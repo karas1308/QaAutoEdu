@@ -214,3 +214,6 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+Level0_Java_part1/.idea/*
+Level0_Java_part1/out/*
+Level0_Java_part1/Level0_Java_part1.iml

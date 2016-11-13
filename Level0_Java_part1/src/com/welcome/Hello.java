@@ -1,28 +1,18 @@
 package com.welcome;
 
-
-
-
 public class Hello {
-
-    private String name;
-    private String name1;
-
-    public String setupName(String name) {
-
-        name1 = name;
-        return name;
-    }
+   private String name;
+        public void setupName(String name) {
+            this.name=name;
+        }
 
     public void welcome() {
-        System.out.println("Hello, " + name1);
-
+        System.out.println("Hello, " + name);
 
     }
 
     public void byeBye() {
-
-        System.out.println("byeBye, " + name1);
+        System.out.println("byeBye, " + name);
     }
 
 
