@@ -10,15 +10,26 @@ public class Main {
             System.out.println("Введите число от 1 до 9. Для выхода введите q");
             Scanner in = new Scanner(System.in); //Ведите имя
             String str = in.nextLine();
+
             if (str.equals("q")) {
-                System.out.print("Пока пока :(");
+                System.out.println("Пока пока :("); //Выходим, если ввели q
                 break;
+            }
+            char c = str.charAt(0);
+            if (!str.equals("q") && (Character.isDigit(c) == false)) {
+                System.out.println("Вы ввели херню");
+                continue;
             }
             int n = Integer.parseInt(str);
             if (n < 1 || n > 9) {
-            } else if (n > 0 && n < 10)
+                System.out.println("Вы ввели херню");
+                continue;
+            }
+            if (n > 0 && n < 10) {
                 Matrix.matrix(n);
+            }
         }
+        //Улитка
         System.out.println("Введите число > 3");
         Scanner in = new Scanner(System.in); //Ведите имя
         int size = in.nextInt();
