@@ -35,5 +35,27 @@ public class Main {
         int size = in.nextInt();
         System.out.println("Вы ввели " + size);
         Snail.calculateSnail(size);
+
+        //Палиндром без учеты регистра и пробелов
+        System.out.println("Введите строку. Палиндром она или нет, скажу Вам я. Регистр и пробелы будут проигнорированя");
+        Scanner scan = new Scanner(System.in);
+        String s = scan.nextLine();
+        //isPalindrome(s);
+        if (Palindrom.isPalindrome(s) == false) {
+            System.out.println("Не, нифига не палиндром");
+        } else {
+            System.out.println("Таки да, палиндром");
+        }
+
+        //Палиндром с учетом регистра и пробелов
+        System.out.println("Введите строку. Палиндром она или нет, скажу Вам я. Пробелы и регистр будем учитывать");
+        scan = new Scanner(System.in);
+        String s1 = scan.nextLine();
+        if (Palindrom.checkPhrase(s1) == false) {
+            System.out.println("Не, нифига не палиндром");
+        } else {
+            System.out.println("Таки да, палиндром");
+
+        }
     }
 }
