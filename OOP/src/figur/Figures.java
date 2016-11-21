@@ -5,11 +5,11 @@ public abstract class Figures {
 
     public abstract void move();
 
-    public abstract void area();
+    public abstract double area(double a, double b);
 
-    public abstract void resize();
+    public abstract double resize(double a, double b);
 
-    public abstract void coordinates();
+    public abstract void coordinates(double a, double b);
 
 
 }

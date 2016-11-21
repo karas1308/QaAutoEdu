@@ -1,9 +1,65 @@
 package figur;
 
+import java.util.Arrays;
+import java.util.Random;
+
 public class Main {
 
     public static void main(String[] args) {
-	// write your code here
+        Random random = new Random();
+        double a, b, a1, b1, r, r1, area = 0;
+        int step = 0;
+        double[] array  = new double[10];
+        int j=0;
+        for (int i = 0; i < 10; i++) {
+            a = Math.random() * 10;   // Основание треугольника
+            b = Math.random() * 10;   //Высота треугольника
+            a1 = Math.random() * 10;  //Высота прямоугольника
+            b1 = Math.random() * 10;  //Ширина прямоугольника
+            //r= random.nextInt (100);   //Радиус круга
+            r = Math.random() * 10;
+            r1 = r;                      //Радиус круга
+            double rand = Math.random() * 10;
+            if (rand < 4) {
+                step = 0;
+            }
+            if (rand > 3 && rand < 7) {
+                step = 1;
+            }
+            if (rand > 6) {
+                step = 2;
+            }
+            switch (step) {
+                case 0:
+                    Triangle triangle = new Triangle();
+                    area = triangle.area(a, b);
+                    System.out.println("Площадь треугольника = " + area);
+                    array[j]=Math.rint(100.0 * area) / 100.0;
+                    j++;
+                    break;
+                case 1:
+                    Rectangle rec = new Rectangle();
+                    area = rec.area(a1, b1);
+                    System.out.println("Площадь прямоугольника = " + area);
+                    //System.out.println("Площадь прямоугольника = " + rec.resize(a1, b1));
+                    array[j]=Math.rint(100.0 * area) / 100.0;
+                    j++;
+                    break;
+                case 2:
+                    Circle circle = new Circle();
+                    area = circle.area(r, r1);
+                    System.out.println("Площадь круга = " + area);
+                    array[j]=Math.rint(100.0 * area) / 100.0;
+                    j++;
+                    break;
+            }
+        }
+        Arrays.sort( array );
+        for (int k=0;k<10;k++) {
+            System.out.print(array[k] + ", ");
+
+        }
+
     }
 }
 
