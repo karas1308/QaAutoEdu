@@ -8,8 +8,9 @@ public class Main {
     public static void main(String[] args) {
         Random random = new Random();
         double a, b, a1, b1, r, r1, area = 0;
-        int step = 0;
+        int step = 0,k;
         double[] array  = new double[10];
+        double[] array1  = new double[10];
         int j=0;
         for (int i = 0; i < 10; i++) {
             a = Math.random() * 10;   // Основание треугольника
@@ -35,6 +36,8 @@ public class Main {
                     area = triangle.area(a, b);
                     System.out.println("Площадь треугольника = " + area);
                     array[j]=Math.rint(100.0 * area) / 100.0;
+                    array1[j]=triangle.resize(a,b);
+//                    array1[j]=Math.rint(100.0 * area* Math.random()) / 100.0;
                     j++;
                     break;
                 case 1:
@@ -43,6 +46,8 @@ public class Main {
                     System.out.println("Площадь прямоугольника = " + area);
                     //System.out.println("Площадь прямоугольника = " + rec.resize(a1, b1));
                     array[j]=Math.rint(100.0 * area) / 100.0;
+                    array1[j]=rec.resize(a1,b1);
+//                    array1[j]=Math.rint(100.0 * area* Math.random()) / 100.0;
                     j++;
                     break;
                 case 2:
@@ -50,16 +55,23 @@ public class Main {
                     area = circle.area(r, r1);
                     System.out.println("Площадь круга = " + area);
                     array[j]=Math.rint(100.0 * area) / 100.0;
+                    array1[j]=circle.resize(r,r1);
+//                    array1[j]=Math.rint(100.0 * area* Math.random()) / 100.0;
                     j++;
                     break;
             }
         }
         Arrays.sort( array );
-        for (int k=0;k<10;k++) {
-            System.out.print(array[k] + ", ");
-
+        System.out.print("Расставим площади фигур по возрастанию: " );
+        for (k=0;k<10;k++) {
+            System.out.print(array[k]+ " ");
         }
-
+        Arrays.sort( array1 );
+        System.out.println();
+        System.out.print("Расставим площади фигур c рандомно измененным размером по возрастанию: " );
+        for (k=0;k<10;k++) {
+            System.out.print(array1[k]+ " ");
+        }
     }
 }
 
