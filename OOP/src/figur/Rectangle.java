@@ -4,9 +4,6 @@ import java.util.Random;
 
 public class Rectangle extends Figures {
 
-    public double area, a, b, x, y;
-
-
     @Override
     public void move(double a, double b) {
         x = x + 10;
@@ -14,17 +11,16 @@ public class Rectangle extends Figures {
     }
 
     @Override
-    public double area(double a, double b) {
+    public double area() {
+        a = Math.random() * 10;  //Высота прямоугольника
+        b = Math.random() * 10;  //Ширина прямоугольника
         area = a * b;
         return Math.rint(100.0 * area) / 100.0;
     }
 
-
     @Override
-    public double resize(double a, double b) {
+    public double resize() {
         Random random = new Random();
-//        double resize = random.nextInt (100);
-//        resize = resize / 100;
         double resize = Math.random();
         a = a * resize;
         b = b * resize;
@@ -32,10 +28,9 @@ public class Rectangle extends Figures {
         return Math.rint(100.0 * area) / 100.0;
     }
 
-
     @Override
     public void coordinates(double x, double y) {
-        x = Math.random()* 300;
-        y = Math.random()*300;
+        x = 50;
+        y = 50;
     }
 }

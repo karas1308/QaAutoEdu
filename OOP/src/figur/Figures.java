@@ -2,14 +2,18 @@ package figur;
 
 
 public abstract class Figures {
+    public double x, y, a, b, area;
 
     public abstract void move(double a, double b);
 
-    public abstract double area(double a, double b);
+    public double area() {
+        return area();
+    }
 
-    public abstract double resize(double a, double b);
+    public double resize() {
+        return resize();
+    }
 
-    public abstract void coordinates(double x, double y);
-
-
+    public void coordinates(double x, double y) {
+    }
 }

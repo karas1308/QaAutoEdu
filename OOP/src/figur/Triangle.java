@@ -1,9 +1,8 @@
 package figur;
+
 import java.util.Random;
 
 public class Triangle extends Figures {
-
-    private double area, x, y;
 
     @Override
     public void move(double a, double b) {
@@ -12,18 +11,16 @@ public class Triangle extends Figures {
     }
 
     @Override
-    public double area(double a, double b) {
-        area = (a * b)/2;
-        return area=Math.rint(100.0 * area) / 100.0;
-
-
+    public double area() {
+        a = Math.random() * 10;   // Основание треугольника
+        b = Math.random() * 10;   //Высота треугольника
+        area = (a * b) / 2;
+        return area = Math.rint(100.0 * area) / 100.0;
     }
 
     @Override
-    public double resize(double a, double b) {
+    public double resize() {
         Random random = new Random();
-//        double resize = random.nextInt (100);
-//        resize = resize / 100;
         double resize = Math.random();
         a = a * resize;
         b = b * resize;
@@ -33,7 +30,7 @@ public class Triangle extends Figures {
 
     @Override
     public void coordinates(double x, double y) {
-        x = Math.random()*100;
-        y = Math.random()*100;
+        x = 40;
+        y = 40;
     }
 }
