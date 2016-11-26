@@ -40,21 +40,20 @@ public class Main {
         System.out.println("Введите строку. Палиндром она или нет, скажу Вам я. Регистр и пробелы будут проигнорированя");
         Scanner scan = new Scanner(System.in);
         String s = scan.nextLine();
-        //isPalindrome(s);
-        if (Palindrom.isPalindrome(s) == false) {
-            System.out.println("Не, нифига не палиндром");
-        } else {
+        if (Palindrom.checkWord(s)) {
             System.out.println("Таки да, палиндром");
+        } else {
+            System.out.println("Не, нифига не палиндром");
         }
 
         //Палиндром с учетом регистра и пробелов
         System.out.println("Введите строку. Палиндром она или нет, скажу Вам я. Пробелы и регистр будем учитывать");
         scan = new Scanner(System.in);
         String s1 = scan.nextLine();
-        if (Palindrom.checkPhrase(s1) == false) {
-            System.out.println("Не, нифига не палиндром");
-        } else {
+        if (Palindrom.checkPhrase(s1)) {
             System.out.println("Таки да, палиндром");
+        } else {
+            System.out.println("Не, нифига не палиндром");
 
         }
     }

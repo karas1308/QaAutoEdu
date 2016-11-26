@@ -1,10 +1,6 @@
 package calculator;
 
 import java.util.Scanner;
-
-//import static calculator.Arithmetics.arrayMultiplication;
-//import static calculator.Arithmetics.power;
-//import static calculator.Arithmetics.division;
 import static calculator.Arithmetics.*;
 
 public class Main {
