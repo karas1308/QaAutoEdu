@@ -19,8 +19,6 @@ public class Palindrom {
                 temp1 = temp1 + someWord.charAt(i);
             return temp.equals(temp1);
         }
-//        StringBuffer stringBuffer = new StringBuffer(someWord);
-//        return stringBuffer.reverse().toString().equals(someWord);
     }
 
 

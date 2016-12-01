@@ -26,7 +26,13 @@ public class Main {
                 continue;
             }
             if (n > 0 && n < 10) {
-                Matrix.matrix(n);
+                int[][] printMatr = Matrix.matrix(n);
+                for (i = 0; i < printMatr.length; i++) {
+                    for (int j = 0; j < printMatr.length; j++) {
+                        System.out.print(printMatr[i][j]);
+                    }
+                    System.out.println();
+                }
             }
         }
         //Улитка

@@ -1,36 +1,30 @@
 package figur;
 
-import java.util.Random;
-
 public class Rectangle extends Figures {
+
+    public Rectangle(double x, double y, double a, double b) {
+        this.setX(Math.rint(x * 100) / 100);
+        this.setY(Math.rint(y * 100) / 100);
+        this.a = a;
+        this.b = b;
+        this.setT("Прямоугольник");
+    }
 
     @Override
     public void move(double a, double b) {
-        x = x + 10;
-        y = y + 20;
+        x = x + a;
+        y = y + b;
     }
 
     @Override
     public double area() {
-        a = Math.random() * 10;  //Высота прямоугольника
-        b = Math.random() * 10;  //Ширина прямоугольника
         area = a * b;
         return Math.rint(100.0 * area) / 100.0;
     }
 
     @Override
-    public double resize() {
-        Random random = new Random();
-        double resize = Math.random();
-        a = a * resize;
-        b = b * resize;
-        area = a * b;
-        return Math.rint(100.0 * area) / 100.0;
-    }
-
-    @Override
-    public void coordinates(double x, double y) {
-        x = 50;
-        y = 50;
+    public void resize(double rand) {
+        a = a * rand;
+        b = b * rand;
     }
 }
