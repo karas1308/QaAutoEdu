@@ -228,6 +228,7 @@ OOP/OOP.iml
 *.xml
 *.iml
 UnitTest/target/*
+UnitTest/.idea/*
 =======
 >>>>>>> parent of fbd1af8... UnitTest
 =======
