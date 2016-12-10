@@ -8,7 +8,11 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
 plugin = {"html:target/cucumber-report/test"},
 features = "src/test/java/cucetestpackage/features",
+<<<<<<< HEAD
 glue = "cucetestpackage/stepdefs")
+=======
+glue = "cucetestpackage")
+>>>>>>> refs/remotes/origin/master
 
 public class TestRun {
 
