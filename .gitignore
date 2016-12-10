@@ -223,3 +223,6 @@ Level0_Java_part2/Level0_Java_part2.iml
 OOP/out/*
 OOP/.idea/*
 OOP/OOP.iml
+*.xml
+*.iml
+UnitTest/target/*
