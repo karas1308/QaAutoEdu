@@ -1,545 +1,348 @@
-$(document).ready(function() {var formatter = new CucumberHTML.DOMFormatter($('.cucumber-report'));formatter.uri("testCircle.feature");
-formatter.feature({
-  "line": 2,
-  "name": "TestCircle",
-  "description": "",
-  "id": "testcircle",
-  "keyword": "Feature",
-  "tags": [
-    {
-      "line": 1,
-      "name": "@Circle"
-    }
-  ]
-});
-formatter.scenario({
-  "comments": [
-    {
-      "line": 4,
-      "value": "#  //Проверяем вычисление плодащи круга, радиусом 1"
-    }
-  ],
-  "line": 5,
-  "name": "1 AreaCircle_r1",
-  "description": "",
-  "id": "testcircle;1-areacircle-r1",
-  "type": "scenario",
-  "keyword": "Scenario"
-});
-formatter.step({
-  "line": 6,
-  "name": "I calculate area of circle",
-  "keyword": "Given "
-});
-formatter.step({
-  "line": 7,
-  "name": "I check area of circle \"3.14\"",
-  "keyword": "When "
-});
-formatter.match({
-  "location": "StepTestCircle.iCalculateAreaOfCircle()"
-});
-formatter.result({
-  "duration": 596322826,
-  "status": "passed"
-});
-formatter.match({
-  "arguments": [
-    {
-      "val": "3.14",
-      "offset": 24
-    }
-  ],
-  "location": "StepTestCircle.iCheckAreaOfCircle(String)"
-});
-formatter.result({
-  "duration": 12759065,
-  "status": "passed"
-});
-formatter.scenario({
-  "comments": [
-    {
-      "line": 9,
-      "value": "#\tДля радиуса \u003d0 не прилетает null"
-    }
-  ],
-  "line": 10,
-  "name": "2 AreaCircle_notNull",
-  "description": "",
-  "id": "testcircle;2-areacircle-notnull",
-  "type": "scenario",
-  "keyword": "Scenario"
-});
-formatter.step({
-  "line": 11,
-  "name": "I calculate area of circle1",
-  "keyword": "Given "
-});
-formatter.step({
-  "line": 12,
-  "name": "I check area of circle1 null",
-  "keyword": "When "
-});
-formatter.match({
-  "location": "StepTestCircle.iCalculateAreaOfCircle1()"
-});
-formatter.result({
-  "duration": 264728,
-  "status": "passed"
-});
-formatter.match({
-  "location": "StepTestCircle.iCheckAreaOfCircle1()"
-});
-formatter.result({
-  "duration": 127922,
-  "status": "passed"
-});
-formatter.scenario({
-  "comments": [
-    {
-      "line": 14,
-      "value": "#\tСмещаем координаты центра на 10"
-    }
-  ],
-  "line": 15,
-  "name": "3 MoveCircle_10_10",
-  "description": "",
-  "id": "testcircle;3-movecircle-10-10",
-  "type": "scenario",
-  "keyword": "Scenario"
-});
-formatter.step({
-  "line": 16,
-  "name": "I move center  x plus 10, y plus 10",
-  "keyword": "Given "
-});
-formatter.step({
-  "line": 17,
-  "name": "After move x equals 20, y equals 20",
-  "keyword": "When "
-});
-formatter.match({
-  "arguments": [
-    {
-      "val": "10",
-      "offset": 22
-    },
-    {
-      "val": "10",
-      "offset": 33
-    }
-  ],
-  "location": "StepTestCircle.iMoveCenterXPlusYPlus(int,int)"
-});
-formatter.result({
-  "duration": 2325106,
-  "status": "passed"
-});
-formatter.match({
-  "arguments": [
-    {
-      "val": "20",
-      "offset": 20
-    },
-    {
-      "val": "20",
-      "offset": 33
-    }
-  ],
-  "location": "StepTestCircle.afterMoveXEqualsYEquals(int,int)"
-});
-formatter.result({
-  "duration": 3573533,
-  "status": "passed"
-});
-formatter.scenario({
-  "comments": [
-    {
-      "line": 19,
-      "value": "#  Проверим, что с увеличением стороны увеличится площадь"
-    }
-  ],
-  "line": 20,
-  "name": "4 ResizeCircle_x2",
-  "description": "",
-  "id": "testcircle;4-resizecircle-x2",
-  "type": "scenario",
-  "keyword": "Scenario"
-});
-formatter.step({
-  "line": 21,
-  "name": "I Increased radius of circle by 2 times",
-  "keyword": "Given "
-});
-formatter.step({
-  "line": 22,
-  "name": "I calculate area of circle with new radius",
-  "keyword": "When "
-});
-formatter.step({
-  "line": 23,
-  "name": "The area is more than 12",
-  "keyword": "Then "
-});
-formatter.match({
-  "arguments": [
-    {
-      "val": "2",
-      "offset": 32
-    }
-  ],
-  "location": "StepTestCircle.iIncreasedRadiusOfCircleByTimes(int)"
-});
-formatter.result({
-  "duration": 458389,
-  "status": "passed"
-});
-formatter.match({
-  "location": "StepTestCircle.iCalculateAreaOfCircleWithNewRadius()"
-});
-formatter.result({
-  "duration": 213203,
-  "status": "passed"
-});
-formatter.match({
-  "arguments": [
-    {
-      "val": "12",
-      "offset": 22
-    }
-  ],
-  "location": "StepTestCircle.theAreaIsMoreThan(int)"
-});
-formatter.result({
-  "duration": 302631,
-  "status": "passed"
-});
-formatter.scenario({
-  "comments": [
-    {
-      "line": 25,
-      "value": "#  //Уменьшим радиус круга"
-    }
-  ],
-  "line": 26,
-  "name": "5 ResizeCircle_x09",
-  "description": "",
-  "id": "testcircle;5-resizecircle-x09",
-  "type": "scenario",
-  "keyword": "Scenario"
-});
-formatter.step({
-  "line": 27,
-  "name": "I decreased radius of circle by \"0.9\" times",
-  "keyword": "Given "
-});
-formatter.step({
-  "line": 28,
-  "name": "The area is less than 1",
-  "keyword": "Then "
-});
-formatter.match({
-  "arguments": [
-    {
-      "val": "0.9",
-      "offset": 33
-    }
-  ],
-  "location": "StepTestCircle.iDecreasedRadiusOfCircleByTimes(String)"
-});
-formatter.result({
-  "duration": 1591330,
-  "status": "passed"
-});
-formatter.match({
-  "arguments": [
-    {
-      "val": "1",
-      "offset": 22
-    }
-  ],
-  "location": "StepTestCircle.theAreaIsLessThan(int)"
-});
-formatter.result({
-  "duration": 485039,
-  "status": "passed"
-});
-formatter.uri("testMatrix.feature");
+$(document).ready(function() {var formatter = new CucumberHTML.DOMFormatter($('.cucumber-report'));formatter.uri("testSnail.feature");
 formatter.feature({
   "line": 3,
-  "name": "Matrix",
+  "name": "Snail",
   "description": "",
-  "id": "matrix",
+  "id": "snail",
   "keyword": "Feature",
   "tags": [
     {
       "line": 1,
-      "name": "@Matrix"
+      "name": "@Snail"
     }
   ]
 });
-formatter.scenario({
-  "line": 5,
-  "name": "01 TestMatix1",
-  "description": "",
-  "id": "matrix;01-testmatix1",
-  "type": "scenario",
-  "keyword": "Scenario"
-});
-formatter.step({
-  "line": 7,
-  "name": "Input \"6\" matrix size",
-  "keyword": "Given "
-});
-formatter.step({
-  "line": 8,
-  "name": "I looking for \"0\" \"5\" element",
-  "keyword": "When "
-});
-formatter.step({
-  "line": 9,
-  "name": "Tenth element isEquals \"6\"",
-  "keyword": "Then "
-});
-formatter.match({
-  "arguments": [
-    {
-      "val": "6",
-      "offset": 7
-    }
-  ],
-  "location": "StepTestMatrix.inputMatrixSize(String)"
-});
-formatter.result({
-  "duration": 1721028,
-  "status": "passed"
-});
-formatter.match({
-  "arguments": [
-    {
-      "val": "0",
-      "offset": 15
-    },
-    {
-      "val": "5",
-      "offset": 19
-    }
-  ],
-  "location": "StepTestMatrix.i_looking_for_element(String,String)"
-});
-formatter.result({
-  "duration": 424038,
-  "status": "passed"
-});
-formatter.match({
-  "arguments": [
-    {
-      "val": "6",
-      "offset": 24
-    }
-  ],
-  "location": "StepTestMatrix.tenth_element_isEquals(String)"
-});
-formatter.result({
-  "duration": 303223,
-  "status": "passed"
-});
-formatter.scenario({
-  "comments": [
-    {
-      "line": 11,
-      "value": "#  //Проверяем, чтоб в матрице максимальный элемент был 9"
-    }
-  ],
-  "line": 12,
-  "name": "1 MaxElemMatr_8x8",
-  "description": "",
-  "id": "matrix;1-maxelemmatr-8x8",
-  "type": "scenario",
-  "keyword": "Scenario"
-});
-formatter.step({
-  "line": 13,
-  "name": "Input matrix size 8",
-  "keyword": "Given "
-});
-formatter.step({
-  "line": 14,
-  "name": "I looking for element more than 9",
-  "keyword": "When "
-});
-formatter.step({
-  "line": 15,
-  "name": "Alarm because I found elenemt more than 9",
-  "keyword": "Then "
-});
-formatter.match({
-  "arguments": [
-    {
-      "val": "8",
-      "offset": 18
-    }
-  ],
-  "location": "StepTestMatrix.inputMatrixSize(int)"
-});
-formatter.result({
-  "duration": 567359,
-  "status": "passed"
-});
-formatter.match({
-  "arguments": [
-    {
-      "val": "9",
-      "offset": 32
-    }
-  ],
-  "location": "StepTestMatrix.iLookingForElementMoreThan(int)"
-});
-formatter.result({
-  "duration": 222679,
-  "status": "passed"
-});
-formatter.match({
-  "arguments": [
-    {
-      "val": "9",
-      "offset": 40
-    }
-  ],
-  "location": "StepTestMatrix.alarmBecauseIFoundElenemtMoreThan(int)"
-});
-formatter.result({
-  "duration": 294932,
-  "status": "passed"
-});
-formatter.scenario({
+formatter.scenarioOutline({
   "comments": [
     {
       "line": 17,
-      "value": "#  //Количество элеметов матрицы"
+      "value": "#Максимальное значение в матрице 7х7"
     }
   ],
-  "line": 18,
-  "name": "2 CountElemMatr_7x7",
-  "description": "",
-  "id": "matrix;2-countelemmatr-7x7",
-  "type": "scenario",
-  "keyword": "Scenario"
-});
-formatter.step({
   "line": 19,
-  "name": "Input size 7",
-  "keyword": "Given "
+  "name": "3 testMaxElemSnail",
+  "description": "",
+  "id": "snail;3-testmaxelemsnail",
+  "type": "scenario_outline",
+  "keyword": "Scenario Outline",
+  "tags": [
+    {
+      "line": 18,
+      "name": "@SnailSpecial"
+    }
+  ]
 });
 formatter.step({
   "line": 20,
-  "name": "Count elements",
-  "keyword": "And "
+  "name": "Размер  матрицы\u003d \u003csize\u003e",
+  "keyword": "Given "
 });
 formatter.step({
   "line": 21,
-  "name": "Count of elemets equals 49",
+  "name": "Запишем матрицу   в массив",
+  "keyword": "When "
+});
+formatter.step({
+  "line": 22,
+  "name": "Найдем самой самое большое значение",
+  "keyword": "And "
+});
+formatter.step({
+  "line": 23,
+  "name": "Максимальное значение \u003cmax\u003e",
+  "keyword": "Then "
+});
+formatter.examples({
+  "line": 24,
+  "name": "",
+  "description": "",
+  "id": "snail;3-testmaxelemsnail;",
+  "rows": [
+    {
+      "cells": [
+        "size",
+        "max"
+      ],
+      "line": 25,
+      "id": "snail;3-testmaxelemsnail;;1"
+    },
+    {
+      "cells": [
+        "7",
+        "49"
+      ],
+      "line": 26,
+      "id": "snail;3-testmaxelemsnail;;2"
+    },
+    {
+      "cells": [
+        "4",
+        "16"
+      ],
+      "line": 27,
+      "id": "snail;3-testmaxelemsnail;;3"
+    },
+    {
+      "cells": [
+        "8",
+        "64"
+      ],
+      "line": 28,
+      "id": "snail;3-testmaxelemsnail;;4"
+    }
+  ],
+  "keyword": "Examples"
+});
+formatter.scenario({
+  "line": 26,
+  "name": "3 testMaxElemSnail",
+  "description": "",
+  "id": "snail;3-testmaxelemsnail;;2",
+  "type": "scenario",
+  "keyword": "Scenario Outline",
+  "tags": [
+    {
+      "line": 1,
+      "name": "@Snail"
+    },
+    {
+      "line": 18,
+      "name": "@SnailSpecial"
+    }
+  ]
+});
+formatter.step({
+  "line": 20,
+  "name": "Размер  матрицы\u003d 7",
+  "matchedColumns": [
+    0
+  ],
+  "keyword": "Given "
+});
+formatter.step({
+  "line": 21,
+  "name": "Запишем матрицу   в массив",
+  "keyword": "When "
+});
+formatter.step({
+  "line": 22,
+  "name": "Найдем самой самое большое значение",
+  "keyword": "And "
+});
+formatter.step({
+  "line": 23,
+  "name": "Максимальное значение 49",
+  "matchedColumns": [
+    1
+  ],
   "keyword": "Then "
 });
 formatter.match({
   "arguments": [
     {
       "val": "7",
-      "offset": 11
+      "offset": 17
     }
   ],
-  "location": "StepTestMatrix.inputSize(int)"
+  "location": "StepTestSnail.размерМатрицы2(int)"
 });
 formatter.result({
-  "duration": 452466,
+  "duration": 727689552,
   "status": "passed"
 });
 formatter.match({
-  "location": "StepTestMatrix.countElements()"
+  "location": "StepTestSnail.запишемМатрицуВМассив2()"
 });
 formatter.result({
-  "duration": 90612,
+  "duration": 4305533,
+  "status": "passed"
+});
+formatter.match({
+  "location": "StepTestSnail.найдемСамойСамоеБольшоеЗначение()"
+});
+formatter.result({
+  "duration": 91796,
   "status": "passed"
 });
 formatter.match({
   "arguments": [
     {
       "val": "49",
-      "offset": 24
+      "offset": 22
     }
   ],
-  "location": "StepTestMatrix.countOfElemetsEquals(int)"
+  "location": "StepTestSnail.максимальноеЗначение(int)"
 });
 formatter.result({
-  "duration": 12711687,
+  "duration": 4122533,
   "status": "passed"
 });
 formatter.scenario({
-  "comments": [
-    {
-      "line": 23,
-      "value": "#  Последняя строка матрицы не равна 789"
-    }
-  ],
-  "line": 24,
-  "name": "LastLine_789_3x3",
+  "line": 27,
+  "name": "3 testMaxElemSnail",
   "description": "",
-  "id": "matrix;lastline-789-3x3",
+  "id": "snail;3-testmaxelemsnail;;3",
   "type": "scenario",
-  "keyword": "Scenario"
+  "keyword": "Scenario Outline",
+  "tags": [
+    {
+      "line": 1,
+      "name": "@Snail"
+    },
+    {
+      "line": 18,
+      "name": "@SnailSpecial"
+    }
+  ]
 });
 formatter.step({
-  "line": 25,
-  "name": "Input size matrix 3",
+  "line": 20,
+  "name": "Размер  матрицы\u003d 4",
+  "matchedColumns": [
+    0
+  ],
   "keyword": "Given "
 });
 formatter.step({
-  "line": 26,
-  "name": "I looking for all elements of line 3",
+  "line": 21,
+  "name": "Запишем матрицу   в массив",
   "keyword": "When "
 });
 formatter.step({
-  "line": 27,
-  "name": "Last line equals \"789\"",
+  "line": 22,
+  "name": "Найдем самой самое большое значение",
+  "keyword": "And "
+});
+formatter.step({
+  "line": 23,
+  "name": "Максимальное значение 16",
+  "matchedColumns": [
+    1
+  ],
   "keyword": "Then "
 });
 formatter.match({
   "arguments": [
     {
-      "val": "3",
-      "offset": 18
+      "val": "4",
+      "offset": 17
     }
   ],
-  "location": "StepTestMatrix.inputSizeMatrix(int)"
+  "location": "StepTestSnail.размерМатрицы2(int)"
 });
 formatter.result({
-  "duration": 366592,
+  "duration": 280718,
+  "status": "passed"
+});
+formatter.match({
+  "location": "StepTestSnail.запишемМатрицуВМассив2()"
+});
+formatter.result({
+  "duration": 509320,
+  "status": "passed"
+});
+formatter.match({
+  "location": "StepTestSnail.найдемСамойСамоеБольшоеЗначение()"
+});
+formatter.result({
+  "duration": 61000,
   "status": "passed"
 });
 formatter.match({
   "arguments": [
     {
-      "val": "3",
-      "offset": 35
+      "val": "16",
+      "offset": 22
     }
   ],
-  "location": "StepTestMatrix.iLookingForAllElementsOfLine(int)"
+  "location": "StepTestSnail.максимальноеЗначение(int)"
 });
 formatter.result({
-  "duration": 273019,
+  "duration": 259397,
+  "status": "passed"
+});
+formatter.scenario({
+  "line": 28,
+  "name": "3 testMaxElemSnail",
+  "description": "",
+  "id": "snail;3-testmaxelemsnail;;4",
+  "type": "scenario",
+  "keyword": "Scenario Outline",
+  "tags": [
+    {
+      "line": 1,
+      "name": "@Snail"
+    },
+    {
+      "line": 18,
+      "name": "@SnailSpecial"
+    }
+  ]
+});
+formatter.step({
+  "line": 20,
+  "name": "Размер  матрицы\u003d 8",
+  "matchedColumns": [
+    0
+  ],
+  "keyword": "Given "
+});
+formatter.step({
+  "line": 21,
+  "name": "Запишем матрицу   в массив",
+  "keyword": "When "
+});
+formatter.step({
+  "line": 22,
+  "name": "Найдем самой самое большое значение",
+  "keyword": "And "
+});
+formatter.step({
+  "line": 23,
+  "name": "Максимальное значение 64",
+  "matchedColumns": [
+    1
+  ],
+  "keyword": "Then "
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "8",
+      "offset": 17
+    }
+  ],
+  "location": "StepTestSnail.размерМатрицы2(int)"
+});
+formatter.result({
+  "duration": 273020,
+  "status": "passed"
+});
+formatter.match({
+  "location": "StepTestSnail.запишемМатрицуВМассив2()"
+});
+formatter.result({
+  "duration": 1633379,
+  "status": "passed"
+});
+formatter.match({
+  "location": "StepTestSnail.найдемСамойСамоеБольшоеЗначение()"
+});
+formatter.result({
+  "duration": 73437,
   "status": "passed"
 });
 formatter.match({
   "arguments": [
     {
-      "val": "789",
-      "offset": 18
+      "val": "64",
+      "offset": 22
     }
   ],
-  "location": "StepTestMatrix.lastLineEquals(String)"
+  "location": "StepTestSnail.максимальноеЗначение(int)"
 });
 formatter.result({
-  "duration": 344087,
+  "duration": 257621,
   "status": "passed"
 });
 });

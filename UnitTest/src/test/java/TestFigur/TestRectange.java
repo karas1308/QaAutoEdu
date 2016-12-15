@@ -47,7 +47,6 @@ public class TestRectange {
     @Test
     public void testResizeRect_10() {
         rectangle.resize(5);
-
         assertFalse("Размеры сторон после ресайза ваще не проканали ",
                 rectangle.a!=10 && rectangle.b!=15);
     }

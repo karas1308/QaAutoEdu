@@ -95,15 +95,17 @@ public class StepTestMatrix {
 
     @When("^I looking for all elements of line (\\d+)$")
     public void iLookingForAllElementsOfLine(int arg0) throws Throwable {
-        for (int i = arg0-1; i < arg0;i++) {
+        for (int i = arg0 - 1; i < arg0; i++) {
             for (int j = 0; j < arg0; j++) {
                 str += mt[i][j];
-            }break;
+            }
+            break;
         }
     }
+
     @Then("^Last line equals \"([^\"]*)\"$")
     public void lastLineEquals(String arg0) throws Throwable {
-                System.out.println(str);
-        assertTrue("Последняя строка матрицы не равна "+ arg0+  ", а равна " + str, str.equals(arg0));
+        System.out.println(str);
+        assertTrue("Последняя строка матрицы не равна " + arg0 + ", а равна " + str, str.equals(arg0));
     }
 }

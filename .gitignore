@@ -223,6 +223,7 @@ Level0_Java_part2/Level0_Java_part2.iml
 OOP/out/*
 OOP/.idea/*
 OOP/OOP.iml
+CucumberTest/target/*
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -235,3 +236,5 @@ UnitTest/.idea/*
 >>>>>>> parent of fbd1af8... UnitTest
 =======
 >>>>>>> parent of fbd1af8... UnitTest
+
+
