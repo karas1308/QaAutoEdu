@@ -11,10 +11,10 @@ import static org.junit.Assert.assertTrue;
 
 
 public class StepTestSnail {
-    int n, zeroValue = 1;
-    int[][] snail;
-    int maxValue;
-    int sum = 0;
+    private  int n, zeroValue = 1;
+    private int[][] snail;
+    private int maxValue;
+    private int sum = 0;
 
     //    Элемент [0][4] матрицы размером 5х5 = 25
 //    Scenario: 1 testElem1and5nail
@@ -35,15 +35,6 @@ public class StepTestSnail {
     }
 
     //------------------------------------------------------------
-    @Given("^Размер  матрицы (\\d+)$")
-    public void размерМатрицы1(int arg0) throws Throwable {
-        n = arg0;
-    }
-
-    @When("^Запишем матрицу  в массив$")
-    public void запишемМатрицуВМассив1() throws Throwable {
-        snail = Snail.calculateSnail(n);
-    }
 
     @Then("^Проверим, равен ли последний элемент в последней строке (\\d+)$")
     public void проверимРавенЛиПоследнийЭлементВПоследнейСтроке(int arg0) throws Throwable {
@@ -52,15 +43,6 @@ public class StepTestSnail {
     }
 
     //----------------------------------------------------
-    @Given("^Размер  матрицы= (\\d+)$")
-    public void размерМатрицы2(int arg0) throws Throwable {
-        n = arg0;
-    }
-
-    @When("^Запишем матрицу   в массив$")
-    public void запишемМатрицуВМассив2() throws Throwable {
-        snail = Snail.calculateSnail(n);
-    }
 
     @And("^Найдем самой самое большое значение$")
     public void найдемСамойСамоеБольшоеЗначение() throws Throwable {
@@ -80,15 +62,6 @@ public class StepTestSnail {
     }
 
     //----------------------------------------------------
-    @Given("^Размер  матрицы=(\\d+)$")
-    public void размерМатрицы3(int arg0) throws Throwable {
-        n = arg0;
-    }
-
-    @When("^Запишем  матрицу в массив$")
-    public void запишемМатрицуВМассив3() throws Throwable {
-        snail = Snail.calculateSnail(n);
-    }
 
     @And("^Проверим, что в матрице нет нулей$")
     public void проверимЧтоВМатрицеНетНулей() throws Throwable {
@@ -104,20 +77,10 @@ public class StepTestSnail {
 
     @Then("^Поорем, если (\\d+) в матрице есть$")
     public void пооремЕслиВМатрицеЕсть(int arg0) throws Throwable {
-        System.out.print(zeroValue);
         assertFalse("В матрице есть нулевые элементы, переделывай! ", zeroValue == 0);
     }
 
     //-----------------------------------------------------
-    @Given("^Размер  матрицы =(\\d+)$")
-    public void размерМатрицы4(int arg0) throws Throwable {
-        n = arg0;
-    }
-
-    @And("^Запишем матрицу в массивчик$")
-    public void запишемМатрицуВМассивчик() throws Throwable {
-        snail = Snail.calculateSnail(n);
-    }
 
     @When("^Просуммируем элеменнты матрицы$")
     public void просуммируемЭлеменнтыМатрицы() throws Throwable {

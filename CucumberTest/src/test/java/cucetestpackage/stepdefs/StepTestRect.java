@@ -7,31 +7,21 @@ import figur.Rectangle;
 
 import static org.junit.Assert.*;
 
-
 public class StepTestRect {
-    double a, b;
-    double x, y;
-    Rectangle rectangle = new Rectangle(0, 10.0, 2.0, 3.0);
-
-    //    Площадь прямоугольника 2x3=6
-//    Scenario: 1 Area of Rectangle_2_3
-    @Given("^Стороны прямоугольника равны (\\d+) и (\\d+)$")
-    public void стороныПрямоугольникаРавны(int arg0, int arg1) throws Throwable {
-        a = arg0;
-        b = arg1;
-    }
+    private  double a, b;
+    private double x, y;
+    private Rectangle rectangle;
 
     @Then("^Площадь прямоугольника равна (\\d+)$")
     public void площадьПрямоугольникаРавна(int arg0) throws Throwable {
         assertEquals("Площадь не равна " + arg0, a * b, arg0, 0);
     }
 
-    //     Площадь прямоугольника 5x6=30
-//    Scenario: 2 Area of Rectangle_5_6
     @Given("^Стороны прямоугольника равны \"([^\"]*)\" и \"([^\"]*)\"$")
     public void стороныПрямоугольникаРавныИ(String arg0, String arg1) throws Throwable {
-        a = Integer.valueOf(arg0);
-        b = Integer.valueOf(arg1);
+        a= Double.valueOf(arg0);
+        b= Double.valueOf(arg1);
+        rectangle=new Rectangle(0,0,a, b);
     }
 
     @Then("^Площадь такого прямоугольника равна (\\d+)$")
@@ -39,9 +29,7 @@ public class StepTestRect {
         assertTrue("Площадь не равна " + arg0, a * b == arg0);
     }
 
-    //    Смещение начальной точки прямоугольника
-//    Scenario: 3 TestMoveRect_10_10
-    @Given("^Изменим координату x на (\\d+), y на (\\d+)$")
+   @Given("^Изменим координату x на (\\d+), y на (\\d+)$")
     public void изменимКоординатуXНаYНа(int arg0, int arg1) throws Throwable {
         rectangle.move(arg0, arg1);
     }
@@ -58,14 +46,12 @@ public class StepTestRect {
                 x == arg0 && y == arg1);
     }
 
-    //    Изменение размера сторон прямоугольника
-//    Scenario: 4 testResizeRect_5
     @Given("^Увеличим стороны прямоугольника в (\\d+) раз$")
     public void увеличимСтороныПрямоугольникаВРаз(int arg0) throws Throwable {
         rectangle.resize(arg0);
     }
 
-    @When("^Найдес размер сторон после изменения$")
+    @When("^Найдем размер сторон после изменения$")
     public void найдесРазмерСторонПослеИзменения() throws Throwable {
         a = rectangle.a;
         b = rectangle.b;
@@ -75,5 +61,10 @@ public class StepTestRect {
     public void проверимРавнаЛиСторонаАB(double arg0, double arg1) throws Throwable {
         assertFalse("Размеры сторон после ресайза ваще не проканали ",
                 a != arg0 || b != arg1);
+    }
+
+    @Given("^Создадим прямоугольник с начальными координатами (\\d+) (\\d+)$")
+    public void создадимПрямоугольникСНачальнымиКоординатами(double arg0, double arg1) throws Throwable {
+        rectangle = new Rectangle(arg0,arg1,1,1);
     }
 }

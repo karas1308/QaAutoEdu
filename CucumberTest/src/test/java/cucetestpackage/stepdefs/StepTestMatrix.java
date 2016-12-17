@@ -39,12 +39,7 @@ public class StepTestMatrix {
     //    ------------------------------------------------------------------------
 ////Проверяем, чтоб в матрице максимальный элемент был 9
 //    Scenario: 1 MaxElemMatr_8x8
-    @Given("^Input matrix size (\\d+)$")
-    public void inputMatrixSize(int arg0) throws Throwable {
-        mt = matrix(arg0);
-    }
-
-    @When("^I looking for element more than (\\d+)$")
+      @When("^I looking for element more than (\\d+)$")
     public void iLookingForElementMoreThan(int arg0) throws Throwable {
         for (x = 0; x < mt.length; x++) {
             for (y = 0; y < mt.length; y++) {
@@ -65,11 +60,6 @@ public class StepTestMatrix {
     //    ------------------------------------------------------------------------
 //    Количество элеметов матрицы
 //    Scenario: 2 CountElemMatr_7x7
-    @Given("^Input size (\\d+)$")
-    public void inputSize(int arg0) throws Throwable {
-        mt = matrix(arg0);
-    }
-
     @And("^Count elements$")
     public void countElements() throws Throwable {
         for (int i = 0; i < mt.length; i++) {
@@ -81,14 +71,13 @@ public class StepTestMatrix {
 
     @Then("^Count of elemets equals (\\d+)$")
     public void countOfElemetsEquals(int arg0) throws Throwable {
-        System.out.println(count);
         assertTrue("Количество элементов не равно 49, а равно " + count, count == arg0);
     }
 
     //    ------------------------------------------------------------------------
     //  Последняя строка матрицы не равна 789
 //    Scenario: LastLine_789_3x3
-    @Given("^Input size matrix (\\d+)$")
+    @Given("^Input matrix size (\\d+)$")
     public void inputSizeMatrix(int arg0) throws Throwable {
         mt = matrix(arg0);
     }
@@ -105,7 +94,6 @@ public class StepTestMatrix {
 
     @Then("^Last line equals \"([^\"]*)\"$")
     public void lastLineEquals(String arg0) throws Throwable {
-        System.out.println(str);
         assertTrue("Последняя строка матрицы не равна " + arg0 + ", а равна " + str, str.equals(arg0));
     }
 }

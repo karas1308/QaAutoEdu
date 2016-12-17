@@ -224,17 +224,10 @@ OOP/out/*
 OOP/.idea/*
 OOP/OOP.iml
 CucumberTest/target/*
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-*.iml
+CucumberTest/.idea/*
 UnitTest/target/*
 UnitTest/.idea/*
-=======
->>>>>>> parent of fbd1af8... UnitTest
-=======
->>>>>>> parent of fbd1af8... UnitTest
-=======
->>>>>>> parent of fbd1af8... UnitTest
+*.iml
+
 
 

@@ -9,8 +9,8 @@ package cucetestpackage.stepdefs;
         import static org.junit.Assert.assertTrue;
 
 public class StepTestPalindrom {
-    String str;
-    boolean pal;
+    private String str;
+    private boolean pal;
 
     @Given("^Введем текст \"([^\"]*)\"$")
     public void введемТекст(String arg0) throws Throwable {
@@ -27,16 +27,6 @@ public class StepTestPalindrom {
         assertTrue("Ваще-то это палиндром: " + str, pal);
     }
 
-    @Given("^Введем текст не палиндром \"([^\"]*)\"$")
-    public void введемТекстНеПалиндром(String arg0) throws Throwable {
-        str = arg0;
-    }
-
-    @When("^Проверим, что это не палиндром$")
-    public void проверимЧтоЭтоНеПалиндром() throws Throwable {
-        pal = Palindrom.checkWord(str);
-    }
-
     @Then("^Сообщим об ошибке$")
     public void сообщимОбОшибке() throws Throwable {
         assertFalse("Ваще-то это не палиндром: " + str, pal);
@@ -50,25 +40,5 @@ public class StepTestPalindrom {
     @When("^Узнаем палиндром ли эта фраза$")
     public void узнаемПалиндромЛиЭтаФраза() throws Throwable {
         pal = Palindrom.checkPhrase(str);
-    }
-
-    @Then("^Сообщим если не тру$")
-    public void сообщимЕслиНеТру() throws Throwable {
-        assertTrue("Ваще-то это палиндром: " + str, pal);
-    }
-
-    @Given("^Введем фразу-не палиндром \"([^\"]*)\"$")
-    public void введемФразуНеПалиндром(String arg0) throws Throwable {
-        str = arg0;
-    }
-
-    @When("^Проверим, что фраза не палиндром$")
-    public void проверимЧтоФразаНеПалиндром() throws Throwable {
-        pal = Palindrom.checkPhrase(str);
-    }
-
-    @Then("^Сообщим, если она палиндром$")
-    public void сообщимЕслиОнаПалиндром() throws Throwable {
-        assertFalse("Ваще-то это не палиндром: " + str, pal);
     }
 }
