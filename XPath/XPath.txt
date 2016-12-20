@@ -1,0 +1,53 @@
+1. Header
+
+.//*[@id='header']
+
+2. Блок с количеством на вкладке featured блока топ-вопросов
+
+.//*[@id='tabs']/a/span[@class='bounty-indicator-tab']
+
+3. Выборка всех топ-вопросов с главной страницы
+
+.//*[@id='qlist-wrapper']//h3/a[contains(@href,'questions')]
+
+4. Выборка всех вопросов, содержащих слово “How” из секции топ-вопросов
+
+.//*[@id='qlist-wrapper']//h3/a[contains(@href,'how')]
+
+5.Выборка всех вопросов, которые имеют тег “java”
+
+.//*[@id='qlist-wrapper']//a[text() = 'java']//..//preceding-sibling::h3
+
+6. На странице http://www.seleniumhq.org/ выбираем все картинки, которые содержат в альтернативном тексте (аттрибут alt) слово 'Selenium' или ‘logo’
+
+.//img[contains(@alt,'Selenium') or contains(@alt,'logo')]
+
+7. На странице http://www.seleniumhq.org/ выбрать точно те элементы футера,
+
+.//*[@id='footer']/ul/li/ul/li[position()>2]
+
+8. Все линки на товары, содержащие слово Prime
+
+.//*[@id='centerMinus']/.//i[contains(@class,'prime')]/../../../../../..//h2
+
+9. Все линки на товары, не содержащие слово Prime
+.//li[contains(@id,'result') and not(descendant::i[contains(@class, 'a-icon-prime')])]/descendant::a[contains(@title, 'Duck')]
+
+.//li[contains(@id,'result') and not(.//i[contains(@class, 'a-icon-prime')])]/.//a/h2
+
+.//li[contains(@id,'result') and not(.//i[contains(@class, 'prime')])]/.//a/h2
+
+
+10. На странице http://www.amazon.com/ в нижней части в секции стран найти ссылки на все страны после Германии
+
+.//*[@id='navFooter']/div[contains(@aria-label,'countries')]/ul/li[position()>6]/a
+
+.//*[@id='navFooter']/div[contains(@aria-label,'countries')]/ul/li[a[text()='Germany']]/following-sibling::li/a
+
+11. все страны после Германии, включая Германию.
+
+.//*[@id='navFooter']/div[contains(@aria-label,'countries')]/ul/li[position()>=6]/a
+
+.//*[@id='navFooter']/div[contains(@aria-label,'countries')]/ul/li[a[text()='Germany']]/following-sibling::li/a | .//*[@id='navFooter']/div[contains(@aria-label,'countries')]/ul/li[a[text()='Germany']]/self::li/a
+
+
