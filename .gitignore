@@ -228,6 +228,8 @@ CucumberTest/.idea/*
 UnitTest/target/*
 UnitTest/.idea/*
 *.iml
+WebDriverTest/.idea/*
+WebDriverTest/target/*
 
-
-
+chromedriver_win32.zip
+chromedriver_win32/chromedriver.exe
