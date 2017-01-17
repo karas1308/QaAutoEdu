@@ -43,7 +43,7 @@ public class TestAmazone {
     }
 
     @Test
-    public void testConteinsDuck() {
+    public void testContainsDuck() {
         WebElement searchBox = driver.findElement(By.id("twotabsearchtextbox"));
         searchBox.sendKeys("duck");
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);

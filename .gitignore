@@ -233,3 +233,5 @@ WebDriverTest/target/*
 
 chromedriver_win32.zip
 chromedriver_win32/chromedriver.exe
+PageObject/target/*
+PageObject/.idea/*
