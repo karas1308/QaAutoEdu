@@ -32,13 +32,13 @@ public class TestStack {
     @After
     public void testAfter() {
 
-//        driver.quit();
+        driver.quit();
     }
 
     @AfterClass
     public static void driverQuit() {
 
-//        driver.quit();
+        driver.quit();
     }
 
     @Test
