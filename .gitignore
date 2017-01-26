@@ -235,3 +235,7 @@ chromedriver_win32.zip
 chromedriver_win32/chromedriver.exe
 PageObject/target/*
 PageObject/.idea/*
+UI_BDD/.idea/*
+UI_BDD/target/*
+CucumberTest/.idea/workspace.xml
+
