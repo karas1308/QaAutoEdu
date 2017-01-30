@@ -1,4 +1,4 @@
-package cucmberWebTest.stepdefs;
+package cucmberWebTest.stepdefs.Amazon;
 
 import amazoneMapping.CartPage;
 import amazoneMapping.ProductPage;

@@ -12,7 +12,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
         plugin = {"html:target/cucumber-report/test"},
         features = "src/test/java/cucmberWebTest/features",
         tags = "@Amazon",
-        glue = "cucmberWebTest/stepdefs")
+        glue = "cucmberWebTest/stepdefs/Amazon")
 
 public class TestAmazonRun {
    }
