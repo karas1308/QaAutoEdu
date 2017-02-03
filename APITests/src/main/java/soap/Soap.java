@@ -17,9 +17,9 @@ public class Soap {
         System.out.println(checkTextResponse);
         List<SpellError> errorsList = checkTextResponse.getSpellResult().getError();
         System.out.println(errorsList.size());
-        for (SpellError error : errorsList){
+        for (SpellError error : errorsList) {
             System.out.println(error.getWord());
-          System.out.println(error.getS());
+            System.out.println(error.getS());
             System.out.println(error.getPos());
             System.out.println(error.getRow());
         }

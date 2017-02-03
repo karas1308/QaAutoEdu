@@ -26,12 +26,14 @@ public class SoapTest {
     @Before
     public void prepareCleanReques() {
         request = new CheckTextRequest();
-      //  request.setLang("EN");
+        //  request.setLang("EN");
     }
-@After
-public void after(){
+
+    @After
+    public void after() {
         System.out.println("Реклама зубной пасты. Как же без рекламы-то ?? ))");
-}
+    }
+
     @Test
     public void checkError() {
         request.setText("todey goood nigth");
@@ -39,24 +41,27 @@ public void after(){
         assertTrue("Respons don't contains 3 errors",
                 checkTextResponse.getSpellResult().getError().size() == 3);
     }
+
     @Test
     public void checkErrorPos0Row0() {
         request.setText("todey");
         CheckTextResponse checkTextResponse = port.checkText(request);
         List<SpellError> errorsList = checkTextResponse.getSpellResult().getError();
         for (SpellError error : errorsList) {
-            assertTrue("pos и row не равны 0 " ,  error.getRow()==0 & error.getPos()==0);
+            assertTrue("pos и row не равны 0 ", error.getRow() == 0 & error.getPos() == 0);
         }
     }
-        @Test
+
+    @Test
     public void checkErrorRow1() {
         request.setText("today \n todey");
         CheckTextResponse checkTextResponse = port.checkText(request);
         List<SpellError> errorsList = checkTextResponse.getSpellResult().getError();
         for (SpellError error : errorsList) {
-            assertTrue("pos и row не равны 0 " + error.getRow(),  error.getRow()==1);
+            assertTrue("row не равны 1 " + error.getRow(), error.getRow() == 1);
         }
     }
+
     @Test
     public void checkErrorRuPlayed() {
         request.setLang("RU");
@@ -64,18 +69,19 @@ public void after(){
         CheckTextResponse checkTextResponse = port.checkText(request);
         List<SpellError> errorsList = checkTextResponse.getSpellResult().getError();
         for (SpellError error : errorsList) {
-            assertTrue("Слово 'сиграна' не попало в ошибки",  error.getWord().equals("сиграна"));
-            assertTrue("В замене предложено не слово 'сыграна' ",  error.getS().contains("сыграна"));
+            assertTrue("Слово 'сиграна' не попало в ошибки", error.getWord().equals("сиграна"));
+            assertTrue("В замене предложено не слово 'сыграна' ", error.getS().contains("сыграна"));
         }
     }
+
     @Test
     public void checkErrorRuNumbSuggest() {
         request.setText("сиграна");
         CheckTextResponse checkTextResponse = port.checkText(request);
         List<SpellError> errorsList = checkTextResponse.getSpellResult().getError();
         for (SpellError error : errorsList) {
-            assertTrue("Слово 'сиграна' не попало в ошибки",  error.getWord().equals("сиграна"));
-            assertTrue("Количество вариантов замены не равно 5, а равно " +error.getS().size(),  error.getS().size()==5);
+            assertTrue("Слово 'сиграна' не попало в ошибки", error.getWord().equals("сиграна"));
+            assertTrue("Количество вариантов замены не равно 5, а равно " + error.getS().size(), error.getS().size() == 5);
         }
     }
 }
