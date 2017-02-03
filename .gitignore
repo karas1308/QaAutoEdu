@@ -239,3 +239,6 @@ UI_BDD/.idea/*
 UI_BDD/target/*
 CucumberTest/.idea/workspace.xml
 
+APITests/.idea/*
+APITests/target/*
+CucumberTest/.idea/workspace.xml
