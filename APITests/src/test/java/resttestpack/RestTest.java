@@ -55,7 +55,7 @@ public class RestTest {
     @Test
     public void currencies170() throws IOException {
         JSONObject json = json();
-        assertTrue("Number of currencies dont equals 170, =" + json.getJSONObject("quotes").keySet().size(), json.getJSONObject("quotes").keySet().size() == 170);
+        assertTrue("Number of currencies dont equals 170", json.getJSONObject("quotes").keySet().size() == 170);
     }
 
     @Test

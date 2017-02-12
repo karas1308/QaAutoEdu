@@ -31,7 +31,7 @@ public class SoapTest {
 
     @After
     public void after() {
-        System.out.println("Реклама зубной пасты. Как же без рекламы-то ?? ))");
+        System.out.println("Реклама");
     }
 
     @Test
@@ -69,8 +69,8 @@ public class SoapTest {
         CheckTextResponse checkTextResponse = port.checkText(request);
         List<SpellError> errorsList = checkTextResponse.getSpellResult().getError();
         for (SpellError error : errorsList) {
-            assertTrue("Слово 'сиграна' не попало в ошибки", error.getWord().equals("сиграна"));
-            assertTrue("В замене предложено не слово 'сыграна' ", error.getS().contains("сыграна"));
+            assertTrue("The word 'сиграна' do not fall into the error", error.getWord().equals("сиграна"));
+            assertTrue("The replacement of the word is not invited 'сыграна' ", error.getS().contains("сыграна"));
         }
     }
 
@@ -80,8 +80,8 @@ public class SoapTest {
         CheckTextResponse checkTextResponse = port.checkText(request);
         List<SpellError> errorsList = checkTextResponse.getSpellResult().getError();
         for (SpellError error : errorsList) {
-            assertTrue("Слово 'сиграна' не попало в ошибки", error.getWord().equals("сиграна"));
-            assertTrue("Количество вариантов замены не равно 5, а равно " + error.getS().size(), error.getS().size() == 5);
+            assertTrue("Word 'сиграна' is absent in errors", error.getWord().equals("сиграна"));
+            assertTrue("The number of replacement options not equal 5, and equal " + error.getS().size(), error.getS().size() == 5);
         }
     }
 }

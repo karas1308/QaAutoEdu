@@ -242,3 +242,5 @@ CucumberTest/.idea/workspace.xml
 APITests/.idea/*
 APITests/target/*
 CucumberTest/.idea/workspace.xml
+authAuto/.idea/*
+authAuto/target/*
