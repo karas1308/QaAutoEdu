@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 
 @RunWith(value = Parameterized.class)
 
@@ -24,6 +25,8 @@ public class TestDDT {
     public static String sid;
     public static String uuid;
     public static String autoruuid;
+    public static String x_auth;
+    public static long millis = System.currentTimeMillis();
     String username = "yuioru@yandex.ru";
     String password = "111111";
 
@@ -34,7 +37,8 @@ public class TestDDT {
     public static void beforeClass() throws IOException {
         json = FirstConnectJson.json();
         sid = String.valueOf(json.get("sid"));
-        uuid = String.valueOf(json.getJSONObject("result").get("uuid"));
+        uuid ="OAuth" +  " " + String.valueOf(json.getJSONObject("result").get("uuid"));
+        x_auth = "Vertis" + " " + String.valueOf(json.getJSONObject("result").get("uuid"))+ " " +"5c27f9e8-2b90-433e-a0bf-b5222bbd97d0";
         autoruuid = String.valueOf(json.get("autoruuid"));
     }
     private Integer rig , mark;
@@ -42,9 +46,9 @@ public class TestDDT {
     public static Collection testMark_Rig(){
         return Arrays.asList(
                 new Object[][]{
-                        {213,-2},
+                        {213,15},
                         {1,-1},
-                        {15,15}
+                        {213,15}
                 }
         );
     }
@@ -58,12 +62,19 @@ public class TestDDT {
 //        System.out.println(json);
 //        System.out.println(sid);
 //        System.out.println(uuid);
-        HttpGet get = new HttpGet("https://api2.auto.ru/1.0/search/count?category_id=15&rid="+rig+"&mark_id="+mark);
-        get.setHeader("Authorization", sid);
-        get.setHeader("X-Authorization", "Vertis eb33980619853b4fab16f0349ca64c78 5c27f9e8-2b90-433e-a0bf-b5222bbd97d0");
+        HttpGet get = new HttpGet("https://api2.auto.ru/1.1/search?page_num=1&page_size=20&prepend_empty_option=1&state=USED&sort=fresh_relevance_1-desc&category_id=15&photo=1&rid="+rig+"&mark_id="+mark+ "&creation_date_to=" +millis );
+       // HttpGet get = new HttpGet("https://api2.auto.ru/1.0/search/count?category_id=15&rid="+rig+"&mark_id="+mark);
+        get.setHeader("Authorization", uuid);
+        get.setHeader("X-Authorization", x_auth);
         CloseableHttpResponse response = client.execute(get);
         HttpEntity entity = response.getEntity();
         JSONObject test = new JSONObject(EntityUtils.toString(entity));
-        System.out.println(test);
+
+           //    System.out.println(test.getJSONArray("list"));
+        //System.out.println(test.getJSONArray("list").getJSONObject(0).get("mark"));
+        System.out.println(test.getJSONArray("list").getJSONObject(0).get("seller"));
+        System.out.println(test.getJSONArray("list").getJSONObject(0).get("price"));
+
+
     }
 }
