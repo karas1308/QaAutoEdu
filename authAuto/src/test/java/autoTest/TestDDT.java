@@ -5,6 +5,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import org.junit.BeforeClass;
@@ -17,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @RunWith(value = Parameterized.class)
 
@@ -66,15 +69,21 @@ public class TestDDT {
        // HttpGet get = new HttpGet("https://api2.auto.ru/1.0/search/count?category_id=15&rid="+rig+"&mark_id="+mark);
         get.setHeader("Authorization", uuid);
         get.setHeader("X-Authorization", x_auth);
+        get.setHeader("Content-Type", "application/json");
         CloseableHttpResponse response = client.execute(get);
         HttpEntity entity = response.getEntity();
-        JSONObject test = new JSONObject(EntityUtils.toString(entity));
+        JSONObject test = new JSONObject(EntityUtils.toString(entity, UTF_8));
 
-           //    System.out.println(test.getJSONArray("list"));
-        //System.out.println(test.getJSONArray("list").getJSONObject(0).get("mark"));
+//        System.out.println(get);
+//        System.out.println(entity);
+//        System.out.println(response);
+//           System.out.println(test);
+        System.out.println(test.getJSONArray("list").getJSONObject(0).get("mark"));
         System.out.println(test.getJSONArray("list").getJSONObject(0).get("seller"));
         System.out.println(test.getJSONArray("list").getJSONObject(0).get("price"));
-
+       // System.out.println(get.getURI());
+//        "Accept-Encoding", "gzip, deflate, identity");
+//        get.setHeader("Accept-Language",
 
     }
 }

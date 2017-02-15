@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.junit.Test;
 
 import static com.jayway.restassured.RestAssured.given;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -41,6 +42,7 @@ public class AutoTest {
     public static String uuid;
     public static String autoruuid;
     public static String x_auth;
+    public static long millis = System.currentTimeMillis();
     String username = "yuioru@yandex.ru";
     String password = "111111";
 
@@ -67,7 +69,7 @@ public class AutoTest {
         get.setHeader("X-Authorization", x_auth);
         CloseableHttpResponse response = client.execute(get);
         HttpEntity entity = response.getEntity();
-        JSONArray regions = new JSONArray(EntityUtils.toString(entity));
+        JSONArray regions = new JSONArray(EntityUtils.toString(entity, UTF_8));
         // regions.optJSONObject(0);
         System.out.println(regions.getJSONObject(1));
         System.out.println(regions.getJSONObject(1).get("rid"));
@@ -88,7 +90,7 @@ public class AutoTest {
         get.setHeader("Accept-Language", "en-RU;q=1, ru-RU;q=0.9, uk-RU;q=0.8, it-RU;q=0.7, de-RU;q=0.6");
         CloseableHttpResponse response = client.execute(get);
         HttpEntity entity = response.getEntity();
-        JSONArray regions = new JSONArray(EntityUtils.toString(entity));
+        JSONArray regions = new JSONArray(EntityUtils.toString(entity, UTF_8));
         System.out.println(regions.get(1));
         System.out.println();
         String cp866 = new String(String.valueOf(regions.getJSONObject(1).get("name")));
@@ -101,13 +103,13 @@ public class AutoTest {
         System.out.println(json);
         System.out.println(sid);
         System.out.println(uuid);
-        HttpGet get = new HttpGet("https://api2.auto.ru/1.0/search/count?category_id=15&mark_id=-2");
+        HttpGet get = new HttpGet("https://api.auto.ru/rest/?sid=&client_tz=180&method=api.service.getUuid&client_version=3.10.1&key=1d2b14555a83699f57fd77d17aa2d5ce9431cd7d9f3edea14186b044e76b606a&client_os=6.0.1&version=2.2.2&device_name=motorola%20XT1562&client_platform=android&format=json");
         get.setHeader("Authorization", uuid);
         get.setHeader("X-Authorization", "Vertis eb33980619853b4fab16f0349ca64c78 5c27f9e8-2b90-433e-a0bf-b5222bbd97d0");
         CloseableHttpResponse response = client.execute(get);
         HttpEntity entity = response.getEntity();
-        JSONObject test = new JSONObject(EntityUtils.toString(entity));
-        System.out.println(test);
+        JSONObject test = new JSONObject(EntityUtils.toString(entity, UTF_8));
+        System.out.println(response);
     }
 
     @Test
@@ -121,7 +123,7 @@ public class AutoTest {
         get.setHeader("X-Authorization", x_auth);
         CloseableHttpResponse response = client.execute(get);
         HttpEntity entity = response.getEntity();
-        JSONObject test = new JSONObject(EntityUtils.toString(entity));
+        JSONObject test = new JSONObject(EntityUtils.toString(entity, UTF_8));
         System.out.println(test);
     }
 
