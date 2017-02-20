@@ -66,11 +66,12 @@ public class TestDDT {
         this.km_age_from = km_age_from;
         this.km_age_to = km_age_to;
     }
+
     @Test //Тест проверяет корректность выдачи по фильтру Пробег
     public void km_age() throws IOException {
-       //int km_age_from = 40000;
-       // int km_age_to = 42000;
-        HttpGet get = new HttpGet(url_api2+"&km_age_from="+km_age_from+"&km_age_to="+km_age_to);
+        //int km_age_from = 40000;
+        // int km_age_to = 42000;
+        HttpGet get = new HttpGet(url_api2 + "&km_age_from=" + km_age_from + "&km_age_to=" + km_age_to);
         get.setHeader("Authorization", uuid);
         get.setHeader("X-Authorization", x_auth);
         CloseableHttpResponse response = client.execute(get);
@@ -80,9 +81,10 @@ public class TestDDT {
         for (int i = 0; i < lenght; i++) {
             String km_ageStr = String.valueOf(jsonTets.getJSONArray("list").getJSONObject(i).get("km_age"));
             int km_age = Integer.valueOf(km_ageStr);
-            assertTrue("Пробег выходит за параметры фильтров - " + km_age, km_age>=km_age_from & km_age<=km_age_to);
+            assertTrue("Пробег выходит за параметры фильтров - " + km_age, km_age >= km_age_from & km_age <= km_age_to);
         }
     }
+
     @Test
     public void test() throws IOException {
 
