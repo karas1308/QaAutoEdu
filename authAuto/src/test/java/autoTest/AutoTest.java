@@ -14,8 +14,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 
 import static com.jayway.restassured.RestAssured.get;
 import static com.jayway.restassured.RestAssured.post;
@@ -165,23 +166,6 @@ public class AutoTest {
     }
 
     @Test
-    public void testAutori() throws IOException {
-        String burl = "https://api2.auto.ru/1.1/stat";
-        Map<String, Object> jsonValues = new HashMap<String, Object>();
-        jsonValues.put("login", "yuioru@yandex.ru");
-        jsonValues.put("pass", "111111");
-        jsonValues.put("sid", "e221f177f91f444e_e757ecaf620c0233e5af8f11721565e3");
-        jsonValues.put("client_tz", "180");
-        jsonValues.put("method", "users.auth.login");
-        jsonValues.put("client_version", "3.10.1");
-        jsonValues.put("key", "1d2b14555a83699f57fd77d17aa2d5ce9431cd7d9f3edea14186b044e76b606a");
-        jsonValues.put("uuid", "f8cd3d92047755055dce604bab99be82");
-        jsonValues.put("format", "json");
-        jsonValues.put("client_platform", "android");
-
-    }
-
-    @Test
     public void stat() {
         RestAssured.baseURI = "https://api2.auto.ru";
         Response r =
@@ -214,6 +198,27 @@ public class AutoTest {
 
     }
 
+    @Test //Ошибка авторизации пользователя
+    public void autorizeFail() {
+        RestAssured.baseURI = "https://api.auto.ru";
+        Response r =
+                given().
+                        headers("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8").
+                        body("login=" + username + "&pass=" + password + "1&sid=" + sid +
+                                "&method=users.auth.login&key=1d2b14555a83699f57fd77d17aa2d5ce9431cd7d9f3edea14186b044e76b606a" +
+                                "&version=2.2.2&uuid=" + uuid + "&format=json").
+                        when().post("/rest/");
+        assertTrue(r.statusCode() == 200);
+        assertTrue(r.body().jsonPath().get("error.message").equals("Неверный логин или пароль."));
+//        System.out.println(r.body().asString());
+        //  System.out.println(r.body().jsonPath().get("error.message"));
+//        auth_sid = r.body().jsonPath().get("sid");
+//        auth_sid_key = r.body().jsonPath().get("sid_key");
+//        auth_autoruuid = r.body().jsonPath().get("autoruuid");
+
+    }
+
+
     @Test //Избранные
     public void favorites() {
         RestAssured.baseURI = "https://api.auto.ru";
@@ -236,10 +241,52 @@ public class AutoTest {
                         when().get("/1.1/user/favorites?sid=" + auth_sid);
         assertTrue(r1.statusCode() == 200);
         assertTrue(r1.body().asString().contains("active"));
-       // System.out.println(r1.statusCode());
-       // System.out.println(r1.body().asString());
+        // System.out.println(r1.statusCode());
+        // System.out.println(r1.body().asString());
+    }
+
+    @Test //my.review, они же отзывы
+    public void myReview() {
+        RestAssured.baseURI = "https://api.auto.ru";
+        Response r =
+                given().
+                        header("Accept-Encoding", "gzip").
+                        when().get("/rest/?category_id=15&sid=" + sid + "&method=my.review.getBlocks&key=1d2b14555a83699f57fd77d17aa2d5ce9431cd7d9f3edea14186b044e76b606a&version=2.2.2&uuid=" + uuid + "&format=json");
+        assertTrue(r.statusCode() == 200);
+        String test = r.body().jsonPath().get("result").toString();
+        System.out.println(r.body().jsonPath().get("result.new_opinions.id").toString());
+        System.out.println(test);
+        System.out.println(test.contains("current_search"));
+    }
+
+    @Test
+    public void readFile() throws IOException {
+        List<String> lines = Files.readAllLines(Paths.get("test.txt"));
+        int linesSize = lines.size();
+        for (int i = 0; i < linesSize; i++) {
+            String[] test = lines.get(i).replace("\uFEFF", "").split("/");
+
+                int km_age_from = Integer.parseInt(test[0]);
+                int km_age_to = Integer.parseInt(test[1]);
+                HttpGet get = new HttpGet(url_api2 + "&km_age_from=" + km_age_from + "&km_age_to=" + km_age_to);
+                get.setHeader("Authorization", uuid_header);
+                get.setHeader("X-Authorization", x_auth);
+                CloseableHttpResponse response = client.execute(get);
+                HttpEntity entity = response.getEntity();
+                JSONObject jsonTets = new JSONObject(EntityUtils.toString(entity, UTF_8));
+                int lenght = jsonTets.getJSONArray("list").length();
+                for (int j = 0; j < lenght; j++) {
+                    String km_ageStr = String.valueOf(jsonTets.getJSONArray("list").getJSONObject(j).get("km_age"));
+                    int km_age = Integer.valueOf(km_ageStr);
+                  //  System.out.println(km_age);
+                    assertTrue("Пробег выходит за параметры фильтров - " + km_age, km_age >= km_age_from & km_age <= km_age_to);
+//                    System.out.println(km_age_from);
+//                    System.out.println(km_age_to);
+
+            }
+
+        }
     }
 }
-
 
 
