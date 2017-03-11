@@ -24,9 +24,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
-import static autoTest.AutoTest.api;
+
 import static autoTest.AutoTest.api2;
-import static autoTest.AutoTest.auth_sid;
 import static autoTest.FirstConnectJson.*;
 import static com.jayway.restassured.RestAssured.given;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -38,10 +37,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(value = Parameterized.class)
 
 public class TestDDT {
-    public static long millis = System.currentTimeMillis();
     public static String url_api2 = "https://api2.auto.ru/1.1/search?category_id=15&page_num=1&page_size=50&creation_date_to=" + millis;
-    String username = "yuioru@yandex.ru";
-    String password = "111111";
 
     static CloseableHttpClient client = HttpClients.createDefault();
 

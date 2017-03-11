@@ -5,13 +5,15 @@ import com.jayway.restassured.response.Response;
 import org.hamcrest.core.Every;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Collection;
 
 import static autoTest.FirstConnectJson.*;
-import static autoTest.AutoTest.millis;
 import static autoTest.FirstConnectJson.beforeClass;
 import static autoTest.FirstConnectJson.sid;
 import static autoTest.FirstConnectJson.uuid;
@@ -23,11 +25,33 @@ import static org.hamcrest.core.AnyOf.anyOf;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(value = Parameterized.class)
+
 public class MotoTest {
     @BeforeClass
     public static void before() throws IOException {
         beforeClass();
     }
+    private Integer id;
+    String params = "&photo=1&prepend_empty_option=1&used_key=5&sid="+sid+"" +
+            "&key="+key+"&version=2.2.2&uuid="+uuid+"&format=json";
+
+    @Parameterized.Parameters
+    public static Collection categoryId1() {
+        return Arrays.asList(
+                new Object[][]{
+                        {55}, //скутеры
+                        {1},  //moto
+                        {4}, //снегоходы
+                        {3}
+                }
+        );
+    }
+
+    public MotoTest(Integer id) {
+        this.id = id;
+    }
+
     @Test
     public void markListMoto() throws IOException {
         String method = "all.mark.getList";
@@ -36,9 +60,7 @@ public class MotoTest {
         RestAssured.baseURI = api;
         Response r = given().
                 header("Accept-Encoding", "gzip").
-                get("/rest/?method=" + method + "&category_id=1" +
-                        "&sid=" + sid + "&key=" + key +
-                        "&version=2.2.2&uuid=" + uuid + "&format=json");
+                get("rest/?category_id=1&method="+method+params);
         String groups_name = r.body().jsonPath().get("result.groups.name").toString();
         for (int i = 0; i < groups_name_const.length; i++) {
             assertTrue("Where is group " + groups_name_const[i], r.body().jsonPath().get("result.groups.name").toString().contains(groups_name_const[i]));
@@ -55,8 +77,7 @@ public class MotoTest {
         RestAssured.baseURI = api;
         Response r = given().
                 header("Accept-Encoding", "gzip").
-                get("rest/?category_id=1&geo_id="+geo_id+"&photo=1&prepend_empty_option=1&used_key=5&sid="+sid+"" +
-                        "&method="+method+"&key="+key+"&version=2.2.2&uuid="+uuid+"&format=json");
+                get("rest/?category_id="+id+"&method="+method+params);
         assertTrue("countTotal = 0",Integer.valueOf(r.jsonPath().get("result.total_found").toString())>0);
 
     }
@@ -67,8 +88,7 @@ public class MotoTest {
         RestAssured.baseURI = api;
         Response r = given().
                 header("Accept-Encoding", "gzip").
-                get("rest/?category_id=1&geo_id="+geo_id+"&photo=1&prepend_empty_option=1&used_key=5&sid="+sid+"" +
-                        "&method="+method+"&key="+key+"&version=2.2.2&uuid="+uuid+"&format=json");
+                get("rest/?category_id="+id+"&method="+method+params);
         assertTrue("countTotal = 0",Integer.valueOf(r.jsonPath().get("result.total_found").toString())>0);
     }
 
@@ -79,19 +99,14 @@ public class MotoTest {
         RestAssured.baseURI = api;
         Response r = given().
                 header("Accept-Encoding", "gzip").
-                get("/rest/?offset=0&category_id=1&creation_date_to="+millis+"&geo_id="+geo_id+"&limit=20&photo=1" +
-                        "&prepend_empty_option=1&sort[price]=asc&used_key=5&sid="+sid+"&method="+method+"&key="+key+"" +
-                        "&version=2.2.2&uuid="+uuid+"&format=json");
-//        print(r.jsonPath().get("result.sales.poi.region").toString());
-//        print(r.jsonPath().get("result").toString());
-
+                get("/rest/?offset=0&category_id="+id+"&creation_date_to="+millis+"&geo_id="+geo_id+"&limit=20" +
+                        "&method="+method+params);
         String [] city_search = replaceSome(r.jsonPath().get("result.sales.poi.region").toString());
         assertThat(Arrays.asList(city_search),Every.everyItem(anyOf(equalToIgnoringWhiteSpace("Москва"))));
 
 //        for (int i=0; i<city_search.length; i++){
 //            assertTrue("not only Moskow "  + city_search[i],city_search[i].trim().equals("Москва"));
 //        }
-//
 
     }
     @Test //geo_id=1 - МО
@@ -101,11 +116,8 @@ public class MotoTest {
         RestAssured.baseURI = api;
         Response r = given().
                 header("Accept-Encoding", "gzip").
-                get("/rest/?offset=0&category_id=1&creation_date_to="+millis+"&geo_id="+geo_id+"&limit=20&photo=1" +
-                        "&prepend_empty_option=1&sort[price]=asc&used_key=5&sid="+sid+"&method="+method+"&key="+key+"" +
-                        "&version=2.2.2&uuid="+uuid+"&format=json");
-//        print(r.jsonPath().get("result.sales.poi.region").toString());
-//        print(r.asString());
+                get("/rest/?offset=0&category_id="+id+"&creation_date_to="+millis+"&geo_id="+geo_id+"&limit=20" +
+                        "&method="+method+params);
         String [] city_search = replaceSome(r.jsonPath().get("result.sales.poi.region").toString());
         assertThat(Arrays.asList(city_search),Every.everyItem(anyOf(equalToIgnoringWhiteSpace("Москва"),
                 (equalToIgnoringWhiteSpace("Московская обл.")))));

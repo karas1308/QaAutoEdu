@@ -217,6 +217,26 @@ public class ApiPhpTest {
             assertTrue("Where is preset " + presetsConst[i], r.body().jsonPath().get("result.label").toString().contains(presetsConst[i]));
         }
     }
+    @Test
+    public void getPresetsAuto() {
+        String[] presetsConst = {"Кроссоверы до миллиона", "Новые до 650 тыс.", "Toyota Corolla с пробегом",
+                "Иномарки до 300 тыс.", "Внедорожники до 500 тыс.","На автомате до 400 тыс."};
+        String method = "all.sale.getPresets";
+        Response r =
+                given().baseUri(api).header("Accept-Encoding", "gzip").
+                        get("/rest/?category_id=15&sid=" + sid + "&method="+method+"&key=" + key + "&version=2.2.2&uuid=" + uuid + "&format=json");
+        String[] presets = replaceSome(r.jsonPath().get("result.label").toString());
+        System.out.print(r.jsonPath().get("result.label").toString());
+        assertTrue("Numb presents",presets.length==4);
+        int c =0;
+        for (int i = 0; i < presetsConst.length; i++) {
+            if ( r.body().jsonPath().get("result.label").toString().contains(presetsConst[i]))
+            {
+                c++;
+            }
+        }
+        assertTrue("Where is preset " + c, c==4);
+    }
 
     @Test
     public void createAddv() {

@@ -22,6 +22,7 @@ public class FirstConnectJson {
     public static String auth_sid;
     public static String auth_sid_key;
     public static String auth_autoruuid;
+    public static long millis = System.currentTimeMillis();
     public static String username = "yuioru@yandex.ru";
     public static String password = "111111";
 

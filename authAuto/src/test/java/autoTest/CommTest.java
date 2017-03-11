@@ -6,9 +6,12 @@ import org.hamcrest.core.Every;
 import org.json.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 
 import static autoTest.AutoTest.*;
 import static autoTest.FirstConnectJson.*;
@@ -21,6 +24,7 @@ import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
 import static org.hamcrest.core.AnyOf.anyOf;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+@RunWith(value = Parameterized.class)
 
 public class CommTest {
     @BeforeClass
@@ -28,8 +32,24 @@ public class CommTest {
         beforeClass();
     }
 
-    public void print(String a) {
-        System.out.println(a);
+    private Integer id;
+
+    @Parameterized.Parameters
+    public static Collection categoryId() {
+        return Arrays.asList(
+                new Object[][]{
+                        {31},
+                        {33},
+                        {32},
+                        {34},
+                        {16}
+                }
+        );
+    }
+
+    public CommTest(Integer id) {
+        this.id = id;
+
     }
 
     @Test
@@ -59,10 +79,9 @@ public class CommTest {
         RestAssured.baseURI = api;
         Response r = given().
                 header("Accept-Encoding", "gzip").
-                get("rest/?category_id=31&geo_id=" + geo_id + "&photo=1&prepend_empty_option=1&used_key=5&sid=" + sid + "" +
+                get("rest/?category_id="+id+"&geo_id=" + geo_id + "&photo=1&prepend_empty_option=1&used_key=5&sid=" + sid + "" +
                         "&method=" + method + "&key=" + key + "&version=2.2.2&uuid=" + uuid + "&format=json");
         assertTrue("countTotal = 0", Integer.valueOf(r.jsonPath().get("result.total_found").toString()) > 0);
-
     }
 
     @Test //geo_id=1 - МО
@@ -72,7 +91,7 @@ public class CommTest {
         RestAssured.baseURI = api;
         Response r = given().
                 header("Accept-Encoding", "gzip").
-                get("rest/?category_id=31&geo_id=" + geo_id + "&photo=1&prepend_empty_option=1&used_key=5&sid=" + sid + "" +
+                get("rest/?category_id="+id+"&geo_id=" + geo_id + "&photo=1&prepend_empty_option=1&used_key=5&sid=" + sid + "" +
                         "&method=" + method + "&key=" + key + "&version=2.2.2&uuid=" + uuid + "&format=json");
         assertTrue("countTotal = 0", Integer.valueOf(r.jsonPath().get("result.total_found").toString()) > 0);
     }
@@ -84,7 +103,7 @@ public class CommTest {
         RestAssured.baseURI = api;
         Response r = given().
                 header("Accept-Encoding", "gzip").
-                get("/rest/?offset=0&category_id=31&creation_date_to=" + millis + "&geo_id=" + geo_id + "&limit=20&photo=1" +
+                get("/rest/?offset=0&category_id="+id+"&creation_date_to=" + millis + "&geo_id=" + geo_id + "&limit=20&photo=1" +
                         "&prepend_empty_option=1&sort[price]=asc&used_key=5&sid=" + sid + "&method=" + method + "&key=" + key + "" +
                         "&version=2.2.2&uuid=" + uuid + "&format=json");
 //        print(r.jsonPath().get("result.sales.poi.region").toString());
@@ -100,13 +119,13 @@ public class CommTest {
         RestAssured.baseURI = api;
         Response r = given().
                 header("Accept-Encoding", "gzip").
-                get("/rest/?offset=0&category_id=31&creation_date_to=" + millis + "&geo_id=" + geo_id + "&limit=20&photo=1" +
+                get("/rest/?offset=0&category_id="+id+"&creation_date_to=" + millis + "&geo_id=" + geo_id + "&limit=20&photo=1" +
                         "&prepend_empty_option=1&sort[price]=asc&used_key=5&sid=" + sid + "&method=" + method + "&key=" + key + "" +
                         "&version=2.2.2&uuid=" + uuid + "&format=json");
 //        print(r.jsonPath().get("result.sales.poi.region").toString());
 //        print(r.asString());
         String[] city_search = replaceSome(r.jsonPath().get("result.sales.poi.region").toString());
-        assertThat(Arrays.asList(city_search), Every.everyItem(anyOf(equalToIgnoringWhiteSpace("Москва"),
+        assertThat(Arrays.asList(city_search),Every.everyItem(anyOf(equalToIgnoringWhiteSpace("Москва"),
                 (equalToIgnoringWhiteSpace("Московская обл.")))));
     }
 }

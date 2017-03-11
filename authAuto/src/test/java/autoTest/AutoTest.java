@@ -36,7 +36,6 @@ public class AutoTest {
     //public static String api = "http://api2.test.autoru.yandex.net";
     public static String api2 = "https://api2.auto.ru";
     public static String markID;
-    public static long millis = System.currentTimeMillis();
     public static String url_api2_search = "https://api2.auto.ru/1.1/search?category_id=15&page_num=1&page_size=50&creation_date_to=" + millis;
 
     static CloseableHttpClient client = HttpClients.createDefault();
