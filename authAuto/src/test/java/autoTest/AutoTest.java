@@ -19,62 +19,51 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Random;
 
+import static methods.Utils.*;
+import static autoTest.FirstConnectJson.*;
 import static com.jayway.restassured.RestAssured.given;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static methods.MethodsAddForm.*;
+import static methods.MethodsAddForm.gearboxList;
 import static methods.MethodsAddForm.generationsList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class AutoTest {
-    public static final String ACCESS_KEY = "";
 
-    public static String api = "https://api.auto.ru";
+
+    //public static String api = "http://api2.test.autoru.yandex.net";
     public static String api2 = "https://api2.auto.ru";
-    public static JSONObject json;
-    public static String sid;
-    public static String uuid_header;
-    public static String uuid;
-    public static String autoruuid;
-    public static String x_auth;
-    public static String auth_sid;
-    public static String auth_sid_key;
-    public static String auth_autoruuid;
     public static String markID;
     public static long millis = System.currentTimeMillis();
     public static String url_api2_search = "https://api2.auto.ru/1.1/search?category_id=15&page_num=1&page_size=50&creation_date_to=" + millis;
-    String username = "yuioru@yandex.ru";
-    String password = "111111";
 
     static CloseableHttpClient client = HttpClients.createDefault();
 
-
+public void print(String a){
+    System.out.println(a);
+}
     @BeforeClass
-    public static void beforeClass() throws IOException {
-        json = FirstConnectJson.json();
-        sid = String.valueOf(json.get("sid"));
-        uuid_header = "OAuth" + " " + String.valueOf(json.getJSONObject("result").get("uuid"));
-        uuid = String.valueOf(json.getJSONObject("result").get("uuid"));
-        x_auth = "Vertis" + " " + String.valueOf(json.getJSONObject("result").get("uuid")) + " " + "5c27f9e8-2b90-433e-a0bf-b5222bbd97d0";
-        autoruuid = String.valueOf(json.get("autoruuid"));
+    public static void before() throws IOException {
+        beforeClass();
+
     }
 
-    @Test
+    @Test //geo suggest
     public void NumberRegions() throws IOException {
-
-        HttpGet get = new HttpGet("https://api2.auto.ru/1.1/regions");
-        get.setHeader("Authorization", uuid_header);
-        get.setHeader("X-Authorization", x_auth);
-        CloseableHttpResponse response = client.execute(get);
-        HttpEntity entity = response.getEntity();
-        JSONArray regions = new JSONArray(EntityUtils.toString(entity, UTF_8));
+        RestAssured.baseURI = api2;
+        Response r =
+                given().headers("Authorization", uuid_header, "X-Authorization", x_auth).
+                        get("/1.1/suggest?letters=москв");
+        assertTrue(r.statusCode() == 200);
+        String[] regions = replaceSome(r.body().jsonPath().get("data.title").toString());
+        assertTrue(regions.length > 0);
     }
 
     @Test
     public void NumberRegions10841() throws IOException {
 
-//        System.out.println(json);
-//        System.out.println(sid);
-//        System.out.println(uuid);
         HttpGet get = new HttpGet("https://api2.auto.ru/1.1/regions/10841");
         get.setHeader("Authorization", uuid_header);
         get.setHeader("X-Authorization", x_auth);
@@ -87,36 +76,28 @@ public class AutoTest {
 
     }
 
-    @Test
-    public void test() throws IOException {
-
-        HttpGet get = new HttpGet("https://api.auto.ru/rest/?sid=&client_tz=180&method=api.service.getUuid&client_version=3.10.1&key=1d2b14555a83699f57fd77d17aa2d5ce9431cd7d9f3edea14186b044e76b606a&client_os=6.0.1&version=2.2.2&device_name=motorola%20XT1562&client_platform=android&format=json");
-        get.setHeader("Authorization", uuid_header);
-        get.setHeader("X-Authorization", x_auth);
-        CloseableHttpResponse response = client.execute(get);
-        HttpEntity entity = response.getEntity();
-        JSONObject jsonTets = new JSONObject(EntityUtils.toString(entity, UTF_8));
-        System.out.println(response);
-    }
-
     @Test //Тест проверяет корректность выдачи по фильтру Цена
     public void testPrice() throws IOException {
-        int minprice = 500000;
-        int maxprice = 600000;
-        HttpGet get = new HttpGet(url_api2_search + "&price_from=" + minprice + "&price_to=" + maxprice);
-        get.setHeader("Authorization", uuid_header);
-        get.setHeader("X-Authorization", x_auth);
-        CloseableHttpResponse response = client.execute(get);
-        HttpEntity entity = response.getEntity();
-        JSONObject jsonTets = new JSONObject(EntityUtils.toString(entity, UTF_8));
-        int lenght = jsonTets.getJSONArray("list").length();
-        for (int i = 0; i < lenght; i++) {
-            String[] priceList = (String.valueOf(jsonTets.getJSONArray("list").getJSONObject(i).get("price")).replace("}", "").split(":"));
-            int price = Integer.valueOf(priceList[3]);
-            assertTrue("Цена выходит за параметры фильтров - " + price, price >= minprice & price <= maxprice);
-            //System.out.println(jsonTets.getJSONArray("list").getJSONObject(i).get("price"));
+        int i;
+        int[] lines = {0 , 50000, 60000, 65000, 70000, 700000, 2000000, 2500000};
+        for (i = 0; i < lines.length - 1; i++) {
+            RestAssured.baseURI = api2;
+            Response r =
+                    given().headers("Authorization", uuid_header, "X-Authorization", x_auth).
+                            get("/1.1/search?category_id=15&page_num=1&page_size=50&creation_date_to=" + millis + "&price_from=" + lines[i] + "&price_to=" + lines[i + 1]);
+            assertTrue(r.statusCode() == 200);
+            int pager_count = Integer.parseInt(r.body().jsonPath().get("pager.count").toString());
+            String[] price = replaceSome(r.body().jsonPath().get("list.price.RUR").toString());
+            assertTrue("tt", price.length > 0);
+            if (pager_count > 0) {
+                for (int i1 = 0; i1 < price.length; i1++) {
+                    int minprice = lines[i];
+                    int maxprice = lines[i + 1];
+                    int a = Integer.valueOf(price[i].trim());
+                    assertTrue("Цена выходит за параметры фильтров - " + a, a >= minprice & a <= maxprice);
+                }
+            }else { assertTrue("Number of ads is zero, correct your filter. "+ lines[i], pager_count > 0);}
         }
-
     }
 
     @Test //Тест проверяет корректность выдачи по фильтру Год выпуска
@@ -138,82 +119,6 @@ public class AutoTest {
         }
     }
 
-    @Test //Тест проверяет корректность выдачи по фильтру Пробег
-    public void km_age() throws IOException {
-        int km_age_from = 40000;
-        int km_age_to = 42000;
-        HttpGet get = new HttpGet(url_api2_search + "&km_age_from=" + km_age_from + "&km_age_to=" + km_age_to);
-        get.setHeader("Authorization", uuid_header);
-        get.setHeader("X-Authorization", x_auth);
-        CloseableHttpResponse response = client.execute(get);
-        HttpEntity entity = response.getEntity();
-        JSONObject jsonTets = new JSONObject(EntityUtils.toString(entity, UTF_8));
-        int lenght = jsonTets.getJSONArray("list").length();
-        for (int i = 0; i < lenght; i++) {
-            String km_ageStr = String.valueOf(jsonTets.getJSONArray("list").getJSONObject(i).get("km_age"));
-            int km_age = Integer.valueOf(km_ageStr);
-            assertTrue("Пробег выходит за параметры фильтров - " + km_age, km_age >= km_age_from & km_age <= km_age_to);
-        }
-    }
-
-    @Test
-    public void mark_list() throws IOException {
-        Response markList = markList();
-        String[] markID = markList.body().jsonPath().get("result.items.id").toString().replace("[", "").replace("]", "").split(",");
-        assertTrue("method=all.mark.getList fail, statusCode=" + markList.statusCode(), markList.statusCode() == 200);
-        String[] markName = markList.body().jsonPath().get("result.items.name").toString().replace("[", "").replace("]", "").split(",");
-        String[] markListConst = {"LADA (ВАЗ)", "AC", "Acura", "Adler", "Alfa Romeo", "Alpina", "Alpine", "AM General", "AMC", "Ariel", "Aro", "Asia", "Aston Martin", "Audi", "Austin", "Autobianchi", "Baltijas Dzips", "Batmobile", "Beijing", "Bentley", "Bertone", "Bilenkin", "Bitter", "BMW", "Borgward", "Brabus", "Brilliance", "Bristol", "Bufori", "Bugatti", "Buick", "BYD", "Byvin", "Cadillac", "Callaway", "Carbodies", "Caterham", "Changan", "ChangFeng", "Chery", "Chevrolet", "Chrysler", "Citroen", "Cizeta", "Coggiola", "Dacia", "Dadi", "Daewoo", "Daihatsu", "Daimler", "Datsun", "De Tomaso", "Delage", "DeLorean", "Derways", "DeSoto", "Dodge", "DongFeng", "Doninvest", "Donkervoort", "DS", "E-Car", "Eagle", "Eagle Cars", "Ecomotors", "Excalibur", "FAW", "Ferrari", "Fiat", "Fisker", "Ford", "Foton", "FSO", "Fuqi", "Geely", "Genesis", "Geo", "GMC", "Gonow", "Gordon", "Great Wall", "Hafei", "Haima", "Hanomag", "Haval", "Hawtai", "Hindustan", "Holden", "Honda", "HuangHai", "Hudson", "Hummer", "Hyundai", "Infiniti", "Innocenti", "Invicta", "Iran Khodro", "Isdera", "Isuzu", "JAC", "Jaguar", "Jeep", "Jensen", "JMC", "Kia", "Koenigsegg", "KTM AG", "Lamborghini", "Lancia", "Land Rover", "Landwind", "Lexus", "Liebao Motor", "Lifan", "Lincoln", "Lotus", "LTI", "Luxgen", "Mahindra", "Marcos", "Marlin", "Marussia", "Maruti", "Maserati", "Maybach", "Mazda", "McLaren", "Mega", "Mercedes-Benz", "Mercury", "Metrocab", "MG", "Microcar", "Minelli", "MINI", "Mitsubishi", "Mitsuoka", "Morgan", "Morris", "Nissan", "Noble", "Oldsmobile", "Opel", "Osca", "Packard", "Pagani", "Panoz", "Perodua", "Peugeot", "PGO", "Piaggio", "Plymouth", "Pontiac", "Porsche", "Premier", "Proton", "PUCH", "Puma", "Qoros", "Qvale", "Ravon", "Reliant", "Renaissance", "Renault", "Renault Samsung", "Rezvani", "Rimac", "Rolls-Royce", "Ronart", "Rover", "Saab", "Saleen", "Santana", "Saturn", "Scion", "SEAT", "Shanghai Maple", "ShuangHuan", "Skoda", "Smart", "Soueast", "Spectre", "Spyker", "SsangYong", "Steyr", "Subaru", "Suzuki", "Talbot", "TATA", "Tatra", "Tazzari", "Tesla", "Tianma", "Tianye", "Tofas", "Toyota", "Trabant", "Tramontana", "Triumph", "TVR", "Ultima", "Vauxhall", "Vector", "Venturi", "Volkswagen", "Volvo", "Vortex", "W Motors", "Wanderer", "Wartburg", "Westfield", "Wiesmann", "Willys", "Xin Kai", "Zastava", "Zenos", "Zenvo", "Zibar", "Zotye", "ZX", "Автокам", "Бронто", "ГАЗ", "Ё-мобиль", "ЗАЗ", "ЗИЛ", "ЗиС", "ИЖ", "Канонир", "Комбат", "ЛуАЗ", "Москвич", "СМЗ", "ТагАЗ", "УАЗ"};
-
-        for (int i = 0; i < markListConst.length; i++) {
-            assertTrue("all.mark.getList fail, " + markListConst[i], markList.body().jsonPath().get("result.items.name").toString().contains(markListConst[i]));
-        }
-    }
-
-    @Test
-    public void model_list() throws IOException {
-        Response modelList = modelList();
-//        System.out.println(modelList.body().asString());
-        assertTrue("catalog.folder.getEditModels fail, statusCode=" + modelList.statusCode(), modelList.statusCode() == 200);
-        String[] modelIdList = modelList.body().jsonPath().get("result.id").toString().replace("[", "").replace("]", "").split(",");
-        assertTrue("", modelIdList.length > 0);
-    }
-
-    @Test
-    public void year_list() throws IOException {
-        Response yearList = yearList();
-        assertTrue("ccatalog.year.getList fail, statusCode=" + yearList.statusCode(), yearList.statusCode() == 200);
-        String[] yearIDList = yearList.body().jsonPath().get("result.id").toString().replace("[", "").replace("]", "").split(",");
-        assertTrue("", yearIDList.length > 0);
-//        System.out.println(yearList.body().asString());
-    }
-
-    @Test
-    public void generations_list() throws IOException {
-        Response generationsList = generationsList();
-        assertTrue("catalog.folder.getEditGenerations fail, statusCode=" + generationsList.statusCode(), generationsList.statusCode() == 200);
-        String[] generationsIDList = generationsList.body().jsonPath().get("result.id").toString().replace("[", "").replace("]", "").split(",");
-        assertTrue("catalog.folder.getEditGenerations fail", generationsIDList.length > 0);
-       // System.out.println(generationsList.body().asString());
-    }
-
-    @Test
-    public void bodytype_list() throws IOException {
-        Response bodytypeList = bodytypeList();
-        assertTrue("catalog.bodytype.getList fail, statusCode=" + bodytypeList.statusCode(), bodytypeList.statusCode() == 200);
-        String[] bodytypeIDList = bodytypeList.body().jsonPath().get("result.id").toString().replace("[", "").replace("]", "").split(",");
-        assertTrue("catalog.bodytype.getList fail", bodytypeIDList.length > 0);
-        System.out.println(bodytypeList.body().asString());
-    }
-        @Test
-        public void enginetype_list() throws IOException {
-            Response enginetypeList = enginetypeList();
-            assertTrue("catalog.bodytype.getList fail, statusCode=" + enginetypeList.statusCode(), enginetypeList.statusCode() == 200);
-            String[] enginetypeIDList = enginetypeList.body().jsonPath().get("result.id").toString().replace("[", "").replace("]", "").split(",");
-            assertTrue("catalog.bodytype.getList fail", enginetypeIDList.length > 0);
-            System.out.println(enginetypeList.body().asString());
-        }
-
-
     @Test
     public void stat() {
         RestAssured.baseURI = api2;
@@ -229,102 +134,36 @@ public class AutoTest {
         // System.out.print(r.body().asString());
     }
 
-    @Test //Авторизация пользователя
-    public void autorize() {
-        RestAssured.baseURI = api;
-        Response r =
-                given().
-                        headers("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8").
-                        body("login=" + username + "&pass=" + password + "&sid=" + sid +
-                                "&method=users.auth.login&key=1d2b14555a83699f57fd77d17aa2d5ce9431cd7d9f3edea14186b044e76b606a" +
-                                "&version=2.2.2&uuid=" + uuid + "&format=json").
-                        when().post("/rest/");
-        assertTrue(r.statusCode() == 200);
-        // System.out.println(r.body().asString());
-        auth_sid = r.body().jsonPath().get("sid");
-        auth_sid_key = r.body().jsonPath().get("sid_key");
-        auth_autoruuid = r.body().jsonPath().get("autoruuid");
-
-    }
-
-    @Test //Ошибка авторизации пользователя
-    public void autorizeFail() {
-        RestAssured.baseURI = api;
-        Response r =
-                given().
-                        headers("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8").
-                        body("login=" + username + "&pass=" + password + "1&sid=" + sid +
-                                "&method=users.auth.login&key=1d2b14555a83699f57fd77d17aa2d5ce9431cd7d9f3edea14186b044e76b606a" +
-                                "&version=2.2.2&uuid=" + uuid + "&format=json").
-                        when().post("/rest/");
-        assertTrue(r.statusCode() == 200);
-        assertTrue(r.body().jsonPath().get("error.message").equals("Неверный логин или пароль."));
-//        System.out.println(r.body().asString());
-        //  System.out.println(r.body().jsonPath().get("error.message"));
-//        auth_sid = r.body().jsonPath().get("sid");
-//        auth_sid_key = r.body().jsonPath().get("sid_key");
-//        auth_autoruuid = r.body().jsonPath().get("autoruuid");
-
-    }
-
-
     @Test //Избранные
     public void favorites() {
         autorize();
         RestAssured.baseURI = api2;
-        Response r1 =
+        Response r =
                 given().
                         headers("X-Authorization", x_auth).
                         when().get("/1.1/user/favorites?sid=" + auth_sid);
-        assertTrue(r1.statusCode() == 200);
-        assertTrue(r1.body().asString().contains("active"));
+        assertTrue(r.statusCode() == 200);
+        assertTrue(r.body().asString().contains("active"));
     }
 
-    @Test //my.review, они же отзывы
-    public void myReview() {
-        RestAssured.baseURI = api;
-        Response r =
-                given().
-                        header("Accept-Encoding", "gzip").
-                        when().get("/rest/?category_id=15&sid=" + sid + "&method=my.review.getBlocks&key=1d2b14555a83699f57fd77d17aa2d5ce9431cd7d9f3edea14186b044e76b606a&version=2.2.2&uuid=" + uuid + "&format=json");
-        assertTrue(r.statusCode() == 200);
-        String test = r.body().jsonPath().get("result").toString();
-        System.out.println(r.body().jsonPath().get("result.new_opinions.id").toString());
-        System.out.println(test);
-        System.out.println(test.contains("current_search"));
-    }
-
-    @Test //получаем список телефонов
-    public void prof() {
-        autorize();
-        RestAssured.baseURI = api;
-        Response r =
-                given().
-                        header("Accept-Encoding", "gzip").
-                        get("/rest/?sid=" + auth_sid + "&client_tz=120&method=users.profile.getPhones&client_version=3.11.0&key=1d2b14555a83699f57fd77d17aa2d5ce9431cd7d9f3edea14186b044e76b606a&client_os=5.0&version=2.2.2&uuid=" + uuid + "&device_name=asus%20ASUS_Z00AD&client_platform=android&format=json");
-        assertTrue(r.statusCode() == 200);
-        String test = r.body().jsonPath().get("result").toString();
-        System.out.println(r.body().jsonPath().get("result.phone").toString());
-//        System.out.println(test);
-//        System.out.println(test.contains("current_search"));
-    }
 
     @Test
-    public void createAddv() {
-        autorize();
-        RestAssured.baseURI = api;
+    public void searchSort() {
 
-        Response modelList = given().
-                header("Accept-Encoding", "gzip").
-                get("/rest/?method=all.mark.getList&category_id=15&is_for_editform=1&sid=e20aa43ffeb30f96_89292543f6752add724431de44750aab&client_tz=120&method=all.mark.getList&client_version=3.12.0&key=b7bf0dfc8cc562c1bf2cffdd9e78fc181f97f6c82f85fbca16d62d3d3258963c&client_os=5.0&version=2.2.2&uuid=a0ffc282c65b7bfc707abd673a571611&device_name=asus%20ASUS_Z00AD&client_platform=android&format=json");
+        RestAssured.baseURI = api2;
 
-        String[] test1 = modelList.body().jsonPath().get("result.items.id").toString().split(",");
-        System.out.println(test1.length);
-        Random rand = new Random();
-        int a = rand.nextInt(test1.length);
+        Response searchList = given().header("X-Authorization", x_auth).get("/1.1/search?page_num=1&page_size=50&prepend_empty_option=1&model_id=17118&creation_date_to=1488459883&mark_id=15&state=USED&sort=price-asc&category_id=15&photo=1&generation_id=17121");
 
-        System.out.println(test1[a].trim());
+        String[] priceList = replaceSome(searchList.body().jsonPath().get("list.price.RUR").toString());
+        for (int i = 0; i < priceList.length - 1; i++) {
+            int a = Integer.valueOf(priceList[i].replace(" ", ""));
+            int b = Integer.valueOf(priceList[i + 1].replace(" ", ""));
+            assertTrue("" + a + " " + b, a <= b);
+            //  System.out.println(Integer.valueOf(priceList[i].replace(" ","")));
+        }
     }
+
+
 
     @Test
     public void readFile() throws IOException {
@@ -345,10 +184,7 @@ public class AutoTest {
             for (int j = 0; j < lenght; j++) {
                 String km_ageStr = String.valueOf(jsonTets.getJSONArray("list").getJSONObject(j).get("km_age"));
                 int km_age = Integer.valueOf(km_ageStr);
-                System.out.println(km_age);
                 assertTrue("Пробег выходит за параметры фильтров - " + km_age, km_age >= km_age_from & km_age <= km_age_to);
-//                    System.out.println(km_age_from);
-//                    System.out.println(km_age_to);
             }
         }
     }

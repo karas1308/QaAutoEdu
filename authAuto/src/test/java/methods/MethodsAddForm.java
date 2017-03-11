@@ -2,14 +2,14 @@ package methods;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
-import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Random;
 
-import static autoTest.AutoTest.uuid;
-import static autoTest.AutoTest.sid;
-import static autoTest.AutoTest.api;
+import static autoTest.AutoTest.*;
+import static autoTest.FirstConnectJson.api;
+import static autoTest.FirstConnectJson.sid;
+import static autoTest.FirstConnectJson.uuid;
 import static com.jayway.restassured.RestAssured.given;
 
 public class MethodsAddForm {
@@ -19,6 +19,10 @@ public class MethodsAddForm {
     public static String randYearID;
     public static String randGenerationsID;
     public static String randBodytypeID;
+    public static String randEnginetypeID;
+    public static String randDriveID;
+    public static String randGearboxID;
+
 
     //Список марок
     public static Response markList() {
@@ -109,5 +113,52 @@ public class MethodsAddForm {
                         "&year=" + randYearID + "&folder_id=" + randGenerationsID + "&body_type="+randBodytypeID+"&client_tz=120&key=b7bf0dfc8cc562c1bf2cffdd9e78fc181f97f6c82f85fbca16d62d3d3258963c" +
                         "&version=2.2.2&uuid=" + uuid + "&format=json");
         return enginetypeList;
+    }
+    //Список типов приводов
+    public static Response driveList() throws IOException {
+        Response enginetypeList = enginetypeList();
+        String[] enginetypeIDList = enginetypeList.body().jsonPath().get("result.id").toString().replace("[", "").replace("]", "").split(",");
+        int a = rand.nextInt(enginetypeIDList.length);
+        randEnginetypeID = enginetypeIDList[a];
+        String method = "catalog.drive.getList";
+        Response driveList = given().
+                header("Accept-Encoding", "gzip").
+                get("/rest/?method=" + method + "&category_id=15&" +
+                        "is_for_editform=1&sid=" + sid + "&mark_id=" + randMarkID + "&model_id=" + randModelID +
+                        "&year=" + randYearID + "&folder_id=" + randGenerationsID + "&body_type="+randBodytypeID+"&engine_type="+randEnginetypeID+"&client_tz=120&key=b7bf0dfc8cc562c1bf2cffdd9e78fc181f97f6c82f85fbca16d62d3d3258963c" +
+                        "&version=2.2.2&uuid=" + uuid + "&format=json");
+        return driveList;
+    }
+    //Список типов КПП
+    public static Response gearboxList() throws IOException {
+        Response driveList = driveList();
+        String[] driveIDList = driveList.body().jsonPath().get("result.id").toString().replace("[", "").replace("]", "").split(",");
+        int a = rand.nextInt(driveIDList.length);
+        randDriveID = driveIDList[a];
+        String method = "catalog.gearbox.getList";
+        Response gearboxList = given().
+                header("Accept-Encoding", "gzip").
+                get("/rest/?method=" + method + "&category_id=15&" +
+                        "is_for_editform=1&sid=" + sid + "&mark_id=" + randMarkID + "&model_id=" + randModelID +
+                        "&year=" + randYearID + "&folder_id=" + randGenerationsID + "&body_type="+randBodytypeID+"&engine_type="+randEnginetypeID+"&drive="+randDriveID+"&client_tz=120&key=b7bf0dfc8cc562c1bf2cffdd9e78fc181f97f6c82f85fbca16d62d3d3258963c" +
+                        "&version=2.2.2&uuid=" + uuid + "&format=json");
+        return gearboxList;
+    }
+
+    //Список модификаций
+    public static Response modificationList() throws IOException {
+        Response gearboxList = gearboxList();
+        String[] gearboxIDList = gearboxList.body().jsonPath().get("result.id").toString().replace("[", "").replace("]", "").split(",");
+        int a = rand.nextInt(gearboxIDList.length);
+        randGearboxID = gearboxIDList[a];
+        String method = "catalog.modification.getList";
+        Response modificationList = given().
+                header("Accept-Encoding", "gzip").
+                get("/rest/?method=" + method + "&category_id=15&" +
+                        "is_for_editform=1&sid=" + sid + "&mark_id=" + randMarkID + "&model_id=" + randModelID +
+                        "&year=" + randYearID + "&folder_id=" + randGenerationsID + "&body_type="+randBodytypeID+"&engine_type="+randEnginetypeID+"&drive="+randDriveID+
+                        "&gearbox="+randGearboxID+"&client_tz=120&key=b7bf0dfc8cc562c1bf2cffdd9e78fc181f97f6c82f85fbca16d62d3d3258963c" +
+                        "&version=2.2.2&uuid=" + uuid + "&format=json");
+        return modificationList;
     }
 }
