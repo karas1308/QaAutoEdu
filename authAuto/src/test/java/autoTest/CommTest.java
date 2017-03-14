@@ -49,7 +49,6 @@ public class CommTest {
 
     public CommTest(Integer id) {
         this.id = id;
-
     }
 
     @Test
@@ -106,7 +105,7 @@ public class CommTest {
                 get("/rest/?offset=0&category_id="+id+"&creation_date_to=" + millis + "&geo_id=" + geo_id + "&limit=20&photo=1" +
                         "&prepend_empty_option=1&sort[price]=asc&used_key=5&sid=" + sid + "&method=" + method + "&key=" + key + "" +
                         "&version=2.2.2&uuid=" + uuid + "&format=json");
-//        print(r.jsonPath().get("result.sales.poi.region").toString());
+        System.out.println(r.jsonPath().get("result.sales.poi.region").toString());
 //        print(r.jsonPath().get("result").toString());
         String[] city_search = replaceSome(r.jsonPath().get("result.sales.poi.region").toString());
         assertThat(Arrays.asList(city_search), Every.everyItem(anyOf(equalToIgnoringWhiteSpace("Москва"))));

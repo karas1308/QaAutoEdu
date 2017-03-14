@@ -2,22 +2,30 @@ package autoTest;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
+import org.hamcrest.Matchers;
+import org.hamcrest.core.Every;
+import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.hamcrest.core.StringContains;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Random;
 
 import static autoTest.FirstConnectJson.*;
-import static autoTest.FirstConnectJson.uuid;
 import static com.jayway.restassured.RestAssured.given;
 import static methods.MethodsAddForm.*;
-import static methods.MethodsAddForm.gearboxList;
-import static methods.MethodsAddForm.modificationList;
+import static methods.Utils.prt;
 import static methods.Utils.replaceSome;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
+import static org.hamcrest.core.AnyOf.anyOf;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.*;
+
 
 public class ApiPhpTest {
 
@@ -33,7 +41,7 @@ public class ApiPhpTest {
     }
 
     @Test //method=api.service.start
-    public void service_start() throws IOException {
+    public void serviceStart() throws IOException {
         RestAssured.baseURI = api;
         Response r =
                 given().headers("Accept-Encoding", "gzip").
@@ -45,13 +53,17 @@ public class ApiPhpTest {
 
 
     @Test //Авторизация пользователя
-    public void autorizeTest() {
+    public void login() {
+        logout();
         Response r = autorize();
-        assertTrue(r.statusCode() == 200);
+        assertTrue("statusCode = " +r.statusCode(), r.statusCode()==200);
+        assertFalse("error " +r.jsonPath().get("error").toString() ,r.jsonPath().get("error").toString().contains("message"));
+        System.out.println(r.jsonPath().get("error").toString());
+        prt(r);
     }
 
     @Test //Ошибка авторизации пользователя
-    public void autorizeFail() {
+    public void loginFail() {
         RestAssured.baseURI = api;
         Response r =
                 given().
@@ -60,13 +72,13 @@ public class ApiPhpTest {
                                 "&method=users.auth.login&key=1d2b14555a83699f57fd77d17aa2d5ce9431cd7d9f3edea14186b044e76b606a" +
                                 "&version=2.2.2&uuid=" + uuid + "&format=json").
                         when().post("/rest/");
-        assertTrue(r.statusCode() == 200);
+        assertTrue("statusCode = " +r.statusCode(), r.statusCode()==200);
         assertTrue(r.body().jsonPath().get("error.message").equals("Неверный логин или пароль."));
 
     }
 
     @Test
-    public void mark_list() throws IOException {
+    public void markGetList() throws IOException {
         Response markList = markList();
         String[] markID = replaceSome(markList.body().jsonPath().get("result.items.id").toString());
         assertTrue("method=all.mark.getList fail, statusCode=" + markList.statusCode(), markList.statusCode() == 200);
@@ -77,16 +89,16 @@ public class ApiPhpTest {
     }
 
     @Test
-    public void model_list() throws IOException {
+    public void getEditModels() throws IOException {
         Response modelList = modelList();
-//        System.out.println(modelList.body().asString());
+//        System.out.println(modelList.bodygetEditModels().asString());
         assertTrue("catalog.folder.getEditModels fail, statusCode=" + modelList.statusCode(), modelList.statusCode() == 200);
         String[] modelIdList = replaceSome(modelList.body().jsonPath().get("result.id").toString());
         assertTrue("", modelIdList.length > 0);
     }
 
     @Test
-    public void year_list() throws IOException {
+    public void yearGetList_list() throws IOException {
         Response yearList = yearList();
         assertTrue("ccatalog.year.getList fail, statusCode=" + yearList.statusCode(), yearList.statusCode() == 200);
         String[] yearIDList = replaceSome(yearList.body().jsonPath().get("result.id").toString());
@@ -95,7 +107,7 @@ public class ApiPhpTest {
     }
 
     @Test
-    public void generations_list() throws IOException {
+    public void getEditGenerations() throws IOException {
         Response generationsList = generationsList();
         assertTrue("catalog.folder.getEditGenerations fail, statusCode=" + generationsList.statusCode(), generationsList.statusCode() == 200);
         String[] generationsIDList = replaceSome(generationsList.body().jsonPath().get("result.id").toString());
@@ -109,34 +121,34 @@ public class ApiPhpTest {
         assertTrue("catalog.bodytype.getList fail, statusCode=" + bodytypeList.statusCode(), bodytypeList.statusCode() == 200);
         String[] bodytypeIDList = replaceSome(bodytypeList.body().jsonPath().get("result.id").toString());
         assertTrue("catalog.bodytype.getList fail", bodytypeIDList.length > 0);
-        System.out.println(bodytypeList.body().asString());
+        // System.out.println(bodytypeList.body().asString());
     }
 
     @Test
-    public void enginetype_list() throws IOException {
+    public void enginetypeGetList() throws IOException {
         Response enginetypeList = enginetypeList();
         assertTrue("catalog.enginetype.getList fail, statusCode=" + enginetypeList.statusCode(), enginetypeList.statusCode() == 200);
         String[] enginetypeIDList = replaceSome(enginetypeList.body().jsonPath().get("result.id").toString());
         assertTrue("catalog.enginetype.getList fail", enginetypeIDList.length > 0);
-        System.out.println(enginetypeList.body().asString());
+        // System.out.println(enginetypeList.body().asString());
     }
 
     @Test
-    public void drive_list() throws IOException {
+    public void driveGetList() throws IOException {
         Response driveList = driveList();
         assertTrue("catalog.drive.getList fail, statusCode=" + driveList.statusCode(), driveList.statusCode() == 200);
         String[] driveIDList = replaceSome(driveList.body().jsonPath().get("result.id").toString());
         assertTrue("catalog.drive.getList fail", driveIDList.length > 0);
-        System.out.println(driveList.body().asString());
+        // System.out.println(driveList.body().asString());
     }
 
     @Test
-    public void gearbox_list() throws IOException {
+    public void gearboxGetLis() throws IOException {
         Response gearboxList = gearboxList();
         assertTrue("catalog.gearbox.getList fail, statusCode=" + gearboxList.statusCode(), gearboxList.statusCode() == 200);
         String[] gearboxIDList = replaceSome(gearboxList.body().jsonPath().get("result.id").toString());
         assertTrue("catalog.gearbox.getList fail", gearboxIDList.length > 0);
-        System.out.println(gearboxList.body().asString());
+        // System.out.println(gearboxList.body().asString());
 
     }
 
@@ -146,7 +158,7 @@ public class ApiPhpTest {
         assertTrue("catalog.modification.getList fail, statusCode=" + modificationList.statusCode(), modificationList.statusCode() == 200);
         String[] modificationIDList = replaceSome(modificationList.body().jsonPath().get("result.id").toString());
         assertTrue("catalog.modification.getList fail", modificationIDList.length > 0);
-        System.out.println(modificationList.body().asString());
+        // System.out.println(modificationList.body().asString());
     }
 
     @Test //my.review, они же отзывы
@@ -156,7 +168,7 @@ public class ApiPhpTest {
                 given().
                         header("Accept-Encoding", "gzip").
                         when().get("/rest/?category_id=15&sid=" + sid + "&method=my.review.getBlocks&key=1d2b14555a83699f57fd77d17aa2d5ce9431cd7d9f3edea14186b044e76b606a&version=2.2.2&uuid=" + uuid + "&format=json");
-        assertTrue(r.statusCode() == 200);
+        assertTrue("statusCode = " +r.statusCode(), r.statusCode()==200);
         String test = r.body().jsonPath().get("result").toString();
         System.out.println(r.body().jsonPath().get("result.new_opinions.id").toString());
         System.out.println(test);
@@ -164,18 +176,16 @@ public class ApiPhpTest {
     }
 
     @Test //получаем список телефонов
-    public void prof() {
-        autorize();
+    public void getPhones() {
+        //autorize();
         RestAssured.baseURI = api;
         Response r =
                 given().
                         header("Accept-Encoding", "gzip").
                         get("/rest/?sid=" + auth_sid + "&client_tz=120&method=users.profile.getPhones&client_version=3.11.0&key=1d2b14555a83699f57fd77d17aa2d5ce9431cd7d9f3edea14186b044e76b606a&client_os=5.0&version=2.2.2&uuid=" + uuid + "&device_name=asus%20ASUS_Z00AD&client_platform=android&format=json");
-        assertTrue(r.statusCode() == 200);
-        String test = r.body().jsonPath().get("result").toString();
-        System.out.println(r.body().jsonPath().get("result.phone").toString());
-//        System.out.println(test);
-//        System.out.println(test.contains("current_search"));
+        assertTrue("statusCode = " +r.statusCode(), r.statusCode()==200);
+        assertTrue("Нет номера ?? ",r.body().jsonPath().get("result.phone").toString().contains("79854406513"));
+        // System.out.println(r.body().jsonPath().get("result.phone").toString().contains("79854406513"));
     }
 
     // Ошибки размещения объявления
@@ -186,9 +196,10 @@ public class ApiPhpTest {
         Response r =
                 given().
                         header("Accept-Encoding", "gzip", "Content-Type", "application/x-www-form-urlencoded").
-                        body("category_id=15&color=28&custom=1&is_for_editform=1&phones_redirect=1&pts=1&sale_id=0&section_id=1&state=4&wheel=1&sid=" + sid + "&method=all.sale.add&key=1d2b14555a83699f57fd77d17aa2d5ce9431cd7d9f3edea14186b044e76b606a&client_os=6.0.1&version=2.2.2&uuid=" + uuid + "&format=json").
-                        post("/rest/");
-        System.out.println(r.body().asString());
+                        parameter("key", key).
+                        post("/rest/?category_id=15&color=28&custom=1&is_for_editform=1&phones_redirect=1&pts=1&sale_id=0&section_id=1&state=4&wheel=1&sid=" + sid + "&method=all.sale.add&client_os=6.0.1&version=2.2.2&uuid=" + uuid + "&format=json");
+        assertTrue("statusCode = " +r.statusCode(), r.statusCode()==200);
+        assertTrue("result.errors not equals 15", r.jsonPath().get("result.errors").toString().split(",").length == 15);
     }
 
     @Test
@@ -197,50 +208,126 @@ public class ApiPhpTest {
         String method = "all.sale.getPresets";
         Response r =
                 given().baseUri(api).header("Accept-Encoding", "gzip").
-                        get("/rest/?category_id=29&sid=" + sid + "&method="+method+"&key=" + key + "&version=2.2.2&uuid=" + uuid + "&format=json");
+                        get("/rest/?category_id=29&sid=" + sid + "&method=" + method + "&key=" + key + "&version=2.2.2&uuid=" + uuid + "&format=json");
+        assertTrue("statusCode = " +r.statusCode(), r.statusCode()==200);
         String[] presets = replaceSome(r.jsonPath().get("result.label").toString());
-        assertTrue("Numb presents",presets.length==presetsConst.length);
+        assertTrue("Numb presents", presets.length == presetsConst.length);
         for (int i = 0; i < presetsConst.length; i++) {
             assertTrue("Where is preset " + presetsConst[i], r.body().jsonPath().get("result.label").toString().contains(presetsConst[i]));
         }
     }
+
     @Test
     public void getPresetsMoto() {
         String[] presetsConst = {"Мотоциклы", "Скутеры", "Снегоходы", "Мотовездеходы"};
         String method = "all.sale.getPresets";
         Response r =
                 given().baseUri(api).header("Accept-Encoding", "gzip").
-                        get("/rest/?category_id=17&sid=" + sid + "&method="+method+"&key=" + key + "&version=2.2.2&uuid=" + uuid + "&format=json");
+                        get("/rest/?category_id=17&sid=" + sid + "&method=" + method + "&key=" + key + "&version=2.2.2&uuid=" + uuid + "&format=json");
+        assertTrue("statusCode = " +r.statusCode(), r.statusCode()==200);
         String[] presets = replaceSome(r.jsonPath().get("result.label").toString());
-        assertTrue("Numb presents",presets.length==presetsConst.length);
+        assertTrue("Numb presents", presets.length == presetsConst.length);
         for (int i = 0; i < presetsConst.length; i++) {
             assertTrue("Where is preset " + presetsConst[i], r.body().jsonPath().get("result.label").toString().contains(presetsConst[i]));
         }
     }
+
     @Test
     public void getPresetsAuto() {
         String[] presetsConst = {"Кроссоверы до миллиона", "Новые до 650 тыс.", "Toyota Corolla с пробегом",
-                "Иномарки до 300 тыс.", "Внедорожники до 500 тыс.","На автомате до 400 тыс."};
+                "Иномарки до 300 тыс.", "Внедорожники до 500 тыс.", "На автомате до 400 тыс."};
         String method = "all.sale.getPresets";
         Response r =
                 given().baseUri(api).header("Accept-Encoding", "gzip").
-                        get("/rest/?category_id=15&sid=" + sid + "&method="+method+"&key=" + key + "&version=2.2.2&uuid=" + uuid + "&format=json");
+                        get("/rest/?category_id=15&sid=" + sid + "&method=" + method + "&key=" + key + "&version=2.2.2&uuid=" + uuid + "&format=json");
+        assertTrue("statusCode = " +r.statusCode(), r.statusCode()==200);
         String[] presets = replaceSome(r.jsonPath().get("result.label").toString());
-        System.out.print(r.jsonPath().get("result.label").toString());
-        assertTrue("Numb presents",presets.length==4);
-        int c =0;
+        assertTrue("Numb presents", presets.length == 4);
+        int c = 0;
         for (int i = 0; i < presetsConst.length; i++) {
-            if ( r.body().jsonPath().get("result.label").toString().contains(presetsConst[i]))
-            {
+            if (r.body().jsonPath().get("result.label").toString().contains(presetsConst[i])) {
                 c++;
             }
         }
-        assertTrue("Where is preset " + c, c==4);
+        assertTrue("Where is preset " + c, c == 4);
     }
+
+
+    @Test //Жалоба method=all.sale.complain
+    public void complain() {
+        String txt = "Неверная модель/поколение";
+        String method = "all.sale.complain";
+        Response r = given().baseUri(api).
+                header("Accept-Encoding", "gzip", "Content-Type", "application/x-www-form-urlencoded", "X-OTRS-platform", "Android").
+                post("/rest/?category_id=15&section_id=1&sale_id=1048427881&text=" + txt + "&sid=" + sid + "&client_tz=180&method=" + method + "&key=" + key + "&version=2.2.2&uuid=" + uuid + "&format=json");
+        assertTrue("statusCode = " +r.statusCode(), r.statusCode()==200);
+        assertTrue(r.jsonPath().get("result.success").toString() == "true");
+
+    }
+
+    @Test //Баланс
+    public void fetchBalance() {
+        //autorize();
+        String method = "all.service.fetchBalance";
+        Response r = given().baseUri(api).
+                header("Accept-Encoding", "gzip").
+                get("/rest/?sid=" + auth_sid +
+                        "&method=" + method + "&key=" + key + "&version=2.2.2&uuid=" + uuid +
+                        "&gateway=googleplay&format=json");
+        assertTrue("Status code = " + r.statusCode(), r.statusCode() == 200);
+        assertTrue("Balance = " + r.jsonPath().get("result").toString(), Integer.valueOf(r.jsonPath().get("result").toString()) > 0);
+
+    }
+
+    @Test //logout
+    public void logout() {
+        //autorize();
+        String method = "users.auth.logout";
+        Response r = given().baseUri(api).
+                header("Accept-Encoding", "gzip").
+                get("/rest/?sid=" + auth_sid +
+                        "&method=" + method + "&key=" + key + "&version=2.2.2&uuid=" + uuid +
+                        "&format=json");
+        assertTrue("Status code = " + r.statusCode(), r.statusCode() == 200);
+        assertTrue("result.success = " + r.jsonPath().get("result").toString(), Integer.valueOf(r.jsonPath().get("result.success").toString()) == 1);
+    }
+
+    @Test//Список марок
+    public void allMarkGetList() {
+        String method = "all.mark.getList";
+        RestAssured.baseURI = api;
+        Response r = given().
+                header("Accept-Encoding", "gzip").
+                get("/rest/?method=" + method + "&category_id=15" +
+                        "&sid=" + sid + "&client_tz=120&key="+key +
+                        "&version=2.2.2&uuid=" + uuid + "&format=json");
+        assertTrue("statusCode = " +r.statusCode(), r.statusCode()==200);
+        System.out.println(r.jsonPath().get("result.items.name").toString());
+        String[] mark = replaceSome(r.jsonPath().get("result.items.name").toString());
+        String[] groups = replaceSome(r.jsonPath().get("result.groups.name").toString());
+        assertThat(Arrays.asList(groups), containsInAnyOrder(equalToIgnoringWhiteSpace("Иномарки"), equalToIgnoringWhiteSpace("Любая марка"), (equalToIgnoringWhiteSpace("Отечественные"))));
+                prt(r);
+            }
+
+//    //Список моделей
+//    public static Response modelList() {
+//        Response markList = markList();
+//        String[] markID = markList.body().jsonPath().get("result.items.id").toString().replace("[", "").replace("]", "").split(",");
+//        int a = rand.nextInt(markID.length);
+//        randMarkID = markID[a];
+//        String method = "catalog.folder.getEditModels";
+//        RestAssured.baseURI = api;
+//        Response modelList = given().
+//                header("Accept-Encoding", "gzip").
+//                get("/rest/?method=" + method + "&category_id=15&" +
+//                        "is_for_editform=1&sid=" + sid + "&mark_id=" + randMarkID + "&client_tz=120&key=b7bf0dfc8cc562c1bf2cffdd9e78fc181f97f6c82f85fbca16d62d3d3258963c" +
+//                        "&version=2.2.2&uuid=" + uuid + "&format=json");
+//        return modelList;
+//    }
 
     @Test
     public void createAddv() {
-        autorize();
+        //autorize();
         RestAssured.baseURI = api;
 
         Response modelList = given().

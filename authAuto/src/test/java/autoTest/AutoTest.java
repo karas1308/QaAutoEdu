@@ -33,10 +33,11 @@ import static org.junit.Assert.assertTrue;
 public class AutoTest {
 
 
-    //public static String api = "http://api2.test.autoru.yandex.net";
-    public static String api2 = "https://api2.auto.ru";
+    public static String api2 = "http://auto-api.test.autoru.yandex.net";
+    //public static String api2 = "https://api2.auto.ru";
     public static String markID;
-    public static String url_api2_search = "https://api2.auto.ru/1.1/search?category_id=15&page_num=1&page_size=50&creation_date_to=" + millis;
+   // public static String url_api2_search = "https://api2.auto.ru/1.1/search?category_id=15&page_num=1&page_size=50&creation_date_to=" + millis;
+    public static String url_api2_search = "http://auto-api.test.autoru.yandex.net/1.1/search?category_id=15&page_num=1&page_size=50&creation_date_to=" + millis;
 
     static CloseableHttpClient client = HttpClients.createDefault();
 
@@ -63,7 +64,7 @@ public void print(String a){
     @Test
     public void NumberRegions10841() throws IOException {
 
-        HttpGet get = new HttpGet("https://api2.auto.ru/1.1/regions/10841");
+        HttpGet get = new HttpGet(api2+"/1.1/regions/10841");
         get.setHeader("Authorization", uuid_header);
         get.setHeader("X-Authorization", x_auth);
         get.setHeader("Accept-Encoding", "gzip, deflate, identity");
@@ -135,7 +136,7 @@ public void print(String a){
 
     @Test //Избранные
     public void favorites() {
-        autorize();
+        //autorize();
         RestAssured.baseURI = api2;
         Response r =
                 given().
