@@ -1,4 +1,4 @@
-package autoTest;
+package autoTest.api;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
@@ -9,17 +9,15 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static autoTest.FirstConnectJson.*;
-import static autoTest.FirstConnectJson.beforeClass;
-import static autoTest.FirstConnectJson.sid;
-import static autoTest.FirstConnectJson.uuid;
+import static methods.FirstConnect.*;
+import static methods.FirstConnect.getUuidSidAuth;
+import static methods.FirstConnect.sid;
+import static methods.FirstConnect.uuid;
 import static com.jayway.restassured.RestAssured.given;
-import static methods.Utils.replaceSome;
-import static org.hamcrest.Matchers.equalTo;
+import static methods.Utils.splitToArray;
 import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
 import static org.hamcrest.core.AnyOf.anyOf;
 import static org.junit.Assert.assertThat;
@@ -30,7 +28,7 @@ import static org.junit.Assert.assertTrue;
 public class MotoTest {
     @BeforeClass
     public static void before() throws IOException {
-        beforeClass();
+        getUuidSidAuth();
     }
     private Integer id;
     String params = "&photo=1&prepend_empty_option=1&used_key=5&sid="+sid+"" +
@@ -101,7 +99,7 @@ public class MotoTest {
                 header("Accept-Encoding", "gzip").
                 get("/rest/?offset=0&category_id="+id+"&creation_date_to="+millis+"&geo_id="+geo_id+"&limit=20" +
                         "&method="+method+params);
-        String [] city_search = replaceSome(r.jsonPath().get("result.sales.poi.region").toString());
+        String [] city_search = splitToArray(r.jsonPath().get("result.sales.poi.region").toString());
         assertThat(Arrays.asList(city_search),Every.everyItem(anyOf(equalToIgnoringWhiteSpace("Москва"))));
 
 //        for (int i=0; i<city_search.length; i++){
@@ -118,7 +116,7 @@ public class MotoTest {
                 header("Accept-Encoding", "gzip").
                 get("/rest/?offset=0&category_id="+id+"&creation_date_to="+millis+"&geo_id="+geo_id+"&limit=20" +
                         "&method="+method+params);
-        String [] city_search = replaceSome(r.jsonPath().get("result.sales.poi.region").toString());
+        String [] city_search = splitToArray(r.jsonPath().get("result.sales.poi.region").toString());
         assertThat(Arrays.asList(city_search),Every.everyItem(anyOf(equalToIgnoringWhiteSpace("Москва"),
                 (equalToIgnoringWhiteSpace("Московская обл.")))));
 //        for (int i=0; i<city_search.length; i++){

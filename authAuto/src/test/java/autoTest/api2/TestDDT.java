@@ -1,36 +1,22 @@
-package autoTest;
+package autoTest.api2;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
-import org.hamcrest.core.Every;
-import org.json.JSONObject;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 
 
-import static autoTest.AutoTest.api2;
-import static autoTest.FirstConnectJson.*;
+import static methods.FirstConnect.*;
 import static com.jayway.restassured.RestAssured.given;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
 import static org.hamcrest.core.AnyOf.anyOf;
 import static org.junit.Assert.assertTrue;
 
@@ -44,7 +30,7 @@ public class TestDDT {
 
     @BeforeClass
     public static void before() throws IOException {
-        beforeClass();
+        getUuidSidAuth();
     }
 
     private Integer rig, mark, km_age_from, km_age_to;
@@ -69,7 +55,7 @@ public class TestDDT {
 
     @Test //Тест проверяет корректность выдачи по фильтру Пробег
     public void km_age() throws IOException {
-        RestAssured.baseURI = api2;
+        RestAssured.baseURI = AutoTest.api2;
         Response r =
                 given().
                         headers("Accept-Encoding", "gzip", "Authorization", uuid, "X-Authorization", x_auth).

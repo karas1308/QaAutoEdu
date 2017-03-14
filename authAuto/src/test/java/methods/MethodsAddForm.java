@@ -6,10 +6,9 @@ import com.jayway.restassured.response.Response;
 import java.io.IOException;
 import java.util.Random;
 
-import static autoTest.AutoTest.*;
-import static autoTest.FirstConnectJson.api;
-import static autoTest.FirstConnectJson.sid;
-import static autoTest.FirstConnectJson.uuid;
+import static methods.FirstConnect.api;
+import static methods.FirstConnect.sid;
+import static methods.FirstConnect.uuid;
 import static com.jayway.restassured.RestAssured.given;
 
 public class MethodsAddForm {

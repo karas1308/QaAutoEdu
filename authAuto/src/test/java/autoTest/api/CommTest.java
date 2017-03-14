@@ -1,9 +1,8 @@
-package autoTest;
+package autoTest.api;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
 import org.hamcrest.core.Every;
-import org.json.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,13 +12,12 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static autoTest.AutoTest.*;
-import static autoTest.FirstConnectJson.*;
-import static autoTest.FirstConnectJson.beforeClass;
-import static autoTest.FirstConnectJson.sid;
-import static autoTest.FirstConnectJson.uuid;
+import static methods.FirstConnect.*;
+import static methods.FirstConnect.getUuidSidAuth;
+import static methods.FirstConnect.sid;
+import static methods.FirstConnect.uuid;
 import static com.jayway.restassured.RestAssured.given;
-import static methods.Utils.replaceSome;
+import static methods.Utils.splitToArray;
 import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
 import static org.hamcrest.core.AnyOf.anyOf;
 import static org.junit.Assert.assertThat;
@@ -29,7 +27,7 @@ import static org.junit.Assert.assertTrue;
 public class CommTest {
     @BeforeClass
     public static void before() throws IOException {
-        beforeClass();
+        getUuidSidAuth();
     }
 
     private Integer id;
@@ -107,7 +105,7 @@ public class CommTest {
                         "&version=2.2.2&uuid=" + uuid + "&format=json");
         System.out.println(r.jsonPath().get("result.sales.poi.region").toString());
 //        print(r.jsonPath().get("result").toString());
-        String[] city_search = replaceSome(r.jsonPath().get("result.sales.poi.region").toString());
+        String[] city_search = splitToArray(r.jsonPath().get("result.sales.poi.region").toString());
         assertThat(Arrays.asList(city_search), Every.everyItem(anyOf(equalToIgnoringWhiteSpace("Москва"))));
     }
 
@@ -123,7 +121,7 @@ public class CommTest {
                         "&version=2.2.2&uuid=" + uuid + "&format=json");
 //        print(r.jsonPath().get("result.sales.poi.region").toString());
 //        print(r.asString());
-        String[] city_search = replaceSome(r.jsonPath().get("result.sales.poi.region").toString());
+        String[] city_search = splitToArray(r.jsonPath().get("result.sales.poi.region").toString());
         assertThat(Arrays.asList(city_search),Every.everyItem(anyOf(equalToIgnoringWhiteSpace("Москва"),
                 (equalToIgnoringWhiteSpace("Московская обл.")))));
     }

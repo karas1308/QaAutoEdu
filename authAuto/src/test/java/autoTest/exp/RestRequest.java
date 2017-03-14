@@ -1,8 +1,8 @@
 package autoTest.exp;
 
-import static autoTest.FirstConnectJson.key;
-import static autoTest.FirstConnectJson.sid;
-import static autoTest.FirstConnectJson.uuid;
+import static methods.FirstConnect.key;
+import static methods.FirstConnect.sid;
+import static methods.FirstConnect.uuid;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.specification.RequestSpecification;

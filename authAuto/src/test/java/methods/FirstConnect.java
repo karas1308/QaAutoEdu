@@ -1,4 +1,4 @@
-package autoTest;
+package methods;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import static com.jayway.restassured.RestAssured.given;
 
 
-public class FirstConnectJson {
+public class FirstConnect {
     public static String api = "http://api2.test.autoru.yandex.net";
     //    public static String api = "https://api.auto.ru";
     public static Response json;
@@ -23,12 +23,12 @@ public class FirstConnectJson {
     public static String auth_autoruuid;
     public static long millis = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
     public static String username = "79854406469";
-    public static String password = "autoru";
-    //public static String password = "111111";
+//    public static String password = "autoru";
+    public static String password = "111111";
     public static String key = "1d2b14555a83699f57fd77d17aa2d5ce9431cd7d9f3edea14186b044e76b606a";
 
 
-    public static Response beforeClass() throws IOException {
+    public static Response getUuidSidAuth() throws IOException {
 
         RestAssured.baseURI = api;
         Response json =
