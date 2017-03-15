@@ -17,6 +17,7 @@
 	</properties>
 
 	<build>
+		<testSourceDirectory>src/main/java</testSourceDirectory>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
