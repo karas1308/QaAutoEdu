@@ -1,18 +1,20 @@
 package methods;
 
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.response.Response;
+import static methods.FirstConnect.api;
+//import static methods.Utils.getRndInt;
+import static methods.Utils.splitToArray;
+import static methods.Utils.getRndInt;
 
 import java.io.IOException;
-import java.util.Random;
+import java.util.HashMap;
+import java.util.Map;
 
-import static methods.FirstConnect.api;
-import static methods.FirstConnect.sid;
-import static methods.FirstConnect.uuid;
-import static com.jayway.restassured.RestAssured.given;
+import com.jayway.restassured.response.Response;
+
+import autoTest.exp.RestRequest;
 
 public class MethodsAddForm {
-    public static Random rand = new Random();
+
     public static String randMarkID;
     public static String randModelID;
     public static String randYearID;
@@ -22,142 +24,82 @@ public class MethodsAddForm {
     public static String randDriveID;
     public static String randGearboxID;
 
+    private static Map<String, Object> getParams() {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("category_id", 15);
+        params.put("is_for_editform", 1);
+        params.put("client_tz", 120);
+        return params;
+    }
 
-    //Список марок
+    // Список марок
     public static Response markList() {
-        String method = "all.mark.getList";
-        RestAssured.baseURI = api;
-        Response markList = given().
-                header("Accept-Encoding", "gzip").
-                get("/rest/?method=" + method + "&category_id=15&" +
-                        "is_for_editform=1&sid=" + sid + "&client_tz=120&key=b7bf0dfc8cc562c1bf2cffdd9e78fc181f97f6c82f85fbca16d62d3d3258963c" +
-                        "&version=2.2.2&uuid=" + uuid + "&format=json");
-        return markList;
+        return new RestRequest().getRequest().baseUri(api).parameters(getParams()).parameter("method", "all.mark.getList").when().get("/rest");
     }
 
-    //Список моделей
+    // Список моделей
     public static Response modelList() {
-        Response markList = markList();
-        String[] markID = markList.body().jsonPath().get("result.items.id").toString().replace("[", "").replace("]", "").split(",");
-        int a = rand.nextInt(markID.length);
-        randMarkID = markID[a];
-        String method = "catalog.folder.getEditModels";
-        RestAssured.baseURI = api;
-        Response modelList = given().
-                header("Accept-Encoding", "gzip").
-                get("/rest/?method=" + method + "&category_id=15&" +
-                        "is_for_editform=1&sid=" + sid + "&mark_id=" + randMarkID + "&client_tz=120&key=b7bf0dfc8cc562c1bf2cffdd9e78fc181f97f6c82f85fbca16d62d3d3258963c" +
-                        "&version=2.2.2&uuid=" + uuid + "&format=json");
-        return modelList;
+        String[] markID = splitToArray(markList().body().jsonPath().get("result.items.id").toString());
+        randMarkID = markID[getRndInt(markID.length)];
+        return new RestRequest().getRequest().baseUri(api).parameters(getParams()).parameters("method", "catalog.folder.getEditModels", "mark_id", randMarkID).when().get("/rest");
     }
 
-    //Список годов выпуска
-    public static Response yearList() throws IOException {
-        Response modelList = modelList();
-        String[] modelID = modelList.body().jsonPath().get("result.id").toString().replace("[", "").replace("]", "").split(",");
-        int a = rand.nextInt(modelID.length);
-        randModelID = modelID[a];
-        String method = "catalog.year.getList";
-        Response yearList = given().
-                header("Accept-Encoding", "gzip").
-                get("/rest/?method=" + method + "&category_id=15&" +
-                        "is_for_editform=1&sid=" + sid + "&mark_id=" + randMarkID + "&model_id=" + randModelID + "&client_tz=120&key=b7bf0dfc8cc562c1bf2cffdd9e78fc181f97f6c82f85fbca16d62d3d3258963c" +
-                        "&version=2.2.2&uuid=" + uuid + "&format=json");
-
-        return yearList;
+    // Список годов выпуска
+    public static Response yearList() {
+        String[] modelID = splitToArray(modelList().body().jsonPath().get("result.id").toString());
+        randModelID = modelID[getRndInt(modelID.length)];
+        return new RestRequest().getRequest().baseUri(api).parameters(getParams()).parameters("method", "catalog.year.getList", "mark_id", randMarkID, "model_id", randModelID)
+                .when().get("/rest");
     }
 
-    //Список поколений
-    public static Response generationsList() throws IOException {
-        Response yearList = yearList();
-        String[] yearID = yearList.body().jsonPath().get("result.id").toString().replace("[", "").replace("]", "").split(",");
-        int a = rand.nextInt(yearID.length);
-        randYearID = yearID[a];
-        String method = "catalog.folder.getEditGenerations";
-        Response generationsList = given().
-                header("Accept-Encoding", "gzip").
-                get("/rest/?method=" + method + "&category_id=15&" +
-                        "is_for_editform=1&sid=" + sid + "&mark_id=" + randMarkID + "&model_id=" + randModelID + "&year=" + randYearID + "&client_tz=120&key=b7bf0dfc8cc562c1bf2cffdd9e78fc181f97f6c82f85fbca16d62d3d3258963c" +
-                        "&version=2.2.2&uuid=" + uuid + "&format=json");
-        return generationsList;
+    // Список поколений
+    public static Response generationsList() {
+        String[] yearID = splitToArray(yearList().body().jsonPath().get("result.id").toString());
+        randYearID = yearID[getRndInt(yearID.length)];
+        return new RestRequest().getRequest().baseUri(api).parameters(getParams())
+                .parameters("method", "catalog.folder.getEditGenerations", "mark_id", randMarkID, "model_id", randModelID, "year", randYearID).when().get("/rest");
     }
 
-    //Список типов кузова
-    public static Response bodytypeList() throws IOException {
-        Response generationsList = generationsList();
-        String[] generationsIDList = generationsList.body().jsonPath().get("result.id").toString().replace("[", "").replace("]", "").split(",");
-        int a = rand.nextInt(generationsIDList.length);
-        randGenerationsID = generationsIDList[a];
-        String method = "catalog.bodytype.getList";
-        Response bodytypeList = given().
-                header("Accept-Encoding", "gzip").
-                get("/rest/?method=" + method + "&category_id=15&" +
-                        "is_for_editform=1&sid=" + sid + "&mark_id=" + randMarkID + "&model_id=" + randModelID +
-                        "&year=" + randYearID + "&folder_id=" + randGenerationsID + "&client_tz=120&key=b7bf0dfc8cc562c1bf2cffdd9e78fc181f97f6c82f85fbca16d62d3d3258963c" +
-                        "&version=2.2.2&uuid=" + uuid + "&format=json");
-        return bodytypeList;
+    // Список типов кузова
+    public static Response bodytypeList() {
+        String[] generationsIDList = splitToArray(generationsList().body().jsonPath().get("result.id").toString());
+        randGenerationsID = generationsIDList[getRndInt(generationsIDList.length)];
+        return new RestRequest().getRequest().baseUri(api).parameters(getParams())
+                .parameters("method", "catalog.bodytype.getList", "mark_id", randMarkID, "model_id", randModelID, "year", randYearID, "folder_id", randGenerationsID).when()
+                .get("/rest");
     }
 
-    //Список типов двигателя
-    public static Response enginetypeList() throws IOException {
-        Response bodytypeList = bodytypeList();
-        String[] bodytypeIDList = bodytypeList.body().jsonPath().get("result.id").toString().replace("[", "").replace("]", "").split(",");
-        int a = rand.nextInt(bodytypeIDList.length);
-        randBodytypeID = bodytypeIDList[a];
-        String method = "catalog.enginetype.getList";
-        Response enginetypeList = given().
-                header("Accept-Encoding", "gzip").
-                get("/rest/?method=" + method + "&category_id=15&" +
-                        "is_for_editform=1&sid=" + sid + "&mark_id=" + randMarkID + "&model_id=" + randModelID +
-                        "&year=" + randYearID + "&folder_id=" + randGenerationsID + "&body_type="+randBodytypeID+"&client_tz=120&key=b7bf0dfc8cc562c1bf2cffdd9e78fc181f97f6c82f85fbca16d62d3d3258963c" +
-                        "&version=2.2.2&uuid=" + uuid + "&format=json");
-        return enginetypeList;
+    // Список типов двигателя
+    public static Response enginetypeList() {
+        String[] bodytypeIDList = splitToArray(bodytypeList().body().jsonPath().get("result.id").toString());
+        randBodytypeID = bodytypeIDList[getRndInt(bodytypeIDList.length)];
+        return new RestRequest().getRequest().baseUri(api).parameters(getParams()).parameters("method", "catalog.enginetype.getList", "mark_id", randMarkID, "model_id",
+                randModelID, "year", randYearID, "folder_id", randGenerationsID, "body_type", randBodytypeID).when().get("/rest");
     }
-    //Список типов приводов
-    public static Response driveList() throws IOException {
-        Response enginetypeList = enginetypeList();
-        String[] enginetypeIDList = enginetypeList.body().jsonPath().get("result.id").toString().replace("[", "").replace("]", "").split(",");
-        int a = rand.nextInt(enginetypeIDList.length);
-        randEnginetypeID = enginetypeIDList[a];
-        String method = "catalog.drive.getList";
-        Response driveList = given().
-                header("Accept-Encoding", "gzip").
-                get("/rest/?method=" + method + "&category_id=15&" +
-                        "is_for_editform=1&sid=" + sid + "&mark_id=" + randMarkID + "&model_id=" + randModelID +
-                        "&year=" + randYearID + "&folder_id=" + randGenerationsID + "&body_type="+randBodytypeID+"&engine_type="+randEnginetypeID+"&client_tz=120&key=b7bf0dfc8cc562c1bf2cffdd9e78fc181f97f6c82f85fbca16d62d3d3258963c" +
-                        "&version=2.2.2&uuid=" + uuid + "&format=json");
-        return driveList;
+
+    // Список типов приводов
+    public static Response driveList() {
+        String[] enginetypeIDList = splitToArray(enginetypeList().body().jsonPath().get("result.id").toString());
+        randEnginetypeID = enginetypeIDList[getRndInt(enginetypeIDList.length)];
+        return new RestRequest().getRequest().baseUri(api).parameters(getParams()).parameters("method", "catalog.drive.getList", "mark_id", randMarkID, "model_id", randModelID,
+                "year", randYearID, "folder_id", randGenerationsID, "body_type", randBodytypeID, "engine_type", randEnginetypeID).when().get("/rest");
     }
-    //Список типов КПП
+
+    // Список типов КПП
     public static Response gearboxList() throws IOException {
-        Response driveList = driveList();
-        String[] driveIDList = driveList.body().jsonPath().get("result.id").toString().replace("[", "").replace("]", "").split(",");
-        int a = rand.nextInt(driveIDList.length);
-        randDriveID = driveIDList[a];
-        String method = "catalog.gearbox.getList";
-        Response gearboxList = given().
-                header("Accept-Encoding", "gzip").
-                get("/rest/?method=" + method + "&category_id=15&" +
-                        "is_for_editform=1&sid=" + sid + "&mark_id=" + randMarkID + "&model_id=" + randModelID +
-                        "&year=" + randYearID + "&folder_id=" + randGenerationsID + "&body_type="+randBodytypeID+"&engine_type="+randEnginetypeID+"&drive="+randDriveID+"&client_tz=120&key=b7bf0dfc8cc562c1bf2cffdd9e78fc181f97f6c82f85fbca16d62d3d3258963c" +
-                        "&version=2.2.2&uuid=" + uuid + "&format=json");
-        return gearboxList;
+        String[] driveIDList = splitToArray(driveList().body().jsonPath().get("result.id").toString());
+        randDriveID = driveIDList[getRndInt(driveIDList.length)];
+        return new RestRequest().getRequest().baseUri(api).parameters(getParams()).parameters("method", "catalog.gearbox.getList", "mark_id", randMarkID, "model_id", randModelID,
+                "year", randYearID, "folder_id", randGenerationsID, "body_type", randBodytypeID, "engine_type", randEnginetypeID, "drive", randDriveID).when().get("/rest");
     }
 
-    //Список модификаций
+    // Список модификаций
     public static Response modificationList() throws IOException {
-        Response gearboxList = gearboxList();
-        String[] gearboxIDList = gearboxList.body().jsonPath().get("result.id").toString().replace("[", "").replace("]", "").split(",");
-        int a = rand.nextInt(gearboxIDList.length);
-        randGearboxID = gearboxIDList[a];
-        String method = "catalog.modification.getList";
-        Response modificationList = given().
-                header("Accept-Encoding", "gzip").
-                get("/rest/?method=" + method + "&category_id=15&" +
-                        "is_for_editform=1&sid=" + sid + "&mark_id=" + randMarkID + "&model_id=" + randModelID +
-                        "&year=" + randYearID + "&folder_id=" + randGenerationsID + "&body_type="+randBodytypeID+"&engine_type="+randEnginetypeID+"&drive="+randDriveID+
-                        "&gearbox="+randGearboxID+"&client_tz=120&key=b7bf0dfc8cc562c1bf2cffdd9e78fc181f97f6c82f85fbca16d62d3d3258963c" +
-                        "&version=2.2.2&uuid=" + uuid + "&format=json");
-        return modificationList;
+        String[] gearboxIDList = splitToArray(gearboxList().body().jsonPath().get("result.id").toString());
+        randGearboxID = gearboxIDList[getRndInt(gearboxIDList.length)];
+        return new RestRequest().getRequest()
+                .baseUri(api).parameters(getParams()).parameters("method", "catalog.modification.getList", "mark_id", randMarkID, "model_id", randModelID, "year", randYearID,
+                        "folder_id", randGenerationsID, "body_type", randBodytypeID, "engine_type", randEnginetypeID, "drive", randDriveID, "gearbox", randGearboxID)
+                .when().get("/rest");
     }
 }

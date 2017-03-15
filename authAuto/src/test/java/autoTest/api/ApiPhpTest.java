@@ -159,7 +159,8 @@ public class ApiPhpTest {
         assertTrue("catalog.modification.getList fail, statusCode=" + modificationList.statusCode(), modificationList.statusCode() == 200);
         String[] modificationIDList = splitToArray(modificationList.body().jsonPath().get("result.id").toString());
         assertTrue("catalog.modification.getList fail", modificationIDList.length > 0);
-        // System.out.println(modificationList.body().asString());
+//         System.out.println(modificationList.body().asString());
+//        System.out.println(randGearboxID + " "+  randEnginetypeID);
     }
 
     @Test //my.review, они же отзывы
