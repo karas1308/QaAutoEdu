@@ -1,36 +1,56 @@
 package autoTest.api;
 
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.path.json.JsonPath;
-import com.jayway.restassured.response.Response;
-import static methods.Constants.*;
+import static com.jayway.restassured.RestAssured.given;
 import static methods.ApiVersion.API_2_2_2;
+import static methods.Constants.AUTO_CATEGORY;
+import static methods.FirstConnect.api;
+import static methods.FirstConnect.auth_sid;
+import static methods.FirstConnect.getUuidSidAuth;
+import static methods.FirstConnect.key;
+import static methods.FirstConnect.password;
+import static methods.FirstConnect.sid;
+import static methods.FirstConnect.username;
+import static methods.FirstConnect.uuid;
+import static methods.MethodsAddForm.bodytypeList;
+import static methods.MethodsAddForm.driveList;
+import static methods.MethodsAddForm.enginetypeList;
+import static methods.MethodsAddForm.gearboxList;
+import static methods.MethodsAddForm.generationsList;
+import static methods.MethodsAddForm.markList;
+import static methods.MethodsAddForm.modelList;
+import static methods.MethodsAddForm.modificationList;
+import static methods.MethodsAddForm.yearList;
+import static methods.Utils.getFile;
+import static methods.Utils.prt;
+import static methods.Utils.splitToArray;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.isEmptyString;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertTrue;
 
-import autoTest.exp.RestRequest;
-import ru.yandex.qatools.allure.annotations.Features;
-import ru.yandex.qatools.allure.annotations.Stories;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import static methods.FirstConnect.*;
-import static com.jayway.restassured.RestAssured.given;
-import static methods.MethodsAddForm.*;
-import static methods.Utils.prt;
-import static methods.Utils.splitToArray;
-import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
-import static org.hamcrest.core.AnyOf.anyOf;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.path.json.JsonPath;
+import com.jayway.restassured.response.Response;
+
+import autoTest.exp.RestRequest;
+import ru.yandex.qatools.allure.annotations.Features;
+import ru.yandex.qatools.allure.annotations.Stories;
 
 @Features("Api PHP")
 @Stories("Some Story")
@@ -264,19 +284,22 @@ public class ApiPhpTest {
 
     }
 
-//    @Test // logout
-//    public void logout() {
-//        // autorize();
-//        String method = "users.auth.logout";
-//        Response r = given().baseUri(api).header("Accept-Encoding", "gzip")
-//                .get("/rest/?sid=" + auth_sid + "&method=" + method + "&key=" + key + "&version=2.2.2&uuid=" + uuid + "&format=json");
-//        assertTrue("Status code = " + r.statusCode(), r.statusCode() == 200);
-//        assertTrue("result.success = " + r.jsonPath().get("result").toString(), Integer.valueOf(r.jsonPath().get("result.success").toString()) == 1);
-//    }
+    // @Test // logout
+    // public void logout() {
+    // // autorize();
+    // String method = "users.auth.logout";
+    // Response r = given().baseUri(api).header("Accept-Encoding", "gzip")
+    // .get("/rest/?sid=" + auth_sid + "&method=" + method + "&key=" + key +
+    // "&version=2.2.2&uuid=" + uuid + "&format=json");
+    // assertTrue("Status code = " + r.statusCode(), r.statusCode() == 200);
+    // assertTrue("result.success = " + r.jsonPath().get("result").toString(),
+    // Integer.valueOf(r.jsonPath().get("result.success").toString()) == 1);
+    // }
 
     @Test
     public void sendFile() {
-        prt(new RestRequest().getRequest().baseUri(api).params("method", "all.sale.uploadphotorecognize").multiPart("files[0]", new File("src\\main\\resources\\LEO_3260.JPG"), "application/image").expect().statusCode(200).post("/rest"));
+        prt(new RestRequest().getRequest().baseUri(api).params("method", "all.sale.uploadphotorecognize").multiPart("files[0]", getFile("LEO_3260.JPG"), "application/image")
+                .expect().statusCode(200).post("/rest"));
     }
 
     @Test // Список марок

@@ -245,7 +245,7 @@ public void print(String a){
 //----------------------------------------------------------------
     @Test
     public void readFile() throws IOException {
-        List<String> lines = Files.readAllLines(Paths.get("test.txt"));
+        List<String> lines = Files.readAllLines(Paths.get(getFile("test.txt").getAbsolutePath()));
         int linesSize = lines.size();
         for (int i = 0; i < linesSize; i++) {
             String[] test = lines.get(i).replace("\uFEFF", "").split("/");
