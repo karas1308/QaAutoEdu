@@ -2,6 +2,9 @@ package autoTest.api2;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
+
+import ru.yandex.qatools.allure.annotations.Parameter;
+
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.junit.BeforeClass;
@@ -32,11 +35,9 @@ public class TestDDT {
     public static void before() throws IOException {
         getUuidSidAuth();
     }
-
-    private Integer rig, mark, km_age_from, km_age_to;
-
+    
     @Parameterized.Parameters
-    public static Collection testMark_Rig() {
+    public static Collection<Object[]> testMark_Rig() {
         return Arrays.asList(
                 new Object[][]{
                         {213, 15, 10000, 20000},
@@ -45,6 +46,19 @@ public class TestDDT {
                 }
         );
     }
+
+    @Parameter
+    private int rig;
+    
+    @Parameter
+    private int mark;
+    
+    @Parameter
+    private int km_age_from;
+    
+    @Parameter
+    private int km_age_to;
+
 
     public TestDDT(Integer rig, Integer mark, Integer km_age_from, Integer km_age_to) {
         this.rig = rig;
