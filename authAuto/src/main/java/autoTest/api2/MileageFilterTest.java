@@ -24,8 +24,7 @@ import static org.hamcrest.core.AnyOf.anyOf;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(value = Parameterized.class)
-
-public class TestDDT {
+public class MileageFilterTest {
   //  public static String url_api2 = "https://api2.auto.ru/1.1/search?category_id=15&page_num=1&page_size=50&creation_date_to=" + millis;
 
     static CloseableHttpClient client = HttpClients.createDefault();
@@ -60,7 +59,7 @@ public class TestDDT {
     private int km_age_to;
 
 
-    public TestDDT(int rig, int mark, int km_age_from, int km_age_to) {
+    public MileageFilterTest(int rig, int mark, int km_age_from, int km_age_to) {
         this.rig = rig;
         this.mark = mark;
         this.km_age_from = km_age_from;
