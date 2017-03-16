@@ -1,30 +1,34 @@
 package autoTest.api;
 
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.response.Response;
+import static methods.ArrayContainsSubArray.containsSubArray;
+import static methods.FirstConnect.getUuidSidAuth;
+import static methods.FirstConnect.millis;
+import static methods.Utils.splitToArray;
+import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
+import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.core.AnyOf.anyOf;
+import static org.junit.Assert.assertThat;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.hamcrest.core.Every;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
+import autoTest.exp.RestRequest;
+import ru.yandex.qatools.allure.annotations.Features;
+import ru.yandex.qatools.allure.annotations.Stories;
 
-import static methods.FirstConnect.*;
-import static methods.FirstConnect.getUuidSidAuth;
-import static methods.FirstConnect.sid;
-import static methods.FirstConnect.uuid;
-import static com.jayway.restassured.RestAssured.given;
-import static methods.Utils.splitToArray;
-import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
-import static org.hamcrest.core.AnyOf.anyOf;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+@Features("Api PHP")
+@Stories("Filtering search results by different regions and categories")
 @RunWith(value = Parameterized.class)
-
 public class CommTest {
+
     @BeforeClass
     public static void before() throws IOException {
         getUuidSidAuth();
@@ -34,15 +38,7 @@ public class CommTest {
 
     @Parameterized.Parameters
     public static Collection<Object[]> categoryId() {
-        return Arrays.asList(
-                new Object[][]{
-                        {31},
-                        {33},
-                        {32},
-                        {34},
-                        {16}
-                }
-        );
+        return Arrays.asList(new Object[][] { { 31 }, { 33 }, { 32 }, { 34 }, { 16 } });
     }
 
     public CommTest(Integer id) {
@@ -50,79 +46,54 @@ public class CommTest {
     }
 
     @Test
-    public void markListCom() throws IOException {
-        String method = "all.mark.getList";
-        String[] groups_name_const = {"Любая марка", "Отечественные", "Иномарки"};
-        String[] mark_name_const = {"BAW", "Changan", "Chevrolet", "Citroen", "DFSK", "Dodge", "FAW", "Fiat", "Ford", "Foton", "Freightliner", "Hyundai", "IFA", "Isuzu", "IVECO", "JAC", "JBC", "JMC", "Kia", "LDV", "Mazda", "Mercedes-Benz", "Mitsubishi", "Multicar", "Nissan", "Opel", "Peugeot", "Piaggio", "Renault", "Skoda", "Ssang Yong", "Toyota", "Volkswagen", "YueJin", "Богдан", "ВАЗ", "ВИС", "ГАЗ", "ГАЗ-САЗ", "ИЖ", "РАФ", "ТагАЗ", "УАЗ"};
-        RestAssured.baseURI = api;
-        Response r = given().
-                header("Accept-Encoding", "gzip").
-                get("/rest/?method=" + method + "&category_id=31" +
-                        "&sid=" + sid + "&key=" + key +
-                        "&version=2.2.2&uuid=" + uuid + "&format=json");
-        String groups_name = r.body().jsonPath().get("result.groups.name").toString();
-        for (int i = 0; i < groups_name_const.length; i++) {
-            assertTrue("Where is group " + groups_name_const[i], r.body().jsonPath().get("result.groups.name").toString().contains(groups_name_const[i]));
-        }
-        for (int i = 0; i < mark_name_const.length; i++) {
-            assertTrue("Where is mark " + mark_name_const[i], r.body().jsonPath().get("result.items.name").toString().contains(mark_name_const[i]));
-        }
+    public void marksListIsDsiplayed() {
+        String[] marksConstList = { "BAW", "Changan", "Chevrolet", "Citroen", "DFSK", "Dodge", "FAW", "Fiat", "Ford", "Foton", "Freightliner", "Hyundai", "Isuzu", "IVECO", "JAC",
+                "JBC", "JMC", "Kia", "LDV", "Mazda", "Mercedes-Benz", "Mitsubishi", "Nissan", "Opel", "Peugeot", "Renault", "Skoda", "Ssang Yong", "Toyota", "Volkswagen", "YueJin",
+                "Богдан", "ВАЗ", "ВИС", "ГАЗ", "ГАЗ-САЗ", "ИЖ", "РАФ", "ТагАЗ", "УАЗ" };
+        assertThat(splitToArray(new RestRequest().getRequest().params("method", "all.mark.getList", "category_id", 31).expect().statusCode(200).get("/rest").jsonPath()
+                .get("result.items.name").toString()), containsSubArray(marksConstList));
     }
 
-    @Test //geo_id = "213" МСК
-    public void filterGeoCityCountTotalCom() throws IOException {
-        String geo_id = "213";
-        String method = "all.sale.countTotal";
-        RestAssured.baseURI = api;
-        Response r = given().
-                header("Accept-Encoding", "gzip").
-                get("rest/?category_id="+id+"&geo_id=" + geo_id + "&photo=1&prepend_empty_option=1&used_key=5&sid=" + sid + "" +
-                        "&method=" + method + "&key=" + key + "&version=2.2.2&uuid=" + uuid + "&format=json");
-        assertTrue("countTotal = 0", Integer.valueOf(r.jsonPath().get("result.total_found").toString()) > 0);
+    @Test
+    public void groupsListIsDsiplayed() {
+        String[] groupsCOnstList = { "Любая марка", "Отечественные", "Иномарки" };
+        assertThat(splitToArray(new RestRequest().getRequest().params("method", "all.mark.getList", "category_id", 31).expect().statusCode(200).get("/rest").jsonPath()
+                .get("result.groups.name").toString()), arrayContainingInAnyOrder(groupsCOnstList));
     }
 
-    @Test //geo_id=1 - МО
-    public void filterGeoRegCountTotalCom() throws IOException {
-        String geo_id = "1";
-        String method = "all.sale.countTotal";
-        RestAssured.baseURI = api;
-        Response r = given().
-                header("Accept-Encoding", "gzip").
-                get("rest/?category_id="+id+"&geo_id=" + geo_id + "&photo=1&prepend_empty_option=1&used_key=5&sid=" + sid + "" +
-                        "&method=" + method + "&key=" + key + "&version=2.2.2&uuid=" + uuid + "&format=json");
-        assertTrue("countTotal = 0", Integer.valueOf(r.jsonPath().get("result.total_found").toString()) > 0);
+    @Test // geo_id = "213" МСК
+    public void citySearchResultsCountGreaterThanZero() {
+        assertThat(Integer.valueOf(
+                new RestRequest().getRequest().params("method", "all.sale.countTotal", "category_id", id, "geo_id", "213", "photo", 1, "prepend_empty_option", 1, "used_key", 5)
+                        .expect().statusCode(200).get("/rest").jsonPath().get("result.total_found").toString()),
+                greaterThan(0));
     }
 
-    @Test //geo_id = "213" МСК
-    public void filterGeoCitySearchCom() throws IOException {
-        String geo_id = "213";
-        String method = "all.sale.search";
-        RestAssured.baseURI = api;
-        Response r = given().
-                header("Accept-Encoding", "gzip").
-                get("/rest/?offset=0&category_id="+id+"&creation_date_to=" + millis + "&geo_id=" + geo_id + "&limit=20&photo=1" +
-                        "&prepend_empty_option=1&sort[price]=asc&used_key=5&sid=" + sid + "&method=" + method + "&key=" + key + "" +
-                        "&version=2.2.2&uuid=" + uuid + "&format=json");
-        System.out.println(r.jsonPath().get("result.sales.poi.region").toString());
-//        print(r.jsonPath().get("result").toString());
-        String[] city_search = splitToArray(r.jsonPath().get("result.sales.poi.region").toString());
-        assertThat(Arrays.asList(city_search), Every.everyItem(anyOf(equalToIgnoringWhiteSpace("Москва"))));
+    @Test // geo_id=1 - МО
+    public void regionSearchResultsCountGreaterThanZero() {
+        assertThat(Integer.valueOf(
+                new RestRequest().getRequest().params("method", "all.sale.countTotal", "category_id", id, "geo_id", "1", "photo", 1, "prepend_empty_option", 1, "used_key", 5)
+                        .expect().statusCode(200).get("/rest").jsonPath().get("result.total_found").toString()),
+                greaterThan(0));
     }
 
-    @Test //geo_id=1 - МО
-    public void filterGeoRegSearchCom() throws IOException {
-        String geo_id = "1";
-        String method = "all.sale.search";
-        RestAssured.baseURI = api;
-        Response r = given().
-                header("Accept-Encoding", "gzip").
-                get("/rest/?offset=0&category_id="+id+"&creation_date_to=" + millis + "&geo_id=" + geo_id + "&limit=20&photo=1" +
-                        "&prepend_empty_option=1&sort[price]=asc&used_key=5&sid=" + sid + "&method=" + method + "&key=" + key + "" +
-                        "&version=2.2.2&uuid=" + uuid + "&format=json");
-//        print(r.jsonPath().get("result.sales.poi.region").toString());
-//        print(r.asString());
-        String[] city_search = splitToArray(r.jsonPath().get("result.sales.poi.region").toString());
-        assertThat(Arrays.asList(city_search),Every.everyItem(anyOf(equalToIgnoringWhiteSpace("Москва"),
-                (equalToIgnoringWhiteSpace("Московская обл.")))));
+    @Test // geo_id = "213" МСК
+    public void filteringSearchResultsByCity() {
+        assertThat(
+                Arrays.asList(splitToArray(new RestRequest().getRequest()
+                        .params("method", "all.sale.search", "category_id", id, "geo_id", "213", "creation_date_to", millis, "photo", 1, "prepend_empty_option", 1, "used_key", 5,
+                                "ort[price]", "asc")
+                        .expect().statusCode(200).get("/rest").jsonPath().get("result.sales.poi.region").toString())),
+                Every.everyItem(equalToIgnoringWhiteSpace("Москва")));
+    }
+
+    @Test // geo_id=1 - МО
+    public void filteringSearchResultsByRegion() {
+        assertThat(
+                Arrays.asList(splitToArray(new RestRequest().getRequest()
+                        .params("method", "all.sale.search", "category_id", id, "geo_id", "1", "creation_date_to", millis, "photo", 1, "prepend_empty_option", 1, "used_key", 5,
+                                "ort[price]", "asc")
+                        .expect().statusCode(200).get("/rest").jsonPath().get("result.sales.poi.region").toString())),
+                Every.everyItem(anyOf(equalToIgnoringWhiteSpace("Москва"), equalToIgnoringWhiteSpace("Московская обл."))));
     }
 }
