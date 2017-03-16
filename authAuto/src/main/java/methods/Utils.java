@@ -26,7 +26,6 @@ public class Utils {
     }
 
     public static File getFile(String fileName) {
-        ClassLoader classLoader = Utils.class.getClassLoader();
-        return new File(classLoader.getResource(fileName).getFile());
+        return new File(Utils.class.getClassLoader().getResource(fileName).getFile());
     }
 }
