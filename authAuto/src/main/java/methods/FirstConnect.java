@@ -2,9 +2,9 @@ package methods;
 
 import static com.jayway.restassured.RestAssured.given;
 
-import com.jayway.restassured.path.json.JsonPath;
+import java.util.concurrent.TimeUnit;
 
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+import com.jayway.restassured.path.json.JsonPath;
 
 public class FirstConnect {
 
