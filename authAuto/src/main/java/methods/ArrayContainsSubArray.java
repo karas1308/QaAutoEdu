@@ -1,13 +1,16 @@
 package methods;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.hamcrest.Description;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
+import org.hamcrest.TypeSafeMatcher;
 
-public class ArrayContainsSubArray extends TypeSafeDiagnosingMatcher<String[]> {
+public class ArrayContainsSubArray extends TypeSafeMatcher<String[]> {
+
     private final String[] matchers;
 
     public ArrayContainsSubArray(String[] matchers) {
@@ -15,8 +18,19 @@ public class ArrayContainsSubArray extends TypeSafeDiagnosingMatcher<String[]> {
     }
 
     @Override
-    protected boolean matchesSafely(String[] item, Description mismatchDescription) {
+    protected boolean matchesSafely(String[] item) {
         return Arrays.asList(item).containsAll(Arrays.asList(matchers));
+    }
+
+    @Override
+    protected void describeMismatchSafely(String[] item, Description mismatchDescription) {
+        List<String> missingElements = new ArrayList<>();
+        for (String m : matchers) {
+            if (!Arrays.asList(item).contains(m)) {
+                missingElements.add(m);
+            }
+        }
+        mismatchDescription.appendText("the following elements are missing ").appendValueList("[", ", ", "]", missingElements);
     }
 
     @Override
