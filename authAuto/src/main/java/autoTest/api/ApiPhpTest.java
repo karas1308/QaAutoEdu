@@ -49,6 +49,7 @@ import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.response.Response;
 
 import autoTest.exp.RestRequest;
+import static methods.ArrayContainsSubArray.containsSubArray;
 import ru.yandex.qatools.allure.annotations.Features;
 import ru.yandex.qatools.allure.annotations.Stories;
 
@@ -117,7 +118,7 @@ public class ApiPhpTest {
                 "Triumph", "TVR", "Ultima", "Vauxhall", "Vector", "Venturi", "Volkswagen", "Volvo", "Vortex", "W Motors", "Wanderer", "Wartburg", "Westfield", "Wiesmann", "Willys",
                 "Xin Kai", "Zastava", "Zenos", "Zenvo", "Zibar", "Zotye", "ZX", "Автокам", "Бронто", "ГАЗ", "Ё-мобиль", "ЗАЗ", "ЗИЛ", "ЗиС", "ИЖ", "Канонир", "Комбат", "ЛуАЗ",
                 "Москвич", "СМЗ", "ТагАЗ", "УАЗ", "Think" };
-        assertThat(markList, arrayContainingInAnyOrder(markListConst));
+        assertThat(markList, containsSubArray(markListConst));
     }
 
     @Test
