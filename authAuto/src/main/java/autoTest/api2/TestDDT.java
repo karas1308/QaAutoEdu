@@ -60,7 +60,7 @@ public class TestDDT {
     private int km_age_to;
 
 
-    public TestDDT(Integer rig, Integer mark, Integer km_age_from, Integer km_age_to) {
+    public TestDDT(int rig, int mark, int km_age_from, int km_age_to) {
         this.rig = rig;
         this.mark = mark;
         this.km_age_from = km_age_from;
