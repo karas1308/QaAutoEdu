@@ -18,7 +18,7 @@ public class FirstConnect {
     public static String auth_sid;
     public static String auth_sid_key;
     public static String auth_autoruuid;
-    public static long millis = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+    public static long cutTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
     public static String username = "79854406469";
     // public static String password = "autoru";
     public static String password = "111111";

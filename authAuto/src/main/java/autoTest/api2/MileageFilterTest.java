@@ -72,7 +72,7 @@ public class MileageFilterTest {
         Response r =
                 given().
                         headers("Accept-Encoding", "gzip", "Authorization", uuid, "X-Authorization", x_auth).
-                        get("/1.1/search?category_id=15&page_num=1&page_size=50&creation_date_to=" + millis + "&km_age_from=" + km_age_from + "&km_age_to=" + km_age_to);
+                        get("/1.1/search?category_id=15&page_num=1&page_size=50&creation_date_to=" + cutTime + "&km_age_from=" + km_age_from + "&km_age_to=" + km_age_to);
         assertTrue(r.statusCode() == 200);
         String[] km_age = r.body().jsonPath().get("list.km_age").toString().replace("[", "").replace("]", "").split(",");
         for (int i = 0; i < km_age.length; i++) {

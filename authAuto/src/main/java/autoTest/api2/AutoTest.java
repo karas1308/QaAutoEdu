@@ -32,7 +32,7 @@ public class AutoTest {
 //    public static String api2 = "http://auto-api.test.autoru.yandex.net";
     public static String api2 = "https://api2.auto.ru";
     public static String markID;
-    public static String url_api2_search = "https://api2.auto.ru/1.1/search?category_id=15&page_num=1&page_size=50&creation_date_to=" + millis;
+    public static String url_api2_search = "https://api2.auto.ru/1.1/search?category_id=15&page_num=1&page_size=50&creation_date_to=" + cutTime;
 //    public static String url_api2_search = "http://auto-api.test.autoru.yandex.net/1.1/search?category_id=15&page_num=1&page_size=50&creation_date_to=" + millis;
 
     static CloseableHttpClient client = HttpClients.createDefault();
@@ -80,7 +80,7 @@ public void print(String a){
             RestAssured.baseURI = api2;
             Response r =
                     given().headers("Authorization", uuid_header, "X-Authorization", x_auth).
-                            get("/1.1/search?category_id=15&page_num=1&page_size=50&creation_date_to=" + millis + "&price_from=" + lines[i] + "&price_to=" + lines[i + 1]);
+                            get("/1.1/search?category_id=15&page_num=1&page_size=50&creation_date_to=" + cutTime + "&price_from=" + lines[i] + "&price_to=" + lines[i + 1]);
             assertTrue(r.statusCode() == 200);
             int pager_count = Integer.parseInt(r.body().jsonPath().get("pager.count").toString());
             String[] price = splitToArray(r.body().jsonPath().get("list.price.RUR").toString());

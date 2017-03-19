@@ -89,7 +89,7 @@ public class CommNew {
         String geo_id = "213";
         String method = "all.sale.search";
         RestAssured.baseURI = api;
-        Response r = given().header("Accept-Encoding", "gzip").get("/rest/?offset=0&category_id=" + id + "&creation_date_to=" + millis + "&geo_id=" + geo_id + "&limit=20&photo=1"
+        Response r = given().header("Accept-Encoding", "gzip").get("/rest/?offset=0&category_id=" + id + "&creation_date_to=" + cutTime + "&geo_id=" + geo_id + "&limit=20&photo=1"
                 + "&prepend_empty_option=1&sort[price]=asc&used_key=5&sid=" + sid + "&method=" + method + "&key=" + key + "" + "&version=2.2.2&uuid=" + uuid + "&format=json");
         // print(r.jsonPath().get("result.sales.poi.region").toString());
         // print(r.jsonPath().get("result").toString());
@@ -102,7 +102,7 @@ public class CommNew {
         String geo_id = "1";
         String method = "all.sale.search";
         RestAssured.baseURI = api;
-        Response r = given().header("Accept-Encoding", "gzip").get("/rest/?offset=0&category_id=" + id + "&creation_date_to=" + millis + "&geo_id=" + geo_id + "&limit=20&photo=1"
+        Response r = given().header("Accept-Encoding", "gzip").get("/rest/?offset=0&category_id=" + id + "&creation_date_to=" + cutTime + "&geo_id=" + geo_id + "&limit=20&photo=1"
                 + "&prepend_empty_option=1&sort[price]=asc&used_key=5&sid=" + sid + "&method=" + method + "&key=" + key + "" + "&version=2.2.2&uuid=" + uuid + "&format=json");
         // print(r.jsonPath().get("result.sales.poi.region").toString());
         // print(r.asString());

@@ -11,6 +11,8 @@ import static methods.FirstConnect.password;
 import static methods.FirstConnect.sid;
 import static methods.FirstConnect.username;
 import static methods.FirstConnect.uuid;
+import static methods.Constants.COMM_CATEGORY;
+import static methods.Constants.MOTO_CATEGORY;
 import static methods.MethodsAddForm.bodytypeList;
 import static methods.MethodsAddForm.driveList;
 import static methods.MethodsAddForm.enginetypeList;
@@ -223,7 +225,7 @@ public class ApiPhpTest {
         String[] presetsConst = { "Легкие коммерческие", "Седельные тягачи", "Грузовики", "Автобусы", "Прицепы" };
         String method = "all.sale.getPresets";
         Response r = given().baseUri(api).header("Accept-Encoding", "gzip")
-                .get("/rest/?category_id=29&sid=" + sid + "&method=" + method + "&key=" + key + "&version=2.2.2&uuid=" + uuid + "&format=json");
+                .get("/rest/?category_id="+COMM_CATEGORY+"&sid=" + sid + "&method=" + method + "&key=" + key + "&version=2.2.2&uuid=" + uuid + "&format=json");
         assertTrue("statusCode = " + r.statusCode(), r.statusCode() == 200);
         String[] presets = splitToArray(r.jsonPath().get("result.label").toString());
         assertTrue("Numb presents", presets.length == presetsConst.length);
@@ -237,7 +239,7 @@ public class ApiPhpTest {
         String[] presetsConst = { "Мотоциклы", "Скутеры", "Снегоходы", "Мотовездеходы" };
         String method = "all.sale.getPresets";
         Response r = given().baseUri(api).header("Accept-Encoding", "gzip")
-                .get("/rest/?category_id=17&sid=" + sid + "&method=" + method + "&key=" + key + "&version=2.2.2&uuid=" + uuid + "&format=json");
+                .get("/rest/?category_id="+MOTO_CATEGORY+"&sid=" + sid + "&method=" + method + "&key=" + key + "&version=2.2.2&uuid=" + uuid + "&format=json");
         assertTrue("statusCode = " + r.statusCode(), r.statusCode() == 200);
         String[] presets = splitToArray(r.jsonPath().get("result.label").toString());
         assertTrue("Numb presents", presets.length == presetsConst.length);
