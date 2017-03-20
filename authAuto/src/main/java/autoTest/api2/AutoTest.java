@@ -2,6 +2,7 @@ package autoTest.api2;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
+import methods.RestRequest;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -19,26 +20,21 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
-import static methods.Constants.GROUPS_CONST_LIST;
-import static methods.MethodsAddForm.modelList;
-import static methods.Utils.*;
-import static methods.FirstConnect.*;
 import static com.jayway.restassured.RestAssured.given;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static methods.FirstConnect.*;
+import static methods.Utils.getFile;
+import static methods.Utils.splitToArray;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.*;
-
-import methods.RestRequest;
+import static org.junit.Assert.assertTrue;
 
 public class AutoTest {
 
 
 //    public static String api2 = "http://auto-api.test.autoru.yandex.net";
     public static String api2 = "https://api2.auto.ru";
-    public static String markID;
     public static String url_api2_search = "https://api2.auto.ru/1.1/search?category_id=15&page_num=1&page_size=50&creation_date_to=" + cutTime;
 //    public static String url_api2_search = "http://auto-api.test.autoru.yandex.net/1.1/search?category_id=15&page_num=1&page_size=50&creation_date_to=" + millis;
 
@@ -236,7 +232,7 @@ public void print(String a){
         RestAssured.baseURI = api2;
         Response searchList = given().header("X-Authorization", x_auth).get("/1.1/search?page_num=1&page_size=50&prepend_empty_option=1&model_id=17118"+
                 "&creation_date_to=1488459883&mark_id=15&state=USED&sort=cr_date-desc&category_id=15&photo=1&generation_id=17121");
-        String[] upDateList = searchList.body().jsonPath().get("list.update_date").toString().replace("[", "").replace("]", "").split(",");
+        String[] upDateList = searchList.body().jsonPath().get("list.true_creation_date").toString().replace("[", "").replace("]", "").split(",");
         for (int i = 8; i < upDateList.length - 1; i++) {
 
             int a = Integer.valueOf(upDateList[i].replace(" ", ""));

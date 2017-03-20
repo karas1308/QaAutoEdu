@@ -59,6 +59,10 @@ public class MileageFilterTest {
     private int km_age_to;
 
 
+    public int getMark() {
+        return mark;
+    }
+
     public MileageFilterTest(int rig, int mark, int km_age_from, int km_age_to) {
         this.rig = rig;
         this.mark = mark;

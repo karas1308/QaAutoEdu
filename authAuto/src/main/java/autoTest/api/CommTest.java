@@ -57,7 +57,7 @@ public class CommTest {
                 {DRAGS, marksConstListDrags},
                 {BUS, marksConstListBus},
                 {TRUCKS, marksConstListTrucks},
-                {LIGHT_TRUCKS, marksConstListTrucks},
+                {LIGHT_TRUCKS, marksConstListLightTrucks},
                 {MOTORCYCLE, marksConstListMotorcycle},
                 {SCOOTERS, marksConstListScooters},
                 {SNOWMOBILE, marksConstListSnowmobile},
