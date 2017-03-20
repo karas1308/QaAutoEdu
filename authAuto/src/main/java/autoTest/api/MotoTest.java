@@ -1,6 +1,7 @@
+/*
 package autoTest.api;
 
-import autoTest.exp.RestRequest;
+import methods.RestRequest;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
 import org.hamcrest.core.Every;
@@ -48,7 +49,7 @@ public class MotoTest {
             "&key=" + key + "&version=2.2.2&uuid=" + uuid + "&format=json";
 
     @Parameterized.Parameters
-    public static Collection categoryId1() {
+    public static Collection categoryId() {
         return Arrays.asList(
                 new Object[][]{{MOTORCYCLE}, {SCOOTERS}, {SNOWMOBILE}, {ATV}});
     }
@@ -116,4 +117,4 @@ public class MotoTest {
                         .expect().statusCode(200).get("/rest").jsonPath().get("result.sales.poi.region").toString())),
                 Every.everyItem(anyOf(equalToIgnoringWhiteSpace("Москва"), equalToIgnoringWhiteSpace("Московская обл."))));
     }
-}
+}*/

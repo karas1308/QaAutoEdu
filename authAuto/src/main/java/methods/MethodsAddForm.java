@@ -11,8 +11,6 @@ import java.util.Map;
 
 import com.jayway.restassured.response.Response;
 
-import autoTest.exp.RestRequest;
-
 public class MethodsAddForm {
 
     public static String randMarkID;
@@ -33,14 +31,17 @@ public class MethodsAddForm {
 
     // Список марок
     public static Response markList() {
-        return new RestRequest().getRequest().baseUri(api).parameters(getParams()).parameter("method", "all.mark.getList").when().get("/rest");
+        return new RestRequest().getRequest().baseUri(api).parameters(getParams()).parameter("method", "all.mark.getList")
+                .when().expect().statusCode(200).get("/rest");
     }
 
     // Список моделей
     public static Response modelList() {
         String[] markID = splitToArray(markList().body().jsonPath().get("result.items.id").toString());
         randMarkID = markID[getRndInt(markID.length)];
-        return new RestRequest().getRequest().baseUri(api).parameters(getParams()).parameters("method", "catalog.folder.getEditModels", "mark_id", randMarkID).when().get("/rest");
+        return new RestRequest().getRequest().baseUri(api).parameters(getParams())
+                .parameters("method", "catalog.folder.getEditModels", "mark_id", randMarkID)
+                .when().expect().statusCode(200).get("/rest");
     }
 
     // Список годов выпуска
@@ -48,7 +49,7 @@ public class MethodsAddForm {
         String[] modelID = splitToArray(modelList().body().jsonPath().get("result.id").toString());
         randModelID = modelID[getRndInt(modelID.length)];
         return new RestRequest().getRequest().baseUri(api).parameters(getParams()).parameters("method", "catalog.year.getList", "mark_id", randMarkID, "model_id", randModelID)
-                .when().get("/rest");
+                .when().expect().statusCode(200).get("/rest");
     }
 
     // Список поколений
@@ -56,7 +57,8 @@ public class MethodsAddForm {
         String[] yearID = splitToArray(yearList().body().jsonPath().get("result.id").toString());
         randYearID = yearID[getRndInt(yearID.length)];
         return new RestRequest().getRequest().baseUri(api).parameters(getParams())
-                .parameters("method", "catalog.folder.getEditGenerations", "mark_id", randMarkID, "model_id", randModelID, "year", randYearID).when().get("/rest");
+                .parameters("method", "catalog.folder.getEditGenerations", "mark_id", randMarkID, "model_id", randModelID, "year", randYearID).
+                        when().expect().statusCode(200).get("/rest");
     }
 
     // Список типов кузова
@@ -64,16 +66,17 @@ public class MethodsAddForm {
         String[] generationsIDList = splitToArray(generationsList().body().jsonPath().get("result.id").toString());
         randGenerationsID = generationsIDList[getRndInt(generationsIDList.length)];
         return new RestRequest().getRequest().baseUri(api).parameters(getParams())
-                .parameters("method", "catalog.bodytype.getList", "mark_id", randMarkID, "model_id", randModelID, "year", randYearID, "folder_id", randGenerationsID).when()
-                .get("/rest");
+                .parameters("method", "catalog.bodytype.getList", "mark_id", randMarkID, "model_id", randModelID, "year", randYearID, "folder_id", randGenerationsID)
+                .when().expect().statusCode(200).get("/rest");
     }
 
     // Список типов двигателя
     public static Response enginetypeList() {
         String[] bodytypeIDList = splitToArray(bodytypeList().body().jsonPath().get("result.id").toString());
         randBodytypeID = bodytypeIDList[getRndInt(bodytypeIDList.length)];
-        return new RestRequest().getRequest().baseUri(api).parameters(getParams()).parameters("method", "catalog.enginetype.getList", "mark_id", randMarkID, "model_id",
-                randModelID, "year", randYearID, "folder_id", randGenerationsID, "body_type", randBodytypeID).when().get("/rest");
+        return new RestRequest().getRequest().baseUri(api).parameters(getParams()).parameters("method", "catalog.enginetype.getList", "mark_id", randMarkID,
+                "model_id", randModelID, "year", randYearID, "folder_id", randGenerationsID, "body_type", randBodytypeID)
+                .when().expect().statusCode(200).get("/rest");
     }
 
     // Список типов приводов
@@ -81,7 +84,8 @@ public class MethodsAddForm {
         String[] enginetypeIDList = splitToArray(enginetypeList().body().jsonPath().get("result.id").toString());
         randEnginetypeID = enginetypeIDList[getRndInt(enginetypeIDList.length)];
         return new RestRequest().getRequest().baseUri(api).parameters(getParams()).parameters("method", "catalog.drive.getList", "mark_id", randMarkID, "model_id", randModelID,
-                "year", randYearID, "folder_id", randGenerationsID, "body_type", randBodytypeID, "engine_type", randEnginetypeID).when().get("/rest");
+                "year", randYearID, "folder_id", randGenerationsID, "body_type", randBodytypeID, "engine_type", randEnginetypeID)
+                .when().expect().statusCode(200).get("/rest");
     }
 
     // Список типов КПП
@@ -89,7 +93,8 @@ public class MethodsAddForm {
         String[] driveIDList = splitToArray(driveList().body().jsonPath().get("result.id").toString());
         randDriveID = driveIDList[getRndInt(driveIDList.length)];
         return new RestRequest().getRequest().baseUri(api).parameters(getParams()).parameters("method", "catalog.gearbox.getList", "mark_id", randMarkID, "model_id", randModelID,
-                "year", randYearID, "folder_id", randGenerationsID, "body_type", randBodytypeID, "engine_type", randEnginetypeID, "drive", randDriveID).when().get("/rest");
+                "year", randYearID, "folder_id", randGenerationsID, "body_type", randBodytypeID, "engine_type", randEnginetypeID, "drive", randDriveID)
+                .when().expect().statusCode(200).get("/rest");
     }
 
     // Список модификаций
@@ -99,6 +104,6 @@ public class MethodsAddForm {
         return new RestRequest().getRequest()
                 .baseUri(api).parameters(getParams()).parameters("method", "catalog.modification.getList", "mark_id", randMarkID, "model_id", randModelID, "year", randYearID,
                         "folder_id", randGenerationsID, "body_type", randBodytypeID, "engine_type", randEnginetypeID, "drive", randDriveID, "gearbox", randGearboxID)
-                .when().get("/rest");
+                .when().expect().statusCode(200).get("/rest");
     }
 }

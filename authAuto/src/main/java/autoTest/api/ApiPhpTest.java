@@ -13,36 +13,19 @@ import static methods.FirstConnect.username;
 import static methods.FirstConnect.uuid;
 import static methods.Constants.COMM_CATEGORY;
 import static methods.Constants.MOTO_CATEGORY;
-import static methods.MethodsAddForm.bodytypeList;
-import static methods.MethodsAddForm.driveList;
-import static methods.MethodsAddForm.enginetypeList;
-import static methods.MethodsAddForm.gearboxList;
-import static methods.MethodsAddForm.generationsList;
 import static methods.MethodsAddForm.markList;
 import static methods.MethodsAddForm.modelList;
-import static methods.MethodsAddForm.modificationList;
-import static methods.MethodsAddForm.yearList;
-import static methods.Utils.getFile;
-import static methods.Utils.prt;
-import static methods.Utils.splitToArray;
+import static methods.Utils.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.isEmptyString;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -50,7 +33,7 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.response.Response;
 
-import autoTest.exp.RestRequest;
+import methods.RestRequest;
 import static methods.ArrayContainsSubArray.containsSubArray;
 import ru.yandex.qatools.allure.annotations.Features;
 import ru.yandex.qatools.allure.annotations.Stories;
@@ -128,67 +111,6 @@ public class ApiPhpTest {
         assertThat(Arrays.asList(splitToArray(modelList().body().jsonPath().get("result.id").toString())), hasSize(greaterThan(0)));
     }
 
-    @Test
-    public void yearsListIsGreaterThanZero() {
-        assertThat(Arrays.asList(splitToArray(yearList().body().jsonPath().get("result.id").toString())), hasSize(greaterThan(0)));
-    }
-
-    @Test
-    public void getEditGenerations() throws IOException {
-        Response generationsList = generationsList();
-        assertTrue("catalog.folder.getEditGenerations fail, statusCode=" + generationsList.statusCode(), generationsList.statusCode() == 200);
-        String[] generationsIDList = splitToArray(generationsList.body().jsonPath().get("result.id").toString());
-        assertTrue("catalog.folder.getEditGenerations fail", generationsIDList.length > 0);
-        // System.out.println(generationsList.body().asString());
-    }
-
-    @Test
-    public void bodytype_list() throws IOException {
-        Response bodytypeList = bodytypeList();
-        assertTrue("catalog.bodytype.getList fail, statusCode=" + bodytypeList.statusCode(), bodytypeList.statusCode() == 200);
-        String[] bodytypeIDList = splitToArray(bodytypeList.body().jsonPath().get("result.id").toString());
-        assertTrue("catalog.bodytype.getList fail", bodytypeIDList.length > 0);
-        // System.out.println(bodytypeList.body().asString());
-    }
-
-    @Test
-    public void enginetypeGetList() throws IOException {
-        Response enginetypeList = enginetypeList();
-        assertTrue("catalog.enginetype.getList fail, statusCode=" + enginetypeList.statusCode(), enginetypeList.statusCode() == 200);
-        String[] enginetypeIDList = splitToArray(enginetypeList.body().jsonPath().get("result.id").toString());
-        assertTrue("catalog.enginetype.getList fail", enginetypeIDList.length > 0);
-        // System.out.println(enginetypeList.body().asString());
-    }
-
-    @Test
-    public void driveGetList() throws IOException {
-        Response driveList = driveList();
-        assertTrue("catalog.drive.getList fail, statusCode=" + driveList.statusCode(), driveList.statusCode() == 200);
-        String[] driveIDList = splitToArray(driveList.body().jsonPath().get("result.id").toString());
-        assertTrue("catalog.drive.getList fail", driveIDList.length > 0);
-        // System.out.println(driveList.body().asString());
-    }
-
-    @Test
-    public void gearboxGetLis() throws IOException {
-        Response gearboxList = gearboxList();
-        assertTrue("catalog.gearbox.getList fail, statusCode=" + gearboxList.statusCode(), gearboxList.statusCode() == 200);
-        String[] gearboxIDList = splitToArray(gearboxList.body().jsonPath().get("result.id").toString());
-        assertTrue("catalog.gearbox.getList fail", gearboxIDList.length > 0);
-        // System.out.println(gearboxList.body().asString());
-
-    }
-
-    @Test
-    public void modification_list() throws IOException {
-        Response modificationList = modificationList();
-        assertTrue("catalog.modification.getList fail, statusCode=" + modificationList.statusCode(), modificationList.statusCode() == 200);
-        String[] modificationIDList = splitToArray(modificationList.body().jsonPath().get("result.id").toString());
-        assertTrue("catalog.modification.getList fail", modificationIDList.length > 0);
-        // System.out.println(modificationList.body().asString());
-        // System.out.println(randGearboxID + " "+ randEnginetypeID);
-    }
-
     @Test // my.review, они же отзывы
     public void myReview() {
         RestAssured.baseURI = api;
@@ -201,7 +123,7 @@ public class ApiPhpTest {
         System.out.println(test.contains("current_search"));
     }
 
-    @Test // получаем список телефонов
+    @Test // получаем список телефонов авторизованного пользователя
     public void getPhones() {
         assertThat(new RestRequest().getRequest().baseUri(api)
                 .params("sid", auth_sid, "method", "users.profile.getPhones", "uuid", uuid, "format", "json", "key", key, "version", "2.2.2").when().get("/rest").jsonPath()
@@ -209,44 +131,36 @@ public class ApiPhpTest {
 
     }
 
-    // Ошибки размещения объявления
+    // Количиство ошибок валидации при размещении объявления 19
     @Test
-    public void errorAddForm() {
-        RestAssured.baseURI = api;
-        Response r = given().header("Accept-Encoding", "gzip", "Content-Type", "application/x-www-form-urlencoded").parameter("key", key)
-                .post("/rest/?category_id=15&color=28&custom=1&is_for_editform=1&phones_redirect=1&pts=1&sale_id=0&section_id=1&state=4&wheel=1&sid=" + sid
-                        + "&method=all.sale.add&client_os=6.0.1&version=2.2.2&uuid=" + uuid + "&format=json");
-        assertTrue("statusCode = " + r.statusCode(), r.statusCode() == 200);
-        assertTrue("result.errors not equals 15", r.jsonPath().get("result.errors").toString().split(",").length == 15);
+    public void quantityErrorsCountAddForm() {
+   Assert.assertThat(
+           Arrays.asList(splitToArray(new RestRequest().getRequest().params("key", key, "method", "all.sale.add", "category_id", 15)
+                   .expect().statusCode(200).post("/rest").jsonPath().get("result.errors").toString())),
+           hasSize(19));
     }
 
     @Test
     public void getPresetsCom() {
-        String[] presetsConst = { "Легкие коммерческие", "Седельные тягачи", "Грузовики", "Автобусы", "Прицепы" };
-        String method = "all.sale.getPresets";
-        Response r = given().baseUri(api).header("Accept-Encoding", "gzip")
-                .get("/rest/?category_id="+COMM_CATEGORY+"&sid=" + sid + "&method=" + method + "&key=" + key + "&version=2.2.2&uuid=" + uuid + "&format=json");
-        assertTrue("statusCode = " + r.statusCode(), r.statusCode() == 200);
-        String[] presets = splitToArray(r.jsonPath().get("result.label").toString());
-        assertTrue("Numb presents", presets.length == presetsConst.length);
-        for (int i = 0; i < presetsConst.length; i++) {
-            assertTrue("Where is preset " + presetsConst[i], r.body().jsonPath().get("result.label").toString().contains(presetsConst[i]));
-        }
+        String [] presetsConst = {"Легкие коммерческие", "Седельные тягачи", "Грузовики", "Автобусы", "Прицепы"};
+        assertThat(Arrays.asList(splitToArray(new RestRequest().getRequest()
+                .params("category_id",COMM_CATEGORY, "method","all.sale.getPresets")
+                .get("/rest").jsonPath().get("result.label").toString())),hasSize(5));
+        assertThat(Arrays.asList(splitToArray(new RestRequest().getRequest()
+                .params("category_id",COMM_CATEGORY, "method","all.sale.getPresets")
+                .get("/rest").jsonPath().get("result.label").toString())),containsInAnyOrder(presetsConst));
     }
 
     @Test
     public void getPresetsMoto() {
         String[] presetsConst = { "Мотоциклы", "Скутеры", "Снегоходы", "Мотовездеходы" };
-        String method = "all.sale.getPresets";
-        Response r = given().baseUri(api).header("Accept-Encoding", "gzip")
-                .get("/rest/?category_id="+MOTO_CATEGORY+"&sid=" + sid + "&method=" + method + "&key=" + key + "&version=2.2.2&uuid=" + uuid + "&format=json");
-        assertTrue("statusCode = " + r.statusCode(), r.statusCode() == 200);
-        String[] presets = splitToArray(r.jsonPath().get("result.label").toString());
-        assertTrue("Numb presents", presets.length == presetsConst.length);
-        for (int i = 0; i < presetsConst.length; i++) {
-            assertTrue("Where is preset " + presetsConst[i], r.body().jsonPath().get("result.label").toString().contains(presetsConst[i]));
+        assertThat(Arrays.asList(splitToArray(new RestRequest().getRequest()
+                .params("category_id",MOTO_CATEGORY, "method","all.sale.getPresets")
+                .get("/rest").jsonPath().get("result.label").toString())),hasSize(4));
+        assertThat(Arrays.asList(splitToArray(new RestRequest().getRequest()
+                .params("category_id",MOTO_CATEGORY, "method","all.sale.getPresets")
+                .get("/rest").jsonPath().get("result.label").toString())),containsInAnyOrder(presetsConst));
         }
-    }
 
     @Test
     public void getPresetsAuto() {
@@ -266,14 +180,10 @@ public class ApiPhpTest {
 
     @Test // Жалоба method=all.sale.complain
     public void complain() {
-        String txt = "Неверная модель/поколение";
-        String method = "all.sale.complain";
-        Response r = given().baseUri(api).header("Accept-Encoding", "gzip", "Content-Type", "application/x-www-form-urlencoded", "X-OTRS-platform", "Android")
-                .post("/rest/?category_id=15&section_id=1&sale_id=1048427881&text=" + txt + "&sid=" + sid + "&client_tz=180&method=" + method + "&key=" + key
-                        + "&version=2.2.2&uuid=" + uuid + "&format=json");
-        assertTrue("statusCode = " + r.statusCode(), r.statusCode() == 200);
-        assertTrue(r.jsonPath().get("result.success").toString() == "true");
-
+        String text = urlEncode("Неверная модель/поколение");
+        assertThat(new RestRequest().getRequest().params("section_id",1, "category_id",15, "sale_id",1048427881,
+                "text", text,"method", "all.sale.complain").expect().statusCode(200)
+                .post("/rest").jsonPath().get("result.success").toString(),equalTo("true"));
     }
 
     @Test // Баланс
@@ -287,21 +197,25 @@ public class ApiPhpTest {
 
     }
 
-    // @Test // logout
-    // public void logout() {
-    // // autorize();
-    // String method = "users.auth.logout";
-    // Response r = given().baseUri(api).header("Accept-Encoding", "gzip")
-    // .get("/rest/?sid=" + auth_sid + "&method=" + method + "&key=" + key +
-    // "&version=2.2.2&uuid=" + uuid + "&format=json");
-    // assertTrue("Status code = " + r.statusCode(), r.statusCode() == 200);
-    // assertTrue("result.success = " + r.jsonPath().get("result").toString(),
-    // Integer.valueOf(r.jsonPath().get("result.success").toString()) == 1);
-    // }
+     @Test // logout
+     public void logout() {
+    JsonPath r = given().baseUri(api).contentType("application/x-www-form-urlencoded; charset=UTF-8")
+            .formParams("login", username, "pass", password, "sid", sid, "method", "users.auth.login", "key", key, "version", "2.2.2", "uuid", uuid, "format", "json").when()
+            .post("/rest").body().jsonPath();
+         String auth_sid_for_logout = r.get("sid");
+         String auth_sid_key_for_logout = r.get("sid_key");
+         String auth_autoruuid_for_logout = r.get("autoruuid");
+     String method = "users.auth.logout";
+     Response out = given().baseUri(api).header("Accept-Encoding", "gzip")
+     .get("/rest/?sid=" + auth_sid_for_logout + "&method=" + method + "&key=" + key +
+     "&version=2.2.2&uuid=" + uuid + "&format=json");
+     assertTrue("result.success = " + out.jsonPath().get("result").toString(),
+     Integer.valueOf(out.jsonPath().get("result.success").toString()) == 1);
+     }
 
-    @Test
-    public void sendFile() {
-        prt(new RestRequest().getRequest().baseUri(api).params("method", "all.sale.uploadphotorecognize").multiPart("files[0]", getFile("LEO_3260.JPG"), "application/image")
+    @Test //Поиск по фото
+    public void uploadPhotoRecognize() {
+        prt(new RestRequest().getRequest().baseUri(api).params("method", "all.sale.uploadphotorecognize").multiPart("files[0]", getFile("mazda3.png"), "application/image")
                 .expect().statusCode(200).post("/rest"));
     }
 

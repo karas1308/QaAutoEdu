@@ -1,6 +1,7 @@
 package autoTest.api;
 
 import static methods.ArrayContainsSubArray.containsSubArray;
+import static methods.Constants.*;
 import static methods.FirstConnect.getUuidSidAuth;
 import static methods.FirstConnect.cutTime;
 import static methods.Utils.splitToArray;
@@ -9,11 +10,6 @@ import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.AnyOf.anyOf;
 import static org.junit.Assert.assertThat;
-import static methods.Constants.LIGHT_TRUCKS;
-import static methods.Constants.TRUCKS;
-import static methods.Constants.BUS;
-import static methods.Constants.DRAGS;
-import static methods.Constants.ARTIC;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -25,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import autoTest.exp.RestRequest;
+import methods.RestRequest;
 import ru.yandex.qatools.allure.annotations.Features;
 import ru.yandex.qatools.allure.annotations.Stories;
 
@@ -39,54 +35,52 @@ public class CommTest {
         getUuidSidAuth();
     }
 
-    String[] marksConstListLightTrucks = {"BAW", "Changan", "Chevrolet", "Citroen", "DFSK", "Dodge", "FAW", "Fiat", "Ford", "Foton", "Freightliner", "Hyundai", "Isuzu", "IVECO", "JAC",
+    static String[] marksConstListLightTrucks = {"BAW", "Changan", "Chevrolet", "Citroen", "DFSK", "Dodge", "FAW", "Fiat", "Ford", "Foton", "Freightliner", "Hyundai", "Isuzu", "IVECO", "JAC",
             "JBC", "JMC", "Kia", "LDV", "Mazda", "Mercedes-Benz", "Mitsubishi", "Nissan", "Opel", "Peugeot", "Renault", "Skoda", "Ssang Yong", "Toyota", "Volkswagen", "YueJin",
             "Богдан", "ВАЗ", "ВИС", "ГАЗ", "ГАЗ-САЗ", "ИЖ", "РАФ", "ТагАЗ", "УАЗ"};
-    String[] marksConstListBus = {"Volkswagen"};
-    String[] marksConstListArtic = {"MAN"};
-    String[] marksConstListDrags = {"МАЗ"};
-    String[] marksConstListTrucks = {"МАЗ"};
+    static String[] marksConstListBus = {"Volkswagen"};
+    static String[] marksConstListArtic = {"MAN"};
+    static String[] marksConstListDrags = {"МАЗ"};
+    static String[] marksConstListTrucks = {"МАЗ"};
+    static String[] marksConstListMotorcycle = {"ABM", "Aermacchi", "American IronHorse", "Apollo", "Aprilia", "Arlen Ness", "Bajaj", "Bars", "Benelli", "Beta", "Big Bear Choppers", "Big Dog Motorcycles", "Bimota", "BM", "BMW", "Boom Trikes", "BRP", "BSE", "Buell", "Cagiva", "Campagna", "Centurion", "CFMoto", "Cobra", "Confederate", "CZ", "Derbi", "Desert Raven", "DM Telai", "Dnepr (Днепр)", "Ducati", "Falcon", "Fine Custom Mechanics", "Forsage", "Futong", "GAS GAS", "GX moto", "Harley-Davidson", "Honda", "Husaberg", "Husqvarna", "Hyosung", "Indian", "IRBIS", "Jawa", "JMC", "Johnny Pag", "Kawasaki", "Kaxa Motos", "KAYO", "Keeway", "KTM", "KXD", "Kymco", "Lifan", "Mikilon", "Minsk (Минск)", "Moto Guzzi", "Moto Morini", "Motoland", "MV Agusta", "MZ", "Nexus", "Omaks Motors", "Orion", "Pannonia", "Patron", "PCW", "Pitsterpro", "Polini", "Racer", "Regal Raptor", "Reggy", "Rewaco", "Rokon", "Royal Enfield", "S2", "Sachs", "Saxon", "Sherco", "Stels", "Stingray", "Suzuki", "Sym", "TM Racing", "Triumph", "TVS", "UM", "Upbeat (ABT)", "Vento", "Victory", "Virus", "Wels", "Xmotos", "Yamaha", "Yamasaki", "YCF", "Zongshen", "Zundapp", "Верховина", "Восход", "Десна", "ЗиД", "ИЖ", "Китай (NoName)", "ММЗ", "ТМЗ (Туламашзавод)", "Урал", "Эксклюзив"};
+    static String[] marksConstListScooters = {"BMW"};
+    static String[] marksConstListSnowmobile = {"Apollo"};
+    static String[] marksConstListAtv = {"ГАЗ"};
 
     private Integer id;
+    private String [] makrList;
 
     @Parameterized.Parameters
     public static Collection<Object[]> categoryId() {
-        return Arrays.asList(new Object[][]{{ARTIC}, {DRAGS}, {BUS}, {TRUCKS}, {LIGHT_TRUCKS}});
+        return Arrays.asList(new Object[][]{
+                {ARTIC, marksConstListArtic},
+                {DRAGS, marksConstListDrags},
+                {BUS, marksConstListBus},
+                {TRUCKS, marksConstListTrucks},
+                {LIGHT_TRUCKS, marksConstListTrucks},
+                {MOTORCYCLE, marksConstListMotorcycle},
+                {SCOOTERS, marksConstListScooters},
+                {SNOWMOBILE, marksConstListSnowmobile},
+                {ATV, marksConstListAtv}});
     }
 
-    public CommTest(Integer id) {
+    public CommTest(Integer id, String [] makrList) {
         this.id = id;
+        this.makrList = makrList;
     }
 
     @Test
     public void marksListIsDsiplayed() {
-        if (id == ARTIC) {
             assertThat(splitToArray(new RestRequest().getRequest().params("method", "all.mark.getList", "category_id", id).expect().statusCode(200).get("/rest").jsonPath()
-                    .get("result.items.name").toString()), containsSubArray(marksConstListArtic));
-        }
-        if (id == DRAGS) {
-            assertThat(splitToArray(new RestRequest().getRequest().params("method", "all.mark.getList", "category_id", id).expect().statusCode(200).get("/rest").jsonPath()
-                    .get("result.items.name").toString()), containsSubArray(marksConstListDrags));
-        }
-        if (id == BUS) {
-            assertThat(splitToArray(new RestRequest().getRequest().params("method", "all.mark.getList", "category_id", id).expect().statusCode(200).get("/rest").jsonPath()
-                    .get("result.items.name").toString()), containsSubArray(marksConstListBus));
-        }
-        if (id == TRUCKS) {
-            assertThat(splitToArray(new RestRequest().getRequest().params("method", "all.mark.getList", "category_id", id).expect().statusCode(200).get("/rest").jsonPath()
-                    .get("result.items.name").toString()), containsSubArray(marksConstListTrucks));
-        }
-        if (id == LIGHT_TRUCKS) {
-            assertThat(splitToArray(new RestRequest().getRequest().params("method", "all.mark.getList", "category_id", id).expect().statusCode(200).get("/rest").jsonPath()
-                    .get("result.items.name").toString()), containsSubArray(marksConstListLightTrucks));
-        }
+                    .get("result.items.name").toString()), containsSubArray(makrList));
+//
     }
 
     @Test
     public void markGroupsListIsDsiplayed() {
         String[] groupsConstList = {"Любая марка", "Отечественные", "Иномарки"};
         assertThat(splitToArray(new RestRequest().getRequest().params("method", "all.mark.getList", "category_id", id).expect().statusCode(200).get("/rest").jsonPath()
-                .get("result.groups.name").toString()), arrayContainingInAnyOrder(groupsConstList));
+                .get("result.groups.name").toString()), arrayContainingInAnyOrder(GROUPS_CONST_LIST));
     }
 
     @Test // geo_id = "213" МСК

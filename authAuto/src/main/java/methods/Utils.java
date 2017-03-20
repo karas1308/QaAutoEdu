@@ -32,7 +32,7 @@ public class Utils {
         return new File(Utils.class.getClassLoader().getResource(fileName).getFile());
     }
 
-    public String urlDecode(String s) {
+    public static String urlDecode(String s) {
         try {
             return URLDecoder.decode(s, "UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -41,7 +41,7 @@ public class Utils {
         }
     }
 
-    public String urlEncode(String s) {
+    public static String urlEncode(String s) {
         try {
             return URLEncoder.encode(s, "UTF-8");
         } catch (UnsupportedEncodingException e) {

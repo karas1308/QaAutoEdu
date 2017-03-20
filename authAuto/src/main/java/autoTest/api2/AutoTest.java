@@ -16,15 +16,22 @@ import org.junit.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 
+import static methods.Constants.GROUPS_CONST_LIST;
+import static methods.MethodsAddForm.modelList;
 import static methods.Utils.*;
 import static methods.FirstConnect.*;
 import static com.jayway.restassured.RestAssured.given;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.*;
+
+import methods.RestRequest;
 
 public class AutoTest {
 
@@ -47,14 +54,11 @@ public void print(String a){
     }
 
     @Test //geo suggest
-    public void NumberRegions() throws IOException {
-        RestAssured.baseURI = api2;
-        Response r =
-                given().headers("Authorization", uuid_header, "X-Authorization", x_auth).
-                        get("/1.1/suggest?letters=москв");
-        assertTrue(r.statusCode() == 200);
-        String[] regions = splitToArray(r.body().jsonPath().get("data.title").toString());
-        assertTrue(regions.length > 0);
+    public void lookingForMoskwaInSuggest() throws IOException {
+        assertThat(Arrays.asList(splitToArray(new RestRequest().getRequestApi2().parameter("letters","москв").expect().statusCode(200).get("/1.1/suggest").jsonPath()
+                .get("data.title").toString())), hasSize(greaterThan(0)));
+//System.out.println(new RestRequest().getRequestApi2().parameter("letters","москв").expect().statusCode(200).get("/1.1/suggest").jsonPath()
+//        .get("data.title").toString());
     }
 
     @Test
