@@ -21,8 +21,8 @@ public class FirstConnect {
 //    public static long cutTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
     public static String cutTime = "";
     public static String username = "79854406469";
-     public static String password = "autoru";
-//    public static String password = "111111";
+//     public static String password = "autoru";
+    public static String password = "111111";
     public static String key = "1d2b14555a83699f57fd77d17aa2d5ce9431cd7d9f3edea14186b044e76b606a";
 
     public static void getUuidSidAuth() {
