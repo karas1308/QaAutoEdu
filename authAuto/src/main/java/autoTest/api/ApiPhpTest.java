@@ -2,8 +2,7 @@ package autoTest.api;
 
 import static com.jayway.restassured.RestAssured.given;
 import static methods.ApiVersion.API_2_2_2;
-import static methods.Constants.AUTO_CATEGORY;
-import static methods.FirstConnect.api;
+import static methods.Constants.*;
 import static methods.FirstConnect.auth_sid;
 import static methods.FirstConnect.getUuidSidAuth;
 import static methods.FirstConnect.key;
@@ -11,14 +10,13 @@ import static methods.FirstConnect.password;
 import static methods.FirstConnect.sid;
 import static methods.FirstConnect.username;
 import static methods.FirstConnect.uuid;
-import static methods.Constants.COMM_CATEGORY;
-import static methods.Constants.MOTO_CATEGORY;
 import static methods.MethodsAddForm.markList;
 import static methods.MethodsAddForm.modelList;
 import static methods.Utils.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertTrue;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -115,7 +113,7 @@ public class ApiPhpTest {
     public void myReview() {
         RestAssured.baseURI = api;
         Response r = given().header("Accept-Encoding", "gzip").when().get("/rest/?category_id=15&sid=" + sid
-                + "&method=my.review.getBlocks&key=1d2b14555a83699f57fd77d17aa2d5ce9431cd7d9f3edea14186b044e76b606a&version=2.2.2&uuid=" + uuid + "&format=json");
+                + "&method=my.review.getBlocks&key="+key+"&version=2.2.2&uuid=" + uuid + "&format=json");
         assertTrue("statusCode = " + r.statusCode(), r.statusCode() == 200);
         String test = r.body().jsonPath().get("result").toString();
         System.out.println(r.body().jsonPath().get("result.new_opinions.id").toString());
@@ -126,7 +124,7 @@ public class ApiPhpTest {
     @Test // получаем список телефонов авторизованного пользователя
     public void getPhones() {
         assertThat(new RestRequest().getRequest().baseUri(api)
-                .params("sid", auth_sid, "method", "users.profile.getPhones", "uuid", uuid, "format", "json", "key", key, "version", "2.2.2").when().get("/rest").jsonPath()
+                .params("sid", auth_sid, "method", "users.profile.getPhones", "uuid", uuid, "format", "json", "key", key, "version", API_2_2_2.getVersion()).when().get("/rest").jsonPath()
                 .get("result.phone").toString(), containsString(username));
 
     }
@@ -181,7 +179,7 @@ public class ApiPhpTest {
     @Test // Жалоба method=all.sale.complain
     public void complain() {
         String text = urlEncode("Неверная модель/поколение");
-        assertThat(new RestRequest().getRequest().params("section_id",1, "category_id",15, "sale_id",1048427881,
+        assertThat(new RestRequest().getRequest().params("section_id", 1, "category_id", 15, "sale_id", 1048427881,
                 "text", text,"method", "all.sale.complain").expect().statusCode(200)
                 .post("/rest").jsonPath().get("result.success").toString(),equalTo("true"));
     }
@@ -191,7 +189,7 @@ public class ApiPhpTest {
         // autorize();
         String method = "all.service.fetchBalance";
         Response r = given().baseUri(api).header("Accept-Encoding", "gzip")
-                .get("/rest/?sid=" + auth_sid + "&method=" + method + "&key=" + key + "&version=2.2.2&uuid=" + uuid + "&gateway=googleplay&format=json");
+                .get("/rest/?sid=" + auth_sid + "&method=" + method + "&key=" + key + "&version="+API_2_2_2.getVersion()+"&uuid=" + uuid + "&gateway=googleplay&format=json");
         assertTrue("Status code = " + r.statusCode(), r.statusCode() == 200);
         assertTrue("Balance = " + r.jsonPath().get("result").toString(), Integer.valueOf(r.jsonPath().get("result").toString()) > 0);
 

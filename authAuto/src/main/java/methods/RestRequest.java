@@ -1,7 +1,8 @@
 package methods;
 
-import static autoTest.api2.AutoTest.api2;
 import static methods.ApiVersion.API_2_2_2;
+import static methods.Constants.api;
+import static methods.Constants.api2;
 import static methods.FirstConnect.key;
 import static methods.FirstConnect.password;
 import static methods.FirstConnect.*;

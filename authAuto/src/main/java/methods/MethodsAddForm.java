@@ -1,7 +1,6 @@
 package methods;
 
-import static methods.FirstConnect.api;
-//import static methods.Utils.getRndInt;
+import static methods.Constants.api;
 import static methods.Utils.splitToArray;
 import static methods.Utils.getRndInt;
 

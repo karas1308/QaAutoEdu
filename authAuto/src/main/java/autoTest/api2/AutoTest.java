@@ -22,6 +22,8 @@ import java.util.List;
 
 import static com.jayway.restassured.RestAssured.given;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static methods.Constants.api2;
+import static methods.Constants.url_api2_search;
 import static methods.FirstConnect.*;
 import static methods.Utils.getFile;
 import static methods.Utils.splitToArray;
@@ -31,13 +33,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertTrue;
 
 public class AutoTest {
-
-
-//    public static String api2 = "http://auto-api.test.autoru.yandex.net";
-    public static String api2 = "https://api2.auto.ru";
-    public static String url_api2_search = "https://api2.auto.ru/1.1/search?category_id=15&page_num=1&page_size=50&creation_date_to=" + cutTime;
-//    public static String url_api2_search = "http://auto-api.test.autoru.yandex.net/1.1/search?category_id=15&page_num=1&page_size=50&creation_date_to=" + millis;
-
     static CloseableHttpClient client = HttpClients.createDefault();
 
 public void print(String a){

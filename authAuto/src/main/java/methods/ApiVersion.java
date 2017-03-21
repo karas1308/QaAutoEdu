@@ -2,7 +2,7 @@ package methods;
 
 public enum ApiVersion {
 
-    API_2_2_2("2.2.2", "json"), API_2_2_1("2.2.1", "json");
+    API_2_2_2("2.2.2", "json"), API_2_2_1("2.2.1","json");
 
     private String version;
 

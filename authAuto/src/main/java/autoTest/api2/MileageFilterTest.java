@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 
+import static methods.Constants.api2;
 import static methods.FirstConnect.*;
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -72,7 +73,7 @@ public class MileageFilterTest {
 
     @Test //Тест проверяет корректность выдачи по фильтру Пробег
     public void km_age() throws IOException {
-        RestAssured.baseURI = AutoTest.api2;
+        RestAssured.baseURI = api2;
         Response r =
                 given().
                         headers("Accept-Encoding", "gzip", "Authorization", uuid, "X-Authorization", x_auth).
