@@ -216,7 +216,7 @@ public class ApiPhpTest {
         prt(new RestRequest().getRequest().baseUri(api).params("method", "all.sale.uploadphotorecognize").multiPart("files[0]", getFile("mazda3.png"), "application/image")
                 .expect().statusCode(200).post("/rest"));
     }
-
+//
     @Test // Список марок
     public void allMarkGetList() {
         String method = "all.mark.getList";
