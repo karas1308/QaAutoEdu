@@ -101,7 +101,6 @@ public void print(String a){
         CloseableHttpResponse response = client.execute(get);
         HttpEntity entity = response.getEntity();
         JSONObject jsonTets = new JSONObject(EntityUtils.toString(entity, UTF_8));
-        // System.out.println(jsonTets.getJSONArray("list").getJSONObject(0).get("year"));
         int lenght = jsonTets.getJSONArray("list").length();
         for (int i = 0; i < lenght; i++) {
             String yearStr = String.valueOf(jsonTets.getJSONArray("list").getJSONObject(i).get("year"));
@@ -121,8 +120,6 @@ public void print(String a){
                         when().post("/1.1/stat");
         assertTrue(r.statusCode() == 200);
         assertTrue(r.body().asString().contains("OK"));
-        //  System.out.println(r.statusCode());
-        // System.out.print(r.body().asString());
     }
 
     @Test //Избранные
