@@ -29,7 +29,7 @@ public class Utils {
     }
 
     public static File getFile(String fileName) {
-        return new File(Utils.class.getClassLoader().getResource(fileName).getFile());
+        return new File(Utils.class.getClassLoader().getResource(fileName).getPath().replaceAll("%20"," "));
     }
 
     public static String urlDecode(String s) {
