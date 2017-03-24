@@ -182,6 +182,12 @@ public class ApiPhpTest {
         assertThat(new RestRequest().getRequest().params("section_id", 1, "category_id", 15, "sale_id", 1048427881,
                 "text", text,"method", "all.sale.complain").expect().statusCode(200)
                 .post("/rest").jsonPath().get("result.success").toString(),equalTo("true"));
+        }
+
+    @Test //Поиск по фото
+    public void uploadPhotoRecognize() {
+            assertThat(new RestRequest().getRequest().params("method", "all.sale.uploadphotorecognize").multiPart("files[0]", getFile("mazda3.png"), "application/image")
+                .expect().statusCode(200).post("/rest").jsonPath().get("result.recognize.mark.name").toString(),equalTo("[Mazda]"));
     }
 
     @Test // Баланс
@@ -211,11 +217,7 @@ public class ApiPhpTest {
      Integer.valueOf(out.jsonPath().get("result.success").toString()) == 1);
      }
 
-    @Test //Поиск по фото
-    public void uploadPhotoRecognize() {
-        prt(new RestRequest().getRequest().baseUri(api).params("method", "all.sale.uploadphotorecognize").multiPart("files[0]", getFile("mazda3.png"), "application/image")
-                .expect().statusCode(200).post("/rest"));
-    }
+
 //
     @Test // Список марок
     public void allMarkGetList() {
