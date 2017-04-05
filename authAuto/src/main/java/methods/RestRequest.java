@@ -23,7 +23,7 @@ public class RestRequest extends RestAssured {
     }
     
     public RequestSpecification getRequestAuth() {
-        return given().parameters("sid", auth_sid, "key", key, "version", "2.2.2", "uuid", uuid, "format", "json").header("Accept-Encoding", "gzip");
+        return given().baseUri(api).parameters("sid", auth_sid, "key", key, "version", "2.2.2", "uuid", uuid, "format", "json").header("Accept-Encoding", "gzip");
     }
 
 }

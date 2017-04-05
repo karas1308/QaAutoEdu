@@ -21,8 +21,16 @@ public class Utils {
     }
 
     public static void prt(Response prt) {
+
         System.out.println(prt.body().asString());
     }
+    public static void prt(String prt) {
+        System.out.println(prt);
+    }
+    public static void prt() {
+        System.out.println();
+    }
+
 
     public static int getRndInt(int i) {
         return new Random().nextInt(i);
