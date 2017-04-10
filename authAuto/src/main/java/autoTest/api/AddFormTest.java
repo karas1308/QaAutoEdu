@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 import static methods.ArrayContainsSubArray.containsSubArray;
 import static methods.FirstConnect.getUuidSidAuth;
-import static methods.FirstConnect.key;
+import static methods.FirstConnect.keyAPI222;
 import static methods.MethodsAddForm.*;
 import static methods.Utils.splitToArray;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -25,6 +25,7 @@ public class AddFormTest {
     public static void before() {
         getUuidSidAuth();
     }
+
     @Test
     public void markGetList() {
         String[] markList = splitToArray(markList().body().jsonPath().get("result.items.name").toString());
@@ -46,10 +47,12 @@ public class AddFormTest {
                 "Москвич", "СМЗ", "ТагАЗ", "УАЗ", "Think"};
         assertThat(markList, containsSubArray(markListConst));
     }
+
     @Test
     public void modelsIsGreaterThanZero() {
         assertThat(Arrays.asList(splitToArray(modelList().body().jsonPath().get("result.id").toString())), hasSize(greaterThan(0)));
     }
+
     @Test
     public void yearsListIsGreaterThanZero() {
         assertThat(Arrays.asList(splitToArray(yearList().body().jsonPath().get("result.id").toString())), hasSize(greaterThan(0)));
@@ -113,7 +116,7 @@ public class AddFormTest {
     @Test
     public void quantityErrorsCountAddForm() {
         Assert.assertThat(
-                Arrays.asList(splitToArray(new RestRequest().getRequest().params("key", key, "method", "all.sale.add", "category_id", 15)
+                Arrays.asList(splitToArray(new RestRequest().getRequestAddForm().params("method", "all.sale.add", "category_id", 15)
                         .expect().statusCode(200).post("/rest").jsonPath().get("result.errors").toString())),
                 hasSize(19));
     }

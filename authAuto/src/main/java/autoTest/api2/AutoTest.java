@@ -26,6 +26,7 @@ import static methods.Constants.api2;
 import static methods.Constants.url_api2_search;
 import static methods.FirstConnect.*;
 import static methods.Utils.getFile;
+import static methods.Utils.prt;
 import static methods.Utils.splitToArray;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
@@ -139,7 +140,7 @@ public void print(String a){
 
         RestAssured.baseURI = api2;
 
-        Response searchList = given().header("X-Authorization", x_auth).get("/1.1/search?page_num=1&page_size=50&prepend_empty_option=1&model_id=17118&creation_date_to=1488459883&mark_id=15&state=USED&sort=price-asc&category_id=15&photo=1&generation_id=17121");
+        Response searchList = given().header("X-Authorization", x_auth).params("page_num", "1", "page_size", "50", "model_id", "-2", "sort", "price-asc", "category_id", "15").get("/1.1/search");
 
         String[] priceList = splitToArray(searchList.body().jsonPath().get("list.price.RUR").toString());
         for (int i = 0; i < priceList.length - 1; i++) {
@@ -154,9 +155,9 @@ public void print(String a){
     @Test
     public void searchSortPriceAsc() {
         RestAssured.baseURI = api2;
-        Response searchList = given().header("X-Authorization", x_auth).get("/1.1/search?page_num=1&page_size=50&prepend_empty_option=1&model_id=17118"+
-                "&creation_date_to=1488459883&mark_id=15&state=USED&sort=price-asc&category_id=15&photo=1&generation_id=17121");
+        Response searchList = given().header("X-Authorization", x_auth).get("/1.2/search?page_num=1&page_size=50&sort=price-asc&category_id=15");
         String[] priceList = searchList.body().jsonPath().get("list.price.RUR").toString().replace("[", "").replace("]", "").split(",");
+        prt(searchList.asString());
         for (int i = 0; i < priceList.length - 1; i++) {
             int a = Integer.valueOf(priceList[i].replace(" ", ""));
             int b = Integer.valueOf(priceList[i + 1].replace(" ", ""));
@@ -167,8 +168,7 @@ public void print(String a){
     @Test
     public void searchSortPriceDesc() {
         RestAssured.baseURI = api2;
-        Response searchList = given().header("X-Authorization", x_auth).get("/1.1/search?page_num=1&page_size=50&prepend_empty_option=1&model_id=17118"+
-                "&creation_date_to=1488459883&mark_id=15&state=USED&sort=price-desc&category_id=15&photo=1&generation_id=17121");
+        Response searchList = given().header("X-Authorization", x_auth).get("/1.1/search?page_num=1&page_size=50&mark_id=15&sort=price-desc&category_id=15");
         String[] priceList = searchList.body().jsonPath().get("list.price.RUR").toString().replace("[", "").replace("]", "").split(",");
         for (int i = 0; i < priceList.length - 1; i++) {
             int a = Integer.valueOf(priceList[i].replace(" ", ""));
