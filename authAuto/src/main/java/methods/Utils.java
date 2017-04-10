@@ -30,6 +30,9 @@ public class Utils {
     public static void prt() {
         System.out.println();
     }
+    public static void prt(int prt) {
+        System.out.println(prt);
+    }
 
 
     public static int getRndInt(int i) {
