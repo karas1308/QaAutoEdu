@@ -33,8 +33,8 @@ import ru.yandex.qatools.allure.annotations.Parameter;
 import ru.yandex.qatools.allure.annotations.Stories;
 
 @RunWith(value = Parameterized.class)
-@Features("Api PHP")
-@Stories("Some Story")
+//@Features("Api PHP")
+//@Stories("Some Story")
 public class ApiPhpTest {
 
     @BeforeClass
@@ -201,32 +201,15 @@ public class ApiPhpTest {
         prt(r);
     }
 
-
-//    GET https://api.auto.ru/rest/?sid=16338009.e25bb23dfe0f6ae2_7030c4e460ddcf433a0483d83e00db9c&client_tz=180&method=users.profile.me&client_version=3.13.0&key=1d2b14555a83699f57fd77d17aa2d5ce9431cd7d9f3edea14186b044e76b606a&client_os=6.0.1&version=2.2.2&uuid=e0666149817300e5cf9581312e1bab3a&device_name=motorola%20XT1562&client_platform=android&format=json HTTP/1.1
-//    Host: api.auto.ru
-//    Connection: Keep-Alive
-//    Accept-Encoding: gzip
-//    User-Agent: okhttp/3.4.1
-
-    // //Список моделей
-    // public static Response modelList() {
-    // Response markList = markList();
-    // String[] markID =
-    // markList.body().jsonPath().get("result.items.id").toString().replace("[",
-    // "").replace("]", "").split(",");
-    // int a = rand.nextInt(markID.length);
-    // randMarkID = markID[a];
-    // String method = "catalog.folder.getEditModels";
-    // RestAssured.baseURI = api;
-    // Response modelList = given().
-    // header("Accept-Encoding", "gzip").
-    // get("/rest/?method=" + method + "&category_id=15&" +
-    // "is_for_editform=1&sid=" + sid + "&mark_id=" + randMarkID +
-    // "&client_tz=120&key=b7bf0dfc8cc562c1bf2cffdd9e78fc181f97f6c82f85fbca16d62d3d3258963c"
-    // +
-    // "&version=2.2.2&uuid=" + uuid + "&format=json");
-    // return modelList;
-    // }
-
+    @Test // Сообщение об ошибке, method=api.service.feedback
+    public void apiServiceFeedback() {
+        assertThat(given().baseUri(api).headers("Accept-Encoding", "gzip", "Content-Type", "application/x-www-form-urlencoded").params("email", "yuioru@yandex.ru", "method", "api.service.feedback", "sid", sid, "uuid", uuid,
+                "key", keyApi, "version", version, "format", "json", "message", "Test").expect().statusCode(200).post("/rest").jsonPath().get("result.message").toString(), equalTo("Спасибо! Ваше сообщение не останется без внимания!"));
+    }
 
 }
+
+
+
+
+

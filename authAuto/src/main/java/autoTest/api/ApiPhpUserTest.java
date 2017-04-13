@@ -13,6 +13,8 @@ import java.util.Collection;
 import static com.jayway.restassured.RestAssured.given;
 import static methods.Constants.api;
 import static methods.FirstConnect.*;
+import static methods.Utils.prt;
+import static methods.Utils.splitToArray;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertTrue;
@@ -87,20 +89,12 @@ public class ApiPhpUserTest {
 
     }
 
+    @Test  // all.sale.getArchiveReasons
+    public void allSaleGetArchiveReasons() {
+        String[] reasons = {"Я продал автомобиль на auto.ru", "Я продал автомобиль где-то еще", "Передумал продавать", "Мало звонков от покупателей", "Другая причина"};
+        assertThat(splitToArray(new RestRequest().getRequestAuth().params("method", "all.sale.getArchiveReasons", "key", keyApi, "version", version).expect().statusCode(200).get("/rest/").jsonPath()
+                .get("result.name").toString()), arrayContaining(reasons));
+    }
+
 }
 
-//    @Test // logout
-//    public void logout() {
-//        JsonPath r = given().baseUri(api).contentType("application/x-www-form-urlencoded; charset=UTF-8")
-//                .formParams("login", username, "pass", password, "sid", sid, "method", "users.auth.login", "key", key, "version", "2.2.2", "uuid", uuid, "format", "json").when()
-//                .post("/rest").body().jsonPath();
-//        String auth_sid_for_logout = r.get("sid");
-//        String auth_sid_key_for_logout = r.get("sid_key");
-//        String auth_autoruuid_for_logout = r.get("autoruuid");
-//        String method = "users.auth.logout";
-//        Response out = given().baseUri(api).header("Accept-Encoding", "gzip")
-//                .get("/rest/?sid=" + auth_sid_for_logout + "&method=" + method + "&key=" + key +
-//                        "&version=2.2.2&uuid=" + uuid + "&format=json");
-//        assertTrue("result.success = " + out.jsonPath().get("result").toString(),
-//                Integer.valueOf(out.jsonPath().get("result.success").toString()) == 1);
-//    }

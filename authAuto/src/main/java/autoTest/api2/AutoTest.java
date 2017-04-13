@@ -46,27 +46,6 @@ public class AutoTest {
 
     }
 
-    @Test //geo suggest
-    public void lookingForMoskwaInSuggest() throws IOException {
-        String[] msk = {"Москва", "Москва и Московская область"};
-        assertThat(splitToArray(new RestRequest().getRequestApi2().parameter("letters", "москв").expect().statusCode(200).get("/1.1/suggest").jsonPath()
-                .get("data.title").toString()), containsSubArray(msk));
-    }
-
-    @Test
-    public void NumberRegions10841() throws IOException {
-
-        HttpGet get = new HttpGet(api2 + "/1.1/regions/10841");
-        get.setHeader("Authorization", uuid_header);
-        get.setHeader("X-Authorization", x_auth);
-        get.setHeader("Accept-Encoding", "gzip, deflate, identity");
-        get.setHeader("Accept-Language", "en-RU;q=1, ru-RU;q=0.9, uk-RU;q=0.8, it-RU;q=0.7, de-RU;q=0.6");
-        CloseableHttpResponse response = client.execute(get);
-        HttpEntity entity = response.getEntity();
-        JSONArray regions = new JSONArray(EntityUtils.toString(entity, UTF_8));
-        System.out.println(regions.get(1));
-
-    }
 
     @Test //Тест проверяет корректность выдачи по фильтру Цена
     public void testPrice() throws IOException {
@@ -112,30 +91,6 @@ public class AutoTest {
         }
     }
 
-    @Test
-    public void stat() {
-        RestAssured.baseURI = api2;
-        Response r =
-                given().
-                        headers("X-Authorization", x_auth, "Content-Type", "application/json; charset=UTF-8").
-                        body("{\"events\":[{\"data\":{\"card_id\":\"1045293948-a9a066\",\"category_id\":\"15\",\"page_type\":\"card\",\"rid\":\"1\"," +
-                                "\"user_agent\":\"Android 3.11.0 1963\",\"user_uid\":\"20084971\"},\"event\":\"card_view\"}]}").
-                        when().post("/1.1/stat");
-        assertTrue(r.statusCode() == 200);
-        assertTrue(r.body().asString().contains("OK"));
-    }
-
-    @Test //Избранные
-    public void favorites() {
-        //autorize();
-        RestAssured.baseURI = api2;
-        Response r =
-                given().
-                        headers("X-Authorization", x_auth).
-                        when().get("/1.1/user/favorites?sid=" + auth_sid);
-        assertTrue(r.statusCode() == 200);
-        assertTrue(r.body().asString().contains("active"));
-    }
 
     @Test
     public void searchSort() {
@@ -148,7 +103,7 @@ public class AutoTest {
         for (int i = 0; i < priceList.length - 1; i++) {
             int a = Integer.valueOf(priceList[i].replace(" ", ""));
             int b = Integer.valueOf(priceList[i + 1].replace(" ", ""));
-            assertTrue("" + a + " " + b, a <= b);
+            assertThat("" + a + " " + b, a <= b);
             //  System.out.println(Integer.valueOf(priceList[i].replace(" ","")));
         }
     }

@@ -20,7 +20,7 @@ public class RestRequest extends RestAssured {
     }
     
     public RequestSpecification getRequestApi2() {
-        return given().baseUri(api2).parameters("sid", sid, "key", keyAPI222, "uuid", uuid, "format", "json").headers("Authorization", uuid_header, "X-Authorization", x_auth);
+        return given().baseUri(api2).headers("Authorization", uuid_header, "X-Authorization", x_auth);
     }
     
     public RequestSpecification getRequestAuth() {

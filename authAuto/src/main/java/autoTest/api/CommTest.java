@@ -27,8 +27,8 @@ import ru.yandex.qatools.allure.annotations.Features;
 import ru.yandex.qatools.allure.annotations.Parameter;
 import ru.yandex.qatools.allure.annotations.Stories;
 
-@Features("Api PHP")
-@Stories("Filtering search results by different regions and categories")
+//@Features("Api PHP")
+//@Stories("Filtering search results by different regions and categories")
 @RunWith(value = Parameterized.class)
 public class CommTest {
 
@@ -37,20 +37,24 @@ public class CommTest {
         getUuidSidAuth();
     }
 
-    static String[] marksConstListLightTrucks = {"BAW", "Changan", "Citroen", "DFSK", "Dodge", "FAW", "Fiat", "Ford", "Foton", "Freightliner", "Hyundai", "Isuzu", "IVECO", "JAC",
-            "JBC", "JMC", "Kia", "LDV", "Mazda", "Mercedes-Benz", "Mitsubishi", "Nissan", "Opel", "Peugeot", "Renault", "Skoda", "Ssang Yong", "Toyota", "Volkswagen", "YueJin",
+    static String[] marksConstListLightTrucks = {"BAW", "Changan", "Citroen", "DFSK", "Dodge", "FAW", "Fiat", "Ford", "Foton", "Hyundai", "Isuzu", "IVECO", "JAC",
+            "JBC", "JMC", "Kia", "LDV", "Mazda", "Mercedes-Benz", "Mitsubishi", "Nissan", "Opel", "Peugeot", "Renault", "Ssang Yong", "Toyota", "Volkswagen", "YueJin",
             "Богдан", "ВАЗ", "ВИС", "ГАЗ", "ГАЗ-САЗ", "ИЖ", "РАФ", "ТагАЗ", "УАЗ"};
     static String[] marksConstListBus = {"Volkswagen"};
     static String[] marksConstListArtic = {"MAN"};
     static String[] marksConstListDrags = {"МАЗ"};
     static String[] marksConstListTrucks = {"МАЗ"};
-    static String[] marksConstListMotorcycle = {"ABM", "Aermacchi", "American IronHorse", "Apollo", "Aprilia", "Arlen Ness", "Bajaj", "Bars", "Benelli", "Beta", "Big Bear Choppers", "Big Dog Motorcycles", "Bimota", "BM", "BMW", "Boom Trikes", "BRP", "BSE", "Buell", "Cagiva", "Campagna", "Centurion", "CFMoto", "Cobra", "Confederate", "CZ", "Derbi", "Desert Raven", "DM Telai", "Dnepr (Днепр)", "Ducati", "Falcon", "Fine Custom Mechanics", "Forsage", "Futong", "GAS GAS", "GX moto", "Harley-Davidson", "Honda", "Husaberg", "Husqvarna", "Hyosung", "Indian", "IRBIS", "Jawa", "JMC", "Johnny Pag", "Kawasaki", "Kaxa Motos", "KAYO", "Keeway", "KTM", "KXD", "Kymco", "Lifan", "Mikilon", "Minsk (Минск)", "Moto Guzzi", "Moto Morini", "Motoland", "MV Agusta", "MZ", "Nexus", "Omaks Motors", "Orion", "Pannonia", "Patron", "PCW", "Pitsterpro", "Polini", "Racer", "Regal Raptor", "Reggy", "Rewaco", "Rokon", "Royal Enfield", "S2", "Sachs", "Saxon", "Sherco", "Stels", "Stingray", "Suzuki", "Sym", "TM Racing", "Triumph", "TVS", "UM", "Upbeat (ABT)", "Vento", "Victory", "Virus", "Wels", "Xmotos", "Yamaha", "Yamasaki", "YCF", "Zongshen", "Zundapp", "Верховина", "Восход", "Десна", "ЗиД", "ИЖ", "Китай (NoName)", "ММЗ", "ТМЗ (Туламашзавод)", "Урал", "Эксклюзив"};
+    static String[] marksConstListMotorcycle = {"BMW", "CZ", "Derbi", "Dnepr (Днепр)", "Ducati", "Harley-Davidson", "Honda", "Kawasaki", "Minsk (Минск)", "Восход", "Десна", "ИЖ",  "Урал", "Эксклюзив"};
     static String[] marksConstListScooters = {"BMW"};
     static String[] marksConstListSnowmobile = {"Stels"};
     static String[] marksConstListAtv = {"IRBIS"};
 
+    @Parameter
     private Integer id;
+
+    @Parameter
     private String[] makrList;
+
     @Parameter
     private String version;
 
