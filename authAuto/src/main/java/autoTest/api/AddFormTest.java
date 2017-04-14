@@ -11,13 +11,13 @@ import java.util.Arrays;
 
 import static methods.ArrayContainsSubArray.containsSubArray;
 import static methods.FirstConnect.getUuidSidAuth;
-import static methods.FirstConnect.keyAPI222;
 import static methods.MethodsAddForm.*;
 import static methods.Utils.splitToArray;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertTrue;
+
 
 
 public class AddFormTest {
@@ -96,12 +96,7 @@ public class AddFormTest {
 
     @Test
     public void gearboxGetLis() throws IOException {
-        Response gearboxList = gearboxList();
-        assertTrue("catalog.gearbox.getList fail, statusCode=" + gearboxList.statusCode(), gearboxList.statusCode() == 200);
-        String[] gearboxIDList = splitToArray(gearboxList.body().jsonPath().get("result.id").toString());
-        assertTrue("catalog.gearbox.getList fail", gearboxIDList.length > 0);
-        // System.out.println(gearboxList.body().asString());
-
+         assertThat(splitToArray(gearboxList().body().jsonPath().get("result.id").toString()).length, greaterThan(0));
     }
 
     @Test
@@ -115,9 +110,10 @@ public class AddFormTest {
     // Количиство ошибок валидации при размещении объявления 19
     @Test
     public void quantityErrorsCountAddForm() {
-        Assert.assertThat(
-                Arrays.asList(splitToArray(new RestRequest().getRequestAddForm().params("method", "all.sale.add", "category_id", 15)
+        assertThat(Arrays.asList(splitToArray(new RestRequest().getRequestAddForm().params("method", "all.sale.add", "category_id", 15)
                         .expect().statusCode(200).post("/rest").jsonPath().get("result.errors").toString())),
                 hasSize(19));
     }
+
+
 }

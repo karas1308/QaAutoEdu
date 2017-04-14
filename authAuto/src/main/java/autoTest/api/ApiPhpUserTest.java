@@ -95,6 +95,11 @@ public class ApiPhpUserTest {
         assertThat(splitToArray(new RestRequest().getRequestAuth().params("method", "all.sale.getArchiveReasons", "key", keyApi, "version", version).expect().statusCode(200).get("/rest/").jsonPath()
                 .get("result.name").toString()), arrayContaining(reasons));
     }
-
+    @Test  // allSaleGetEditForm
+    public void  allSaleGetEditForm() {
+        String saleId = "1049807990-43d2";
+        assertThat((new RestRequest().getRequestAuth().params("method", "all.sale.getEditForm", "key", keyApi, "version", version, "sale_id", saleId, "category_id", "15").expect().statusCode(200).get("/rest/").jsonPath()
+                .get("result.fields.value").toString()), containsString(saleId) );
+    }
 }
 

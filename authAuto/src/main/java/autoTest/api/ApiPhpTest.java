@@ -206,7 +206,6 @@ public class ApiPhpTest {
         assertThat(given().baseUri(api).headers("Accept-Encoding", "gzip", "Content-Type", "application/x-www-form-urlencoded").params("email", "yuioru@yandex.ru", "method", "api.service.feedback", "sid", sid, "uuid", uuid,
                 "key", keyApi, "version", version, "format", "json", "message", "Test").expect().statusCode(200).post("/rest").jsonPath().get("result.message").toString(), equalTo("Спасибо! Ваше сообщение не останется без внимания!"));
     }
-
 }
 
 
