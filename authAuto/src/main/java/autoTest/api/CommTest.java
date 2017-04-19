@@ -91,7 +91,7 @@ public class CommTest {
 
     @Test
     public void markGroupsListIsDsiplayed() {
-        String[] groupsConstList = {"Любая марка", "Отечественные", "Иномарки"};
+//        String[] groupsConstList = {"Любая марка", "Отечественные", "Иномарки"};
         assertThat(splitToArray(new RestRequest().getRequest().params("method", "all.mark.getList", "category_id", id).params("key", keyApi, "version", version).expect().statusCode(200).get("/rest").jsonPath()
                 .get("result.groups.name").toString()), arrayContainingInAnyOrder(GROUPS_CONST_LIST));
     }

@@ -22,6 +22,9 @@ public class RestRequest extends RestAssured {
     public RequestSpecification getRequestApi2() {
         return given().baseUri(api2).headers("Authorization", uuid_header, "X-Authorization", x_auth);
     }
+    public RequestSpecification getRequestApi2Search() {
+        return given().baseUri(api2).parameters("page_num", "1", "page_size", "50").headers("Authorization", uuid_header, "X-Authorization", x_auth);
+    }
     
     public RequestSpecification getRequestAuth() {
         return given().baseUri(api).parameters("sid", auth_sid, "uuid", uuid, "format", "json").header("Accept-Encoding", "gzip");

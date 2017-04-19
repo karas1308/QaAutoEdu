@@ -48,27 +48,18 @@ public class AutoTest {
 
 
     @Test //Тест проверяет корректность выдачи по фильтру Цена
-    public void testPrice() throws IOException {
+    public void testFilterPriceApi2Auto() throws IOException {
         int i;
         int[] lines = {0, 50000, 60000, 65000, 70000, 700000, 2000000, 2500000};
         for (i = 0; i < lines.length - 1; i++) {
-            RestAssured.baseURI = api2;
-            Response r =
-                    given().headers("Authorization", uuid_header, "X-Authorization", x_auth).
-                            get("/1.1/search?category_id=15&page_num=1&page_size=50&creation_date_to=" + cutTime + "&price_from=" + lines[i] + "&price_to=" + lines[i + 1]);
-            assertTrue(r.statusCode() == 200);
-            int pager_count = Integer.parseInt(r.body().jsonPath().get("pager.count").toString());
+            Response r = new RestRequest().getRequestApi2Search()
+                    .parameters("category_id", "15", "creation_date_to", cutTime, "price_from", lines[i], "price_to", lines[i + 1])
+                    .expect().statusCode(200).get("/1.1/search");
+            assertThat(Integer.parseInt(r.body().jsonPath().get("pager.count").toString()), greaterThan(0));
             String[] price = splitToArray(r.body().jsonPath().get("list.price.RUR").toString());
-            assertTrue("tt", price.length > 0);
-            if (pager_count > 0) {
-                for (int i1 = 0; i1 < price.length; i1++) {
-                    int minprice = lines[i];
-                    int maxprice = lines[i + 1];
-                    int a = Integer.valueOf(price[i].trim());
-                    assertTrue("Цена выходит за параметры фильтров - " + a, a >= minprice & a <= maxprice);
-                }
-            } else {
-                assertTrue("Number of ads is zero, correct your filter. " + lines[i], pager_count > 0);
+            assertThat(price.length, greaterThan(0));
+            for (int j = 0; j < price.length; j++) {
+                assertThat(Integer.valueOf(price[i].trim()), allOf(greaterThanOrEqualTo(lines[i]), lessThanOrEqualTo(lines[i + 1])));
             }
         }
     }
@@ -77,17 +68,12 @@ public class AutoTest {
     public void yearProd() throws IOException {
         int year_from = 1995;
         int year_to = 1996;
-        HttpGet get = new HttpGet(url_api2_search + "&year_from=" + year_from + "&year_to=" + year_to);
-        get.setHeader("Authorization", uuid_header);
-        get.setHeader("X-Authorization", x_auth);
-        CloseableHttpResponse response = client.execute(get);
-        HttpEntity entity = response.getEntity();
-        JSONObject jsonTets = new JSONObject(EntityUtils.toString(entity, UTF_8));
-        int lenght = jsonTets.getJSONArray("list").length();
-        for (int i = 0; i < lenght; i++) {
-            String yearStr = String.valueOf(jsonTets.getJSONArray("list").getJSONObject(i).get("year"));
-            int year = Integer.valueOf(yearStr);
-            assertTrue("Год выпуска выходит за параметры фильтров - " + year, year >= year_from & year <= year_to);
+        Response r = new RestRequest().getRequestApi2Search().parameters("year_from", year_from, "year_to", year_to).expect().statusCode(200).get("/1.1/search");
+        assertThat(Integer.parseInt(r.body().jsonPath().get("pager.count").toString()), greaterThan(0));
+        String[] year = splitToArray(r.body().jsonPath().get("list.year").toString());
+        assertThat(year.length, greaterThan(0));
+        for (int i = 0; i < year.length; i++) {
+            assertThat(Integer.valueOf(year[i].trim()), allOf(greaterThanOrEqualTo(year_from), lessThanOrEqualTo(year_to)));
         }
     }
 
@@ -195,8 +181,7 @@ public class AutoTest {
     @Test
     public void readFile() throws IOException {
         List<String> lines = Files.readAllLines(Paths.get(getFile("test.txt").getAbsolutePath()));
-        int linesSize = lines.size();
-        for (int i = 0; i < linesSize; i++) {
+        for (int i = 0; i < lines.size(); i++) {
             String[] test = lines.get(i).replace("\uFEFF", "").split("/");
 
             int km_age_from = Integer.parseInt(test[0]);
