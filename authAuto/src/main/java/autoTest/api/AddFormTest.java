@@ -12,6 +12,7 @@ import java.util.Arrays;
 import static methods.ArrayContainsSubArray.containsSubArray;
 import static methods.FirstConnect.getUuidSidAuth;
 import static methods.MethodsAddForm.*;
+import static methods.Utils.prt;
 import static methods.Utils.splitToArray;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
@@ -97,5 +98,9 @@ public class AddFormTest {
                 hasSize(19));
     }
 
-
+//    @Test
+//    public void quantityErrorsCountAddForm1() throws IOException {
+//        modificationList();
+//        prt ( randMarkID+ " / " +randModelID+ " / " +randYearID+ " / " +randGenerationsID+ " / " +randBodytypeID+ " / " +randEnginetypeID+ " / " +randDriveID+ " / " +randGearboxID );
+//    }
 }
