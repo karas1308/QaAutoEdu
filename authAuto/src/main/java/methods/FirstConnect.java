@@ -5,6 +5,8 @@ import static methods.Constants.api;
 
 import com.jayway.restassured.path.json.JsonPath;
 
+import java.util.concurrent.TimeUnit;
+
 public class FirstConnect {
 
 
@@ -24,8 +26,8 @@ public class FirstConnect {
     public static String auth_sid_221;
     public static String auth_sid_key_221;
     public static String auth_autoruuid_221;
-//    public static long cutTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
-    public static String cutTime = "";
+    public static String cutTime = String.valueOf(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()));
+//    public static String cutTime = "";
     public static String username = "79854406469";
      public static String password = "autoru";
 //    public static String password = "111111";

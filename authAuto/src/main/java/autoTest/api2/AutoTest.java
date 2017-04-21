@@ -95,6 +95,16 @@ public class AutoTest {
     }
 //-------------------------------------------------Сортировки
 
+    @Test //Сортировка даты размещения по убывани "sort", "cr_date-desc"
+    public void searchSortDate() {
+        String []  searchSortDate =  splitToArray(new RestRequest().getRequestApi2Search()
+                .params("mark_id", "288","rid", "147", "creation_date_to", cutTime, "state", "USED", "sort", "cr_date-desc", "category_id", "15")
+                .given().get("/1.1/search").jsonPath().get("list.true_creation_date").toString());
+        for (int i = 15; i <  searchSortDate.length - 1; i++) {
+            assertThat(Integer.valueOf( searchSortDate[i].trim()),  greaterThanOrEqualTo(Integer.valueOf( searchSortDate[i+1].trim())));
+        }
+    }
+
     @Test
     public void searchSortPriceAsc() {
         RestAssured.baseURI = api2;
@@ -162,20 +172,7 @@ public class AutoTest {
         }
     }
 
-    @Test
-    public void searchSortDate() {
-        RestAssured.baseURI = api2;
-        Response searchList = given().header("X-Authorization", x_auth).get("/1.1/search?page_num=1&page_size=50&prepend_empty_option=1&model_id=17118" +
-                "&creation_date_to=1488459883&mark_id=15&state=USED&sort=cr_date-desc&category_id=15&photo=1&generation_id=17121");
-        String[] upDateList = searchList.body().jsonPath().get("list.true_creation_date").toString().replace("[", "").replace("]", "").split(",");
-        for (int i = 8; i < upDateList.length - 1; i++) {
 
-            int a = Integer.valueOf(upDateList[i].replace(" ", ""));
-            int b = Integer.valueOf(upDateList[i + 1].replace(" ", ""));
-            assertTrue("Сортировка даты размещения по убыванию" + " " + a + " " + b, a >= b);
-        }
-
-    }
 
     //----------------------------------------------------------------
     @Test

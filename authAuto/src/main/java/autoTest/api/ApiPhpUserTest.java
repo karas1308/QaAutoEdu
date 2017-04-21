@@ -50,9 +50,15 @@ public class ApiPhpUserTest {
     }
 
     @Test // Авторизация пользователя
-    public void login() {
+    public void loginAndroidPost() {
         assertThat(new RestRequest().getRequest().contentType("application/x-www-form-urlencoded; charset=UTF-8")
-                .formParams("login", username, "pass", password, "method", "users.auth.login", "key", keyApi, "version", version).post("/rest").jsonPath().get("result.sid").toString(), not(containsString(sid)));
+                .formParams("login", username, "pass", password, "method", "users.auth.login", "key", keyApi, "version", version).expect().statusCode(200).post("/rest").jsonPath().get("result.sid").toString(), allOf(not(containsString(sid)), containsString("."), containsString("_")));
+    }
+
+    @Test // Авторизация пользователя
+    public void loginiOSGet() {
+        assertThat(new RestRequest().getRequest().contentType("application/x-www-form-urlencoded; charset=UTF-8")
+                .parameters("login", username, "pass", password, "method", "users.auth.login", "key", keyApi, "version", version).expect().statusCode(200).get("/rest").jsonPath().get("result.sid").toString(), allOf(not(containsString(sid)), containsString("."), containsString("_")));
     }
 
     @Test
@@ -64,7 +70,7 @@ public class ApiPhpUserTest {
     @Test // получаем список телефонов авторизованного пользователя
     public void getPhones() {
         assertThat(new RestRequest().getRequestAuth().
-                params("method", "users.profile.getPhones", "key", keyApi, "version", version).when().get("/rest").jsonPath()
+                params("method", "users.profile.getPhones", "key", keyApi, "version", version).expect().statusCode(200).when().get("/rest").jsonPath()
                 .get("result.phone").toString(), containsString(username));
     }
 

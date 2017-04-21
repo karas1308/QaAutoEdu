@@ -21,6 +21,9 @@ import static methods.Constants.api2;
 import static methods.FirstConnect.*;
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.core.AnyOf.anyOf;
 import static org.junit.Assert.assertTrue;
 
@@ -42,7 +45,7 @@ public class MileageFilterTest {
                 new Object[][]{
                         {213, 15, 10000, 20000},
                         {1, -1, 10000, 30000},
-                        {213, 15, 10000, 40000}
+                        {213, -2, 10000, 40000}
                 }
         );
     }
@@ -60,9 +63,9 @@ public class MileageFilterTest {
     private int km_age_to;
 
 
-    public int getMark() {
-        return mark;
-    }
+//    public int getMark() {
+//        return mark;
+//    }
 
     public MileageFilterTest(int rig, int mark, int km_age_from, int km_age_to) {
         this.rig = rig;
@@ -83,9 +86,8 @@ public class MileageFilterTest {
         for (int i = 0; i < km_age.length; i++) {
             int a = Integer.valueOf(km_age[i].replace(" ", ""));
 
-            assertTrue("" + a, a <= km_age_to && a >= km_age_from);
+            assertThat(Integer.valueOf(km_age[i].trim()), allOf(greaterThanOrEqualTo(km_age_from), lessThanOrEqualTo(km_age_to)));
         }
-        //  System.out.println(r.body().jsonPath().get("list.km_age").toString());
 
     }
 
